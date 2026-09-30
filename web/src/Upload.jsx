@@ -1,11 +1,50 @@
+import { useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { MAX_FILES } from './lib/files.js'
+
+const fan = (i, n) => ({ rotate: (i - (n - 1) / 2) * 6, y: Math.abs(i - (n - 1) / 2) * 6 })
+
 export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
+  const [over, setOver] = useState(false)
+  const input = useRef(null)
   return (
-    <main>
-      <h1>What's your aesthetic?</h1>
-      <input type="file" accept="image/*" multiple onChange={(e) => onAdd(e.target.files)} />
-      <ul>{files.map((f, i) => <li key={i}>{f.name} <button onClick={() => onRemove(i)}>remove</button></li>)}</ul>
-      {error && <p role="alert">{error}</p>}
-      {files.length > 0 && <button className="btn" onClick={onAnalyze}>Find my aesthetic</button>}
+    <main className="hero">
+      <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>What's your aesthetic?</motion.h1>
+      <p className="sub">Drop a few photos from your life. We'll place them on the map of every internet aesthetic.</p>
+
+      <div className={'drop' + (over ? ' over' : '')} role="button" tabIndex={0}
+        onClick={() => input.current.click()} onKeyDown={(e) => e.key === 'Enter' && input.current.click()}
+        onDragOver={(e) => { e.preventDefault(); setOver(true) }} onDragLeave={() => setOver(false)}
+        onDrop={(e) => { e.preventDefault(); setOver(false); onAdd(e.dataTransfer.files) }}>
+        <span>Drop up to {MAX_FILES} photos here, or click to choose</span>
+        <small>JPEG or PNG, under 5 MB each. Nothing is stored.</small>
+        <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => { onAdd(e.target.files); e.target.value = '' }} />
+      </div>
+
+      {error && <p className="notice" role="alert">{error}</p>}
+
+      <motion.ul className="stack" layout>
+        <AnimatePresence>
+          {files.map((f, i) => (
+            <motion.li key={`${f.name}:${f.size}`} layout
+              initial={{ opacity: 0, scale: .6, ...fan(i, files.length) }}
+              animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
+              exit={{ opacity: 0, scale: .6 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 22, delay: i * .05 }}>
+              <img src={URL.createObjectURL(f)} alt="" />
+              <button className="remove" aria-label={`remove ${f.name}`} onClick={() => onRemove(i)}>×</button>
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </motion.ul>
+
+      <AnimatePresence>
+        {files.length > 0 && (
+          <motion.button className="btn" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} onClick={onAnalyze}>
+            Find my aesthetic
+          </motion.button>
+        )}
+      </AnimatePresence>
     </main>
   )
 }
