@@ -8,16 +8,16 @@ import { useObjectUrls } from './lib/objectUrls.js'
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const fade = (duration, delay = 0) => (reduced() ? { duration: 0, delay: 0 } : { duration, delay })
 
-export default function Result({ files, result, onReset }) {
-  const [graph, setGraph] = useState(null)
+export default function Result({ files, result, graph, graphError, onReset }) {
   const [stage, setStage] = useState('reveal')   // 'reveal' | 'done'
   const api = useRef(null)
   const started = useRef(false)
   const shown = useRef([])                       // photo indexes revealed so far
   const cancel = useRef(() => {})
   const urls = useObjectUrls(files)
-  useEffect(() => { fetch('/api/graph').then((r) => r.json()).then(setGraph) }, [])
-  useEffect(() => () => cancel.current(), [])
+  useEffect(() => { if (graphError) setStage('done') }, [graphError])
+  // Also resets `started`: StrictMode's simulated unmount cancels the steps, and Graph's effect then re-fires onReady.
+  useEffect(() => () => { cancel.current(); started.current = false }, [])
 
   // Graph rebuilds sigma when its inputs change (e.g. object URLs resolve) and calls onReady each time.
   const onReady = (a) => {
@@ -58,6 +58,8 @@ export default function Result({ files, result, onReset }) {
               ))}
             </motion.div>
           )}
+          {!graph && !graphError && <p className="sub">Loading the map…</p>}
+          {graphError && <p className="notice">Couldn't load the map</p>}
         </div>
         {stage === 'done' && (
           <motion.div className="actions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade(.4, .6)}>

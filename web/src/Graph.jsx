@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Graphology from 'graphology'
 import Sigma from 'sigma'
 import { NodeImageProgram } from '@sigma/node-image'
+import { drawDiscNodeLabel } from 'sigma/rendering'
 import { useObjectUrls } from './lib/objectUrls.js'
 import Drawer from './Drawer.jsx'
 import { searchNodes } from './lib/search.js'
@@ -27,12 +28,12 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     graph.edges.forEach((e) => { if (g.hasNode(e.source) && g.hasNode(e.target) && !g.hasEdge(e.source, e.target)) g.addEdge(e.source, e.target, { color: COLORS.edge, size: .6 }) })
     result.images.forEach((img, k) => {
       const image = urls.get(files[k])
-      if (image) g.addNode(`photo-${k}`, { x: img.x * SCALE, y: img.y * SCALE, size: 20, type: 'image', image, label: `your photo ${k + 1}`, color: COLORS.hot, zIndex: 3, hidden: !photosVisible })
+      if (image) g.addNode(`photo-${k}`, { x: img.x * SCALE, y: img.y * SCALE, size: photosVisible ? 20 : 0, type: 'image', image, label: `your photo ${k + 1}`, color: COLORS.hot, zIndex: 3 })
     })
 
     const sigma = new Sigma(g, el.current, {
       nodeProgramClasses: { image: NodeImageProgram }, renderLabels: true, labelRenderedSizeThreshold: 7,
-      labelColor: { color: COLORS.label }, labelFont: 'Inter', labelSize: 12, zIndex: true,
+      labelColor: { color: COLORS.label }, labelFont: 'Inter', labelSize: 12, zIndex: true, defaultDrawNodeHover: drawDiscNodeLabel,
       nodeReducer: (node, data) => {
         const h = hoverRef.current
         if (!h) return data
@@ -53,7 +54,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     const api = {
       flyTo: (id, ratio = .25, duration = 600) => g.hasNode(id) && sigma.getCamera().animate({ ...sigma.getNodeDisplayData(id), ratio }, { duration }),
       overview: (duration = 800) => sigma.getCamera().animate({ x: .5, y: .5, ratio: 1 }, { duration }),
-      showPhoto: (k) => { if (g.hasNode(`photo-${k}`)) g.setNodeAttribute(`photo-${k}`, 'hidden', false); sigma.refresh() },
+      showPhoto: (k) => { if (g.hasNode(`photo-${k}`)) g.setNodeAttribute(`photo-${k}`, 'size', 20); sigma.refresh() },
       light: (slug) => { if (g.hasNode(slug)) { g.mergeNodeAttributes(slug, { color: COLORS.hot, size: 8, zIndex: 2 }); sigma.refresh() } },
       select: (slug) => setSelected(nodes[slug] || null),
     }

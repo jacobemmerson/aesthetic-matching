@@ -66,7 +66,7 @@ export async function shareOrDownload(result, graph, files, deps = {}) {
   const blob = await new Promise((r) => canvas.toBlob(r, 'image/png'))
   if (!blob) throw new Error('could not render card')
   const file = new File([blob], 'my-aesthetic.png', { type: 'image/png' })
-  if (nav.share && nav.canShare?.({ files: [file] })) { try { await nav.share({ files: [file], title: 'My aesthetic' }); return } catch { /* user cancelled: fall through to download */ } }
+  if (nav.share && nav.canShare?.({ files: [file] })) { try { await nav.share({ files: [file], title: 'My aesthetic' }); return } catch (e) { if (e?.name === 'AbortError') return } }
   const a = doc.createElement('a'); a.href = url.createObjectURL(blob); a.download = 'my-aesthetic.png'; a.click()
   setTimeout(() => url.revokeObjectURL(a.href), 1000)
 }

@@ -38,3 +38,11 @@ it('rejects when the canvas cannot produce a blob', async () => {
   const canvas = { toBlob: (cb) => cb(null) }
   await expect(shareOrDownload(result, graph, [], { render: async () => canvas, navigator: {}, document: {}, URL: {} })).rejects.toThrow('could not render card')
 })
+
+it('does not download when the user cancels the share sheet', async () => {
+  const click = vi.fn()
+  const canvas = { toBlob: (cb) => cb(new Blob(['x'], { type: 'image/png' })) }
+  const nav = { canShare: () => true, share: () => Promise.reject(Object.assign(new Error('cancelled'), { name: 'AbortError' })) }
+  await shareOrDownload(result, graph, [], { render: async () => canvas, navigator: nav, document: { createElement: () => ({ click }) }, URL: {} })
+  expect(click).not.toHaveBeenCalled()
+})

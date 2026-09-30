@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Upload from './Upload.jsx'
 import Analyzing from './Analyzing.jsx'
 import Result from './Result.jsx'
@@ -9,6 +9,12 @@ export default function App() {
   const [files, setFiles] = useState([])
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
+  const [graph, setGraph] = useState(null)
+  const [graphError, setGraphError] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/graph').then((r) => { if (!r.ok) throw new Error(r.statusText); return r.json() }).then(setGraph).catch(() => setGraphError(true))
+  }, [])
 
   const onAdd = (list) => {
     const { accepted, notice } = acceptFiles(files, [...list])
@@ -32,7 +38,7 @@ export default function App() {
     <>
       {phase === 'upload' && <Upload files={files} onAdd={onAdd} onRemove={onRemove} onAnalyze={onAnalyze} error={error} />}
       {phase === 'analyzing' && <Analyzing files={files} />}
-      {phase === 'result' && <Result files={files} result={result} onReset={onReset} />}
+      {phase === 'result' && <Result files={files} result={result} graph={graph} graphError={graphError} onReset={onReset} />}
       <footer>Aesthetic names and descriptions are from the <a href="https://aesthetics.fandom.com">Aesthetics Wiki</a> (CC BY-SA). Matching uses CLIP image embeddings. Your photos are not stored.</footer>
     </>
   )

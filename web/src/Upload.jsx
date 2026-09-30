@@ -15,7 +15,7 @@ export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
       <p className="sub">Drop a few photos from your life. We'll place them on the map of every internet aesthetic.</p>
 
       <div className={'drop' + (over ? ' over' : '')} role="button" tabIndex={0}
-        onClick={() => input.current.click()} onKeyDown={(e) => e.key === 'Enter' && input.current.click()}
+        onClick={() => input.current.click()} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), input.current.click())}
         onDragOver={(e) => { e.preventDefault(); setOver(true) }} onDragLeave={() => setOver(false)}
         onDrop={(e) => { e.preventDefault(); setOver(false); onAdd(e.dataTransfer.files) }}>
         <span>Drop up to {MAX_FILES} photos here, or click to choose</span>
