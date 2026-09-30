@@ -1,12 +1,14 @@
 import { useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MAX_FILES } from './lib/files.js'
+import { useObjectUrls } from './lib/objectUrls.js'
 
 const fan = (i, n) => ({ rotate: (i - (n - 1) / 2) * 6, y: Math.abs(i - (n - 1) / 2) * 6 })
 
 export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
   const [over, setOver] = useState(false)
   const input = useRef(null)
+  const urls = useObjectUrls(files)
   return (
     <main className="hero">
       <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>What's your aesthetic?</motion.h1>
@@ -31,7 +33,7 @@ export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
               animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
               exit={{ opacity: 0, scale: .6 }}
               transition={{ type: 'spring', stiffness: 260, damping: 22, delay: i * .05 }}>
-              <img src={URL.createObjectURL(f)} alt="" />
+              <img src={urls.get(f)} alt="" />
               <button className="remove" aria-label={`remove ${f.name}`} onClick={() => onRemove(i)}>×</button>
             </motion.li>
           ))}
