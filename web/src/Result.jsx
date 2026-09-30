@@ -6,6 +6,7 @@ import { shareOrDownload } from './lib/shareCard.js'
 import { useObjectUrls } from './lib/objectUrls.js'
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const fade = (duration, delay = 0) => (reduced() ? { duration: 0, delay: 0 } : { duration, delay })
 
 export default function Result({ files, result, onReset }) {
   const [graph, setGraph] = useState(null)
@@ -30,7 +31,7 @@ export default function Result({ files, result, onReset }) {
       overview: () => api.current.overview(0),
       photo: (i) => {
         api.current.flyTo(`photo-${i}`, .3, quick ? 0 : TIMING.fly)
-        timers.push(setTimeout(() => { shown.current.push(i); api.current.showPhoto(i) }, quick ? 0 : TIMING.fly))
+        timers.push(setTimeout(() => { shown.current.push(i); api.current.showPhoto(i); api.current.light(result.images[i].matches[0].slug) }, quick ? 0 : TIMING.fly))
       },
       frame: () => api.current.overview(quick ? 0 : TIMING.frame),
       headline: () => setStage('done'),
@@ -44,14 +45,14 @@ export default function Result({ files, result, onReset }) {
       <header className="result-head">
         <div>
           <AnimatePresence>{stage === 'done' && (
-            <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5 }}>
+            <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={fade(.5)}>
               You are {names.map((n, i) => <span key={n}>{i > 0 && ' · '}<em>{n}</em></span>)}
             </motion.h1>
           )}</AnimatePresence>
           {stage === 'done' && (
-            <motion.div className="chips" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .3 }}>
+            <motion.div className="chips" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade(.4, .3)}>
               {result.images.map((img, k) => files[k] && (
-                <button key={k} className="chip" onClick={() => api.current?.flyTo(`photo-${k}`, .3)}>
+                <button key={k} className="chip" onClick={() => api.current?.flyTo(`photo-${k}`, .3, reduced() ? 0 : undefined)}>
                   {urls.get(files[k]) && <img src={urls.get(files[k])} alt="" />} {result.names[img.matches[0].slug]}
                 </button>
               ))}
@@ -59,7 +60,7 @@ export default function Result({ files, result, onReset }) {
           )}
         </div>
         {stage === 'done' && (
-          <motion.div className="actions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .6 }}>
+          <motion.div className="actions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade(.4, .6)}>
             <button className="btn" onClick={() => shareOrDownload(result, graph, files)}>Download card</button>
             <button className="btn ghost" onClick={onReset}>Start over</button>
           </motion.div>

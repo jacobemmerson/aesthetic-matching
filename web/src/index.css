@@ -62,3 +62,5 @@ footer a { color: var(--muted); }
 .chip { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-size: .9rem; }
 .chip img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
 .actions { display: flex; gap: 8px; }
+.result-head { min-height: 170px; }
+@media (max-width: 799px) { .result-head { min-height: 230px; } }

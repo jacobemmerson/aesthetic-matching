@@ -19,10 +19,11 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
   const [query, setQuery] = useState('')
   const nodes = Object.fromEntries(graph.nodes.map((n) => [n.slug, n]))
   const hot = new Set(result.images.map((i) => i.matches[0].slug))
+  const litAtStart = photosVisible ? hot : new Set()  // reveal lights matches via api.light
 
   useEffect(() => {
     const g = new Graphology()
-    graph.nodes.forEach((n) => g.addNode(n.slug, { x: n.x * SCALE, y: n.y * SCALE, label: n.name, size: hot.has(n.slug) ? 8 : 3, color: hot.has(n.slug) ? COLORS.hot : COLORS.node, zIndex: hot.has(n.slug) ? 2 : 0 }))
+    graph.nodes.forEach((n) => g.addNode(n.slug, { x: n.x * SCALE, y: n.y * SCALE, label: n.name, size: litAtStart.has(n.slug) ? 8 : 3, color: litAtStart.has(n.slug) ? COLORS.hot : COLORS.node, zIndex: litAtStart.has(n.slug) ? 2 : 0 }))
     graph.edges.forEach((e) => { if (g.hasNode(e.source) && g.hasNode(e.target) && !g.hasEdge(e.source, e.target)) g.addEdge(e.source, e.target, { color: COLORS.edge, size: .6 }) })
     result.images.forEach((img, k) => {
       const image = urls.get(files[k])
@@ -53,6 +54,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       flyTo: (id, ratio = .25, duration = 600) => g.hasNode(id) && sigma.getCamera().animate({ ...sigma.getNodeDisplayData(id), ratio }, { duration }),
       overview: (duration = 800) => sigma.getCamera().animate({ x: .5, y: .5, ratio: 1 }, { duration }),
       showPhoto: (k) => { if (g.hasNode(`photo-${k}`)) g.setNodeAttribute(`photo-${k}`, 'hidden', false); sigma.refresh() },
+      light: (slug) => { if (g.hasNode(slug)) { g.mergeNodeAttributes(slug, { color: COLORS.hot, size: 8, zIndex: 2 }); sigma.refresh() } },
       select: (slug) => setSelected(nodes[slug] || null),
     }
     onReady?.(api)

@@ -57,10 +57,10 @@ const shots = {
   },
   async reveal() {
     const p = await page(1280); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click()
-    await p.waitForSelector('.graph canvas'); await p.waitForTimeout(1200); await shoot(p, 'reveal-mid')
-    await p.waitForTimeout(5000); await shoot(p, 'reveal-done')
+    await p.waitForSelector('.graph canvas'); await p.waitForTimeout(1600); await shoot(p, 'reveal-mid')
+    await p.waitForTimeout(4500); await shoot(p, 'reveal-done')
     const r = await page(1280, { reducedMotion: 'reduce' }); await uploadAll(r); await r.getByRole('button', { name: 'Find my aesthetic' }).click(); await r.waitForSelector('.graph canvas'); await r.waitForTimeout(800); await shoot(r, 'reveal-reduced')
-    const one = await page(1280); await uploadAll(one, 1); await one.getByRole('button', { name: 'Find my aesthetic' }).click(); await one.waitForSelector('.graph canvas'); await one.waitForTimeout(4000); await shoot(one, 'result-one-photo')
+    const one = await page(1280); await uploadAll(one, 1); await one.getByRole('button', { name: 'Find my aesthetic' }).click(); await one.waitForSelector('.graph canvas'); await one.waitForTimeout(6000); await shoot(one, 'result-one-photo')
     await p.context().close(); await r.context().close(); await one.context().close()
   },
 }
