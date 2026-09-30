@@ -1,5 +1,5 @@
 import { expect, it, vi } from 'vitest'
-import { layoutCard, shareOrDownload } from './shareCard.js'
+import { fitFontSize, layoutCard, shareOrDownload } from './shareCard.js'
 
 const graph = { nodes: [{ slug: 'a', x: -1, y: -1 }, { slug: 'b', x: 1, y: 1 }, { slug: 'c', x: 0, y: 0 }] }
 const result = { overall: [{ slug: 'a' }, { slug: 'b' }, { slug: 'c' }], names: { a: 'Alpha', b: 'Beta', c: 'Gamma' }, images: [{ x: 0, y: 0, matches: [{ slug: 'c' }] }] }
@@ -25,4 +25,16 @@ it('falls back to a download when navigator.share is unavailable', async () => {
   await shareOrDownload(result, graph, [], { render: async () => canvas, navigator: nav, document: doc, URL: url })
   expect(click).toHaveBeenCalled()
   expect(a._dl).toBe('my-aesthetic.png')
+})
+
+it('shrinks a font until the text fits, but not below the floor', () => {
+  const measure = (t, size) => t.length * size
+  expect(fitFontSize(measure, 'abcd', 96, 200)).toBe(50)
+  expect(fitFontSize(measure, 'abcd', 96, 1)).toBe(40)
+  expect(fitFontSize(measure, 'ab', 96, 1000)).toBe(96)
+})
+
+it('rejects when the canvas cannot produce a blob', async () => {
+  const canvas = { toBlob: (cb) => cb(null) }
+  await expect(shareOrDownload(result, graph, [], { render: async () => canvas, navigator: {}, document: {}, URL: {} })).rejects.toThrow('could not render card')
 })

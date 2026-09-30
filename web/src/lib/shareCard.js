@@ -20,10 +20,19 @@ export function layoutCard(result, graph, W = 1080, H = 1350) {
   }
 }
 
+export function fitFontSize(measure, text, size, maxWidth, floor = 40) {
+  while (size > floor && measure(text, size) > maxWidth) size -= 2
+  return size
+}
+
 export function drawCard(ctx, L, images, hostname, W = 1080, H = 1350) {
   ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H)
   ctx.fillStyle = MUTED; ctx.font = `500 ${L.title.size}px Inter, system-ui, sans-serif`; ctx.fillText('my aesthetic is', L.title.x, L.title.y)
-  for (const n of L.names) { ctx.fillStyle = TEXT; ctx.font = `700 ${n.size}px Fraunces, Georgia, serif`; ctx.fillText(n.text, n.x, n.y) }
+  const fontFor = (size) => `700 ${size}px Fraunces, Georgia, serif`
+  for (const n of L.names) {
+    const size = fitFontSize((t, sz) => { ctx.font = fontFor(sz); return ctx.measureText(t).width }, n.text, n.size, W - 2 * n.x)
+    ctx.fillStyle = TEXT; ctx.font = fontFor(size); ctx.fillText(n.text, n.x, n.y)
+  }
   for (const d of L.dots) { ctx.fillStyle = d.hot ? ACCENT : DOT; ctx.beginPath(); ctx.arc(d.x, d.y, d.hot ? 7 : 3, 0, Math.PI * 2); ctx.fill() }
   for (const p of L.photos) {
     const img = images[p.index]; if (!img) continue
@@ -35,7 +44,13 @@ export function drawCard(ctx, L, images, hostname, W = 1080, H = 1350) {
   ctx.fillStyle = MUTED; ctx.font = `500 ${L.footer.size}px Inter, system-ui, sans-serif`; ctx.fillText(hostname, L.footer.x, L.footer.y)
 }
 
-const loadImage = (file) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(file) })
+// Resolves null on failure so one bad photo doesn't abort the card.
+const loadImage = (file) => new Promise((res) => {
+  const i = new Image(), src = URL.createObjectURL(file)
+  i.onload = () => { URL.revokeObjectURL(src); res(i) }
+  i.onerror = () => { URL.revokeObjectURL(src); res(null) }
+  i.src = src
+})
 
 async function renderCanvas(result, graph, files) {
   await document.fonts?.load('700 96px Fraunces').catch(() => {})
@@ -49,6 +64,7 @@ export async function shareOrDownload(result, graph, files, deps = {}) {
   const { render = renderCanvas, navigator: nav = navigator, document: doc = document, URL: url = URL } = deps
   const canvas = await render(result, graph, files)
   const blob = await new Promise((r) => canvas.toBlob(r, 'image/png'))
+  if (!blob) throw new Error('could not render card')
   const file = new File([blob], 'my-aesthetic.png', { type: 'image/png' })
   if (nav.share && nav.canShare?.({ files: [file] })) { try { await nav.share({ files: [file], title: 'My aesthetic' }); return } catch { /* user cancelled: fall through to download */ } }
   const a = doc.createElement('a'); a.href = url.createObjectURL(blob); a.download = 'my-aesthetic.png'; a.click()
