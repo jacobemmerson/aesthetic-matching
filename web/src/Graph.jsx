@@ -50,9 +50,9 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     sigma.on('clickNode', ({ node }) => nodes[node] && setSelected(nodes[node]))
     sigma.on('clickStage', () => setSelected(null))
     const api = {
-      flyTo: (id, ratio = .25, duration = 600) => sigma.getCamera().animate({ ...sigma.getNodeDisplayData(id), ratio }, { duration }),
+      flyTo: (id, ratio = .25, duration = 600) => g.hasNode(id) && sigma.getCamera().animate({ ...sigma.getNodeDisplayData(id), ratio }, { duration }),
       overview: (duration = 800) => sigma.getCamera().animate({ x: .5, y: .5, ratio: 1 }, { duration }),
-      showPhoto: (k) => { g.setNodeAttribute(`photo-${k}`, 'hidden', false); sigma.refresh() },
+      showPhoto: (k) => { if (g.hasNode(`photo-${k}`)) g.setNodeAttribute(`photo-${k}`, 'hidden', false); sigma.refresh() },
       select: (slug) => setSelected(nodes[slug] || null),
     }
     onReady?.(api)

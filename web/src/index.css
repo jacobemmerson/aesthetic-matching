@@ -57,3 +57,8 @@ footer a { color: var(--muted); }
   .graph-shell { height: 70vh; }
   .drawer { top: auto; left: 0; right: 0; width: 100%; max-height: 55%; border-left: 0; border-top: 1px solid var(--border); border-radius: 16px 16px 0 0; }
 }
+.result-head h1 em { font-style: normal; color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-size: .9rem; }
+.chip img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.actions { display: flex; gap: 8px; }
