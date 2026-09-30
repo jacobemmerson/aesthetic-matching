@@ -56,7 +56,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       select: (slug) => setSelected(nodes[slug] || null),
     }
     onReady?.(api)
-    return () => sigma.kill()
+    return () => { hoverRef.current = null; setHover(null); sigma.kill() }
   }, [graph, result, files, urls])
 
   const hits = searchNodes(graph.nodes, query)
