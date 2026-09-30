@@ -1,0 +1,15 @@
+# child -> parent : child is dropped, its edges re-point to parent, its name becomes a parent alias
+2000s-preppy -> preppy
+2020s-preppy -> preppy
+2010s-soft-kawaii -> kawaii
+trad-goth -> goth
+grandparentcore -> eclectic-grandpa
+surf-crush -> coconut-girl
+trillwave -> swag
+memphis-lite -> memphis-design
+classic-lolita -> lolita
+sweet-lolita -> lolita
+gothic-lolita -> lolita
+dark-nautical -> nautical
+neo-y2k -> y2k
+diy-punk -> punk

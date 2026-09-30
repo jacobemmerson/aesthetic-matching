@@ -1,0 +1,10 @@
+data/img/
+data/raw/
+.venv/
+__pycache__/
+.env
+web/node_modules/
+web/dist/
+data/image_vecs.npz
+.superpowers/
+web/scripts/shots/

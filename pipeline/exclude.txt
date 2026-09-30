@@ -1,0 +1,32 @@
+# art history: painting movements and antiquity. Design/architecture movements people
+# actually decorate with (Art Deco, Bauhaus, Minimalism, Rococo, Pop Art...) are kept.
+aestheticism
+chinoiserie
+classicism
+constructivism
+cubism
+dadaism
+de-stijl
+expressionism
+futurism
+hellenic
+impressionism
+italian-renaissance
+japonisme
+mission-school
+modernism
+neo-pop
+neoclassicism
+neue-slowenische-kunst
+orientalism
+post-impressionism
+pre-raphaelite
+realism
+romanesque
+romanticism
+social-realism
+socialist-realism
+spanish-golden-age
+suprematism
+symbolism
+gothic-architecture
