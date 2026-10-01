@@ -70,18 +70,36 @@ def load_model():
     return model, preprocess, open_clip.get_tokenizer(MODEL), torch
 
 
-def embed_images(paths: list[Path], batch: int = 32) -> np.ndarray:
+def random_crop(img, rng):
+    fw, fh = rng.uniform(0.5, 0.9, 2)
+    w, h = int(img.width * fw), int(img.height * fh)
+    x, y = rng.integers(0, img.width - w + 1), rng.integers(0, img.height - h + 1)
+    return img.crop((x, y, x + w, y + h))
+
+
+def embed_images(paths: list[Path], batch: int = 32, crops: int = 0, masker=None, seed: int = 0) -> tuple[np.ndarray, np.ndarray]:
+    """Unit vectors for each path, then `crops` random crops per path. `source` maps every row
+    back to its path index so crops stay with their image in CV folds and attribute labels."""
     from PIL import Image
 
     model, preprocess, _, torch = load_model()
+    rng = np.random.default_rng(seed)
+
+    def load(p):
+        img = Image.open(p).convert("RGB")
+        return masker.mask(img) if masker else img
+
+    jobs = [(i, lambda p=p: load(p)) for i, p in enumerate(paths)]
+    jobs += [(i, lambda p=p: random_crop(load(p), rng)) for _ in range(crops) for i, p in enumerate(paths)]
     out = []
     with torch.no_grad():
-        for i in range(0, len(paths), batch):
-            imgs = torch.stack([preprocess(Image.open(p).convert("RGB")) for p in paths[i : i + batch]])
+        for i in range(0, len(jobs), batch):
+            imgs = torch.stack([preprocess(job()) for _, job in jobs[i : i + batch]])
             out.append(model.encode_image(imgs).float().numpy())
-            print(f"  embedded {min(i + batch, len(paths))}/{len(paths)} images", end="\r")
+            print(f"  embedded {min(i + batch, len(jobs))}/{len(jobs)} images", end="\r")
     print()
-    return normalize(np.concatenate(out)) if out else np.zeros((0, 512), np.float32)
+    source = np.array([i for i, _ in jobs], dtype=np.int64)
+    return (normalize(np.concatenate(out)) if out else np.zeros((0, 512), np.float32)), source
 
 
 def embed_texts(texts: list[str]) -> np.ndarray:
@@ -90,7 +108,7 @@ def embed_texts(texts: list[str]) -> np.ndarray:
         return normalize(model.encode_text(tokenizer(texts)).float().numpy())
 
 
-def main(limit: int | None):
+def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str = ""):
     nodes = json.loads((DATA / "nodes.json").read_text())[:limit]
     slugs = [n["slug"] for n in nodes]
     parent_of = load_merge()  # image folders of merged-away children count toward the parent
@@ -102,7 +120,13 @@ def main(limit: int | None):
                 paths.append(p)
                 owner.append(slug)
     print(f"{len(nodes)} nodes, {len(paths)} images")
-    image_vecs = embed_images(paths)
+    masker = None
+    if mask_faces:
+        from pipeline.faces import Detector
+
+        masker = Detector()
+    image_vecs, source = embed_images(paths, crops=crops, masker=masker)
+    owner = [owner[i] for i in source]
     cents, counts = centroids(image_vecs, owner, slugs)
     text_vecs = embed_texts([f"{n['name']} aesthetic. {n['description'][:300]}" for n in nodes])
     # CLIP vectors share a large common component, so generic "photo of a person" aesthetics
@@ -112,14 +136,21 @@ def main(limit: int | None):
     # text-only nodes land in their own UMAP cluster; fine while they're rare after the fetch.
     node_vecs = np.where((counts >= MIN_IMAGES)[:, None], normalize(cents - mean_img), normalize(text_vecs - mean_txt))
     xy = layout(node_vecs)
-    np.savez(DATA / "index.npz", slugs=np.array(slugs), centroids=cents, text_vecs=text_vecs, counts=counts, xy=xy,
-             mean_img=mean_img, mean_txt=mean_txt, prior=prior(nodes))
-    np.savez(DATA / "image_vecs.npz", vecs=image_vecs, owner=np.array(owner))  # for pipeline/evaluate.py
-    (DATA / "graph.json").write_text(json.dumps(build_graph(nodes, xy, counts), ensure_ascii=False))
-    print(f"wrote data/index.npz and data/graph.json; {int((counts < MIN_IMAGES).sum())} nodes fell back to text vectors")
+    suffix = f"_{tag}" if tag else ""
+    np.savez(DATA / f"index{suffix}.npz", slugs=np.array(slugs), centroids=cents, text_vecs=text_vecs, counts=counts, xy=xy,
+             mean_img=mean_img, mean_txt=mean_txt, prior=prior(nodes), masked_faces=np.array(mask_faces))
+    np.savez(DATA / f"image_vecs{suffix}.npz", vecs=image_vecs, owner=np.array(owner),  # for evaluate/fairness/probe
+             path=np.array([str(paths[i]) for i in source]), source=source)
+    if not tag:
+        (DATA / "graph.json").write_text(json.dumps(build_graph(nodes, xy, counts), ensure_ascii=False))
+    print(f"wrote data/index{suffix}.npz; {int((counts < MIN_IMAGES).sum())} nodes fell back to text vectors")
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, help="only the first N nodes (smoke run)")
-    main(ap.parse_args().limit)
+    ap.add_argument("--crops", type=int, default=0, help="extra random crops embedded per image")
+    ap.add_argument("--mask-faces", action="store_true", help="blank detected faces before embedding")
+    ap.add_argument("--tag", default="", help="write index_TAG.npz / image_vecs_TAG.npz and skip graph.json")
+    a = ap.parse_args()
+    main(a.limit, a.crops, a.mask_faces, a.tag)
