@@ -13,6 +13,11 @@ TEMPLATES = ["a photo of a {} person", "a portrait of a {} person", "a picture o
 GENDER_TEMPLATES = ["a photo of a {}", "a portrait of a {}", "a picture of a {}", "a {}"]
 
 
+def fit_rows(n: int) -> np.ndarray:
+    """Probe rows LEACE is fitted on (even rows); fairness.py measures on the rest."""
+    return np.arange(n) % 2 == 0
+
+
 def onehot(labels: np.ndarray, k: int) -> np.ndarray:
     return np.eye(k, dtype=np.float32)[np.asarray(labels)]
 
@@ -70,8 +75,9 @@ def main():
         if not probe.exists():
             continue
         z = np.load(probe)
-        Z = np.concatenate([onehot(z["race"], len(RACE_GROUPS)), onehot(z["gender"], len(GENDER_GROUPS))], 1)
-        P, b = leace_fit(z["vecs"], Z)
+        rows = fit_rows(len(z["race"]))
+        Z = np.concatenate([onehot(z["race"][rows], len(RACE_GROUPS)), onehot(z["gender"][rows], len(GENDER_GROUPS))], 1)
+        P, b = leace_fit(z["vecs"][rows], Z)
         np.savez(DATA / f"debias_leace{suffix}.npz", P=P, b=b)
         print(f"wrote data/debias_leace{suffix}.npz: rank {np.linalg.matrix_rank(P, tol=1e-4)} of {P.shape[0]}")
 

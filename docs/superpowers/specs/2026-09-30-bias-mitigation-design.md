@@ -26,17 +26,20 @@ later.
 
 Measured on the FairFace probe and the existing leave-one-out evaluation:
 
-| metric | current | target |
-|---|---|---|
-| top-1 label parity, max TVD across race groups | 0.787 | <= 0.39 (halved) |
-| top-1 label parity, max TVD across gender groups | 0.448 | <= 0.22 (halved) |
-| race recoverable from embedding (5-fold logreg acc.) | 0.638 | within 5 points of chance (1/7) |
-| gender recoverable from embedding | 0.926 | within 5 points of chance (1/2) |
-| leave-one-out top-5 (plain) | 0.72 | >= 0.69 (floor: at most 3 points lost) |
+| metric | baseline | target | served (centroid + LEACE) |
+|---|---|---|---|
+| top-1 label parity, max TVD across race groups | 0.825 | <= 0.41 (halved) | 0.320 (shuffled-label floor 0.275) |
+| top-1 label parity, max TVD across gender groups | 0.479 | <= 0.24 (halved) | 0.187 (floor 0.117) |
+| race recoverable from embedding (5-fold logreg acc.) | 0.619 | within 5 points of chance (0.143) | 0.285, target missed |
+| gender recoverable from embedding | 0.936 | within 5 points of chance (0.5) | 0.625, target missed |
+| leave-one-out top-5 (plain) | 0.724 | >= 0.69 (floor: at most 3 points lost) | 0.714 |
 
-"Current" column measured 2026-10-01 on the 2,800-face FairFace probe (`data/fairness_report.md`).
-Recoverability is measured on the same probe the LEACE map is fitted on, so for LEACE rows it
-reads below chance; a held-out probe split would give the honest number and is a follow-up.
+Measured 2026-10-01 on the 2,800-face FairFace probe (`data/fairness_report.md`). LEACE is fitted
+on the even probe rows and every number is measured on the odd rows, so they are out of sample.
+Face masking reaches better parity (race TVD 0.165) and recoverability (0.172 / 0.510) but costs
+top-5 0.669, below the floor, so it was not served; it is the next lever if the recoverability
+target matters more than 3 to 5 points of accuracy. The linear head matched centroid accuracy
+(top-5 0.725 vs 0.724, worse with crops) and did not change the decision.
 
 ## Attributes
 

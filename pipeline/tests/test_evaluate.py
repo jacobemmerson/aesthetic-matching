@@ -41,3 +41,16 @@ def test_loo_sims_wraps_loo_scores():
     vecs = normalize(np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32))
     sims = loo_sims(vecs, np.array([0, 0, 1]), 2, np.zeros(3, np.float32))
     assert sims.shape == (3, 2) and sims[2, 1] == -1
+
+
+def test_loo_scores_projects_after_normalizing_like_the_server():
+    from pipeline.evaluate import loo_scores
+
+    vecs = normalize(np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 0]], dtype=np.float32))
+    owner = np.array([0, 0, 1, 1])
+    sums = np.zeros((2, 3), np.float32); np.add.at(sums, owner, vecs)
+    P, b = np.diag([0.5, 1, 1]).astype(np.float32), np.array([0, 0.1, 0], np.float32)
+    project = lambda v: v @ P.T + b
+    sims = loo_scores(vecs, owner, sums, np.array([2, 2]), np.zeros(3, np.float32), project)
+    loo0 = normalize(project(normalize(sums[0] - vecs[0])))
+    assert abs(sims[0, 0] - normalize(project(vecs[0])) @ loo0) < 1e-6

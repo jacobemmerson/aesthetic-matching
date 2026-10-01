@@ -16,25 +16,27 @@ from pipeline.build_index import normalize
 DATA = Path(__file__).resolve().parent.parent / "data"
 
 
-def loo_scores(vecs, owner_idx, sums, counts, mean_img):
+def loo_scores(vecs, owner_idx, sums, counts, mean_img, project=lambda v: v):
     """Cosine of each image against every centroid; its own centroid is rebuilt without it.
-    `sums` is the per-node sum of unit image vectors (not the normalized centroid)."""
-    cents = normalize(sums)
-    q = normalize(vecs - mean_img)
+    `sums` is the per-node sum of unit image vectors (not the normalized centroid). `project` is
+    the index's debias map, applied after unit-normalizing exactly as server/match.Index does;
+    `mean_img` is already projected."""
+    cents = project(normalize(sums))
+    q = normalize(project(vecs) - mean_img)
     sims = q @ normalize(cents - mean_img).T
     for i, o in enumerate(owner_idx):
         if counts[o] > 1:
-            loo = normalize(normalize(sums[o] - vecs[i]) - mean_img)  # unit centroid first, then center, like the others
+            loo = normalize(project(normalize(sums[o] - vecs[i])) - mean_img)  # unit centroid, project, center: like the others
             sims[i, o] = q[i] @ loo
         else:
             sims[i, o] = -1  # singleton: no fair score
     return sims
 
 
-def loo_sims(vecs, owner_idx, n_nodes, mean_img):
+def loo_sims(vecs, owner_idx, n_nodes, mean_img, project=lambda v: v):
     sums = np.zeros((n_nodes, vecs.shape[1]), np.float32)
     np.add.at(sums, owner_idx, vecs)
-    return loo_scores(vecs, owner_idx, sums, np.bincount(owner_idx, minlength=n_nodes), mean_img)
+    return loo_scores(vecs, owner_idx, sums, np.bincount(owner_idx, minlength=n_nodes), mean_img, project)
 
 
 def accuracy(scores: np.ndarray, owner_idx: np.ndarray, weights: np.ndarray, k: int) -> float:

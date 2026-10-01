@@ -30,3 +30,10 @@ def test_prompt_directions_are_orthonormal():
     dirs = prompt_directions(fake_embed)
     assert dirs.shape == (6 + 1, 16)  # 7 race groups -> 6, 2 genders -> 1
     np.testing.assert_allclose(dirs @ dirs.T, np.eye(7), atol=1e-5)
+
+
+def test_fit_rows_is_half_and_disjoint_from_eval():
+    from pipeline.debias import fit_rows
+
+    f = fit_rows(10)
+    assert f.sum() == 5 and (~f).sum() == 5 and f.dtype == bool

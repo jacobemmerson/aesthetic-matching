@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from pipeline.build_index import MIN_IMAGES, normalize
-from pipeline.debias import RACE_GROUPS, apply
+from pipeline.debias import RACE_GROUPS, apply, fit_rows
 from pipeline.evaluate import accuracy, loo_sims
 from pipeline.logreg import cv_accuracy
 from pipeline.train_head import best_l2, cv_scores, group_weights, train, zscore
@@ -41,6 +41,22 @@ def parity(top1: np.ndarray, groups: np.ndarray, n_nodes: int) -> dict:
         idx = np.argsort(-ratio * (dist > 0))[:OVER_TOP]
         over[g] = [(int(i), float(ratio[i])) for i in idx if dist[i] > 0]
     return {"max_tvd": float(max_tvd), "per_group": per, "over": over}
+
+
+def parity_floor(top1: np.ndarray, groups: np.ndarray, n_nodes: int, seed: int = 0) -> float:
+    """Max TVD when group labels are shuffled: what this probe size reads as parity by chance."""
+    return parity(top1, np.random.default_rng(seed).permutation(groups), n_nodes)["max_tvd"]
+
+
+def centroid_probe_scores(pvecs_raw: np.ndarray, sums: np.ndarray, z, P: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """Probe scores by the served scorer: unit centroid, then projection, then centering (see
+    server/match.Index). `z` holds the index arrays; `sums` are unprojected unit-vector sums."""
+    project = lambda v: apply(v, P, b)
+    mean_img, mean_txt = project(z["mean_img"][None])[0], project(z["mean_txt"][None])[0]
+    q = project(pvecs_raw)
+    img = normalize(q - mean_img) @ normalize(project(normalize(sums)) - mean_img).T
+    txt = normalize(q - mean_txt) @ normalize(project(z["text_vecs"]) - mean_txt).T
+    return np.where(z["counts"] > 0, IMAGE_WEIGHT * img + TEXT_WEIGHT * txt, txt) + PRIOR_WEIGHT * z["prior"]
 
 
 def recoverability(vecs: np.ndarray, labels: np.ndarray) -> dict:
@@ -90,18 +106,18 @@ def run_config(scorer: str, treatment: str, masked: bool, attrs) -> dict | None:
     slugs = list(z["slugs"])
     owner_idx = np.array([slugs.index(o) for o in img["owner"]])
     P, b = treatment_map(treatment, masked, img["vecs"].shape[1])
-    vecs, pvecs, text = apply(img["vecs"], P, b), apply(probe["vecs"], P, b), apply(z["text_vecs"], P, b)
+    held = ~fit_rows(len(probe["race"]))  # LEACE was fitted on the other rows; measure out of sample
+    praw, prace, pgender = probe["vecs"][held], probe["race"][held], probe["gender"][held]
+    vecs, pvecs, text = apply(img["vecs"], P, b), apply(praw, P, b), apply(z["text_vecs"], P, b)
     counts, prior = z["counts"], z["prior"]
     mean_img, mean_txt = apply(z["mean_img"][None], P, b)[0], apply(z["mean_txt"][None], P, b)[0]
     txt_ref = normalize(vecs - mean_txt) @ normalize(text - mean_txt).T
     txt_probe = normalize(pvecs - mean_txt) @ normalize(text - mean_txt).T
-    sums = np.zeros_like(z["centroids"]); np.add.at(sums, owner_idx, vecs)
+    sums = np.zeros_like(z["centroids"]); np.add.at(sums, owner_idx, img["vecs"])  # unprojected, like build_index
     if scorer == "centroid":
-        cents = normalize(sums)
-        ref = loo_sims(vecs, owner_idx, len(slugs), mean_img)
-        pro = normalize(pvecs - mean_img) @ normalize(cents - mean_img).T
+        ref = loo_sims(img["vecs"], owner_idx, len(slugs), mean_img, lambda v: apply(v, P, b))
         ref_s = np.where(counts > 0, IMAGE_WEIGHT * ref + TEXT_WEIGHT * txt_ref, txt_ref) + PRIOR_WEIGHT * prior
-        pro_s = np.where(counts > 0, IMAGE_WEIGHT * pro + TEXT_WEIGHT * txt_probe, txt_probe) + PRIOR_WEIGHT * prior
+        pro_s = centroid_probe_scores(praw, sums, z, P, b)
     else:
         w = group_weights(attrs["race"][img["source"]], owner_idx) if scorer == "head_rw" else None
         l2 = best_l2(vecs, owner_idx, len(slugs), img["source"], w)
@@ -113,10 +129,11 @@ def run_config(scorer: str, treatment: str, masked: bool, attrs) -> dict | None:
         pro_s = np.where(fallback, zscore(txt_probe), pro_s) + PRIOR_WEIGHT * prior
     plain_w = 1 / counts[owner_idx]
     top1 = pro_s.argmax(1)
-    race_par, gender_par = parity(top1, probe["race"], len(slugs)), parity(top1, probe["gender"], len(slugs))
-    loading = node_loading(sums, group_directions(pvecs, probe["race"]))
+    race_par, gender_par = parity(top1, prace, len(slugs)), parity(top1, pgender, len(slugs))
+    loading = node_loading(apply(normalize(sums), P, b), group_directions(pvecs, prace))
     return {"race_tvd": race_par["max_tvd"], "gender_tvd": gender_par["max_tvd"],
-            "race_acc": recoverability(pvecs, probe["race"])["acc"], "gender_acc": recoverability(pvecs, probe["gender"])["acc"],
+            "race_floor": parity_floor(top1, prace, len(slugs)), "gender_floor": parity_floor(top1, pgender, len(slugs)),
+            "race_acc": recoverability(pvecs, prace)["acc"], "gender_acc": recoverability(pvecs, pgender)["acc"],
             "top1": accuracy(ref_s, owner_idx, plain_w, 1), "top5": accuracy(ref_s, owner_idx, plain_w, 5),
             "over": {RACE_GROUPS[g]: [(slugs[i], r) for i, r in v] for g, v in race_par["over"].items()},
             "loading": [(slugs[i], float(np.abs(loading[i]).max())) for i in np.argsort(-np.abs(loading).max(1))[:OVER_TOP]]}
@@ -132,6 +149,7 @@ def main(only: list[str] | None, tag: str = ""):
         lines.insert(0, f"WARNING: attribute labels are noisy (race {attrs['race_cv_acc']:.2f}, gender {attrs['gender_cv_acc']:.2f}); "
                         "reweighted rows are unreliable\n")
     details = []
+    floor_line = None
     for name, scorer, treatment, masked in CONFIGS:
         if only and name not in only:
             continue
@@ -142,10 +160,12 @@ def main(only: list[str] | None, tag: str = ""):
         lines.append(f"| {name} | {r['race_tvd']:.3f} | {r['gender_tvd']:.3f} | {r['race_acc']:.3f} | {r['gender_acc']:.3f} | "
                      f"{r['top1']:.3f} | {r['top5']:.3f} |")
         print(lines[-1])
+        floor_line = floor_line or (f"Parity is measured on the probe half LEACE was not fitted on. Shuffled-label floor for this "
+                                    f"probe size: race TVD {r['race_floor']:.3f}, gender TVD {r['gender_floor']:.3f}.\n")
         details.append(f"\n### {name}\nmost over-represented nodes per race group (ratio to pooled):\n" +
                        "\n".join(f"- {g}: " + ", ".join(f"{s} x{ratio:.1f}" for s, ratio in v[:5]) for g, v in r["over"].items()) +
                        "\n\nnodes loading most on race directions: " + ", ".join(f"{s} {v:.2f}" for s, v in r["loading"]))
-    (DATA / f"fairness_report{f'_{tag}' if tag else ''}.md").write_text("\n".join(lines + details) + "\n")
+    (DATA / f"fairness_report{f'_{tag}' if tag else ''}.md").write_text("\n".join(([floor_line] if floor_line else []) + lines + details) + "\n")
     print(f"wrote data/fairness_report{f'_{tag}' if tag else ''}.md")
 
 
