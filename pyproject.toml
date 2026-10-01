@@ -8,6 +8,7 @@ dependencies = [
     "mwparserfromhell>=0.7.2",
     "numpy>=2.5.3",
     "open-clip-torch>=3.3.0",
+    "opencv-python-headless>=5.0.0.93",
     "pillow>=12.3.0",
     "python-multipart>=0.0.32",
     "torch>=2.14.0",
@@ -18,6 +19,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "datasets>=5.0.1",
     "pytest>=9.1.1",
 ]
 
