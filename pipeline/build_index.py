@@ -108,7 +108,7 @@ def embed_texts(texts: list[str]) -> np.ndarray:
         return normalize(model.encode_text(tokenizer(texts)).float().numpy())
 
 
-def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str = ""):
+def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str = "", debias: str = "none", head: str = "none"):
     nodes = json.loads((DATA / "nodes.json").read_text())[:limit]
     slugs = [n["slug"] for n in nodes]
     parent_of = load_merge()  # image folders of merged-away children count toward the parent
@@ -136,9 +136,21 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
     # text-only nodes land in their own UMAP cluster; fine while they're rare after the fetch.
     node_vecs = np.where((counts >= MIN_IMAGES)[:, None], normalize(cents - mean_img), normalize(text_vecs - mean_txt))
     xy = layout(node_vecs)
+    extra = {}
+    if debias != "none":
+        t = np.load(DATA / f"debias_{debias}{'_masked' if mask_faces and debias == 'leace' else ''}.npz")
+        extra = {"proj_P": t["P"], "proj_b": t["b"]}
+    if head != "none":
+        from pipeline.debias import apply
+        from pipeline.train_head import group_weights, train
+
+        owner_idx = np.array([slugs.index(o) for o in owner])
+        treated = apply(image_vecs, extra["proj_P"], extra["proj_b"]) if extra else image_vecs  # scores() projects the query first
+        weights = group_weights(np.load(DATA / "reference_attrs.npz")["race"][source], owner_idx) if head == "reweighted" else None
+        extra["head_w"], extra["head_b"] = train(treated, owner_idx, len(slugs), weights)
     suffix = f"_{tag}" if tag else ""
     np.savez(DATA / f"index{suffix}.npz", slugs=np.array(slugs), centroids=cents, text_vecs=text_vecs, counts=counts, xy=xy,
-             mean_img=mean_img, mean_txt=mean_txt, prior=prior(nodes), masked_faces=np.array(mask_faces))
+             mean_img=mean_img, mean_txt=mean_txt, prior=prior(nodes), masked_faces=np.array(mask_faces), **extra)
     np.savez(DATA / f"image_vecs{suffix}.npz", vecs=image_vecs, owner=np.array(owner),  # for evaluate/fairness/probe
              path=np.array([str(paths[i]) for i in source]), source=source)
     if not tag:
@@ -152,5 +164,7 @@ if __name__ == "__main__":
     ap.add_argument("--crops", type=int, default=0, help="extra random crops embedded per image")
     ap.add_argument("--mask-faces", action="store_true", help="blank detected faces before embedding")
     ap.add_argument("--tag", default="", help="write index_TAG.npz / image_vecs_TAG.npz and skip graph.json")
+    ap.add_argument("--debias", choices=["none", "prompt", "leace"], default="none", help="store this debias map in the index")
+    ap.add_argument("--head", choices=["none", "plain", "reweighted"], default="none", help="train a linear head into the index")
     a = ap.parse_args()
-    main(a.limit, a.crops, a.mask_faces, a.tag)
+    main(a.limit, a.crops, a.mask_faces, a.tag, a.debias, a.head)

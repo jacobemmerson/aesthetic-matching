@@ -31,9 +31,10 @@ def download_model(path: Path = MODEL_PATH):
 
 
 class Detector:
-    def __init__(self, model_path: Path = MODEL_PATH):
+    def __init__(self, model_path: Path | None = None):
         import cv2
 
+        model_path = model_path or MODEL_PATH
         if not model_path.exists():
             raise FileNotFoundError(f"{model_path} missing; run `uv run python -m pipeline.faces` to download it")
         self._cv2 = cv2

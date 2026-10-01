@@ -26,7 +26,7 @@ def load():
     graph = json.loads((DATA / "graph.json").read_text())
     state["graph"] = graph
     state["nodes"] = {n["slug"]: n for n in graph["nodes"]}
-    state.setdefault("encoder", Encoder())
+    state.setdefault("encoder", Encoder(masked=state["index"].masked_faces))
 
 
 def client_ip(request: Request) -> str:

@@ -97,3 +97,43 @@ def test_forged_forwarded_header_does_not_dodge_rate_limit(client):
                            files=[("images", ("a.jpg", jpeg("red"), "image/jpeg"))]).status_code == 200
     assert client.post("/api/analyze", headers={"x-forwarded-for": "10.0.0.99"},
                        files=[("images", ("a.jpg", jpeg("red"), "image/jpeg"))]).status_code == 429
+
+
+def test_index_without_new_keys_scores_as_before(tmp_path):
+    np.savez(tmp_path / "i.npz", slugs=np.array(INDEX.slugs), centroids=INDEX.centroids, text_vecs=INDEX.text_vecs,
+             counts=INDEX.counts, xy=INDEX.xy, mean_img=np.zeros(3, np.float32), mean_txt=np.zeros(3, np.float32),
+             prior=np.zeros(3, np.float32))
+    loaded = Index.load(tmp_path / "i.npz")
+    q = normalize(np.array([1, 0.2, 0], np.float32))
+    np.testing.assert_allclose(loaded.scores(q), INDEX.scores(q), atol=1e-6)
+    assert loaded.masked_faces is False and loaded.head_w is None
+
+
+def test_projection_applies_to_query_and_centroids():
+    P = np.diag([0, 1, 1]).astype(np.float32)  # erase axis 0
+    idx = Index(slugs=INDEX.slugs, centroids=INDEX.centroids, text_vecs=INDEX.text_vecs, counts=INDEX.counts, xy=INDEX.xy,
+                proj_P=P, proj_b=np.zeros(3, np.float32))
+    s = idx.scores(np.array([1, 0, 0], np.float32))
+    assert abs(s[0] - s[1]) < 1e-6  # red and green are indistinguishable once axis 0 is gone
+
+
+def test_head_scores_use_logits_and_text_fallback_on_same_scale():
+    from pipeline.train_head import zscore
+
+    head_w = np.array([[5, 0, 0], [0, 5, 0], [0, 0, 0]], np.float32)
+    idx = Index(slugs=INDEX.slugs, centroids=INDEX.centroids, text_vecs=INDEX.text_vecs, counts=INDEX.counts, xy=INDEX.xy,
+                head_w=head_w, head_b=np.zeros(3, np.float32))
+    q = np.array([1, 0, 0], np.float32)
+    s = idx.scores(q)
+    assert s.argmax() == 0
+    expected_text = zscore((normalize(idx.text_vecs) @ q)[None])[0, 2]
+    assert abs(s[2] - expected_text) < 1e-5
+
+
+def test_masked_encoder_requires_detector(monkeypatch, tmp_path):
+    import pipeline.faces as faces
+    from server.match import Encoder
+
+    monkeypatch.setattr(faces, "MODEL_PATH", tmp_path / "missing.onnx")
+    with pytest.raises(FileNotFoundError):
+        Encoder(masked=True)
