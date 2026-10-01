@@ -31,6 +31,12 @@ def loo_scores(vecs, owner_idx, sums, counts, mean_img):
     return sims
 
 
+def loo_sims(vecs, owner_idx, n_nodes, mean_img):
+    sums = np.zeros((n_nodes, vecs.shape[1]), np.float32)
+    np.add.at(sums, owner_idx, vecs)
+    return loo_scores(vecs, owner_idx, sums, np.bincount(owner_idx, minlength=n_nodes), mean_img)
+
+
 def accuracy(scores: np.ndarray, owner_idx: np.ndarray, weights: np.ndarray, k: int) -> float:
     topk = np.argsort(-scores, axis=1)[:, :k]
     hit = (topk == owner_idx[:, None]).any(1)
@@ -42,9 +48,7 @@ def main(alphas, image_weights):
     slugs = list(z["slugs"])
     owner_idx = np.array([slugs.index(o) for o in img["owner"]])
     vecs, counts = img["vecs"], z["counts"]
-    sums = np.zeros_like(z["centroids"])
-    np.add.at(sums, owner_idx, vecs)
-    img_sims = loo_scores(vecs, owner_idx, sums, counts, z["mean_img"])
+    img_sims = loo_sims(vecs, owner_idx, len(slugs), z["mean_img"])
     txt_sims = normalize(vecs - z["mean_txt"]) @ normalize(z["text_vecs"] - z["mean_txt"]).T
     prior = z["prior"]
     plain_w = 1 / counts[owner_idx]  # each aesthetic contributes 1 in total

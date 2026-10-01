@@ -33,3 +33,11 @@ def test_loo_keeps_coherent_class_on_top_with_centering():
     mean = normalize(sums).mean(0)
     sims = loo_scores(vecs, owner, sums, np.array([6, 6]), mean)
     assert (sims.argmax(1) == owner).all()
+
+
+def test_loo_sims_wraps_loo_scores():
+    from pipeline.evaluate import loo_sims
+
+    vecs = normalize(np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32))
+    sims = loo_sims(vecs, np.array([0, 0, 1]), 2, np.zeros(3, np.float32))
+    assert sims.shape == (3, 2) and sims[2, 1] == -1
