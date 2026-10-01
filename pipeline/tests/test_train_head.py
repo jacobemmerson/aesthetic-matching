@@ -27,3 +27,14 @@ def test_train_and_zscore():
     z = zscore(X @ W.T + b)
     np.testing.assert_allclose(z.mean(1), 0, atol=1e-6)
     assert z[0, 0] > 0 > z[0, 1]
+
+
+def test_best_l2_picks_the_value_that_fits_small_margin_data():
+    from pipeline.train_head import best_l2
+
+    rng = np.random.default_rng(0)
+    owner = np.repeat([0, 1], 30)
+    X = rng.normal(size=(60, 8)).astype(np.float32)
+    X[:, 0] += 0.3 * owner
+    X /= np.linalg.norm(X, axis=1, keepdims=True)  # unit vectors like CLIP, tiny class margin
+    assert best_l2(X, owner, 2, np.arange(60), grid=(1.0, 1e-6)) == 1e-6

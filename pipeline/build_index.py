@@ -142,12 +142,14 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
         extra = {"proj_P": t["P"], "proj_b": t["b"]}
     if head != "none":
         from pipeline.debias import apply
-        from pipeline.train_head import group_weights, train
+        from pipeline.train_head import best_l2, group_weights, train
 
         owner_idx = np.array([slugs.index(o) for o in owner])
         treated = apply(image_vecs, extra["proj_P"], extra["proj_b"]) if extra else image_vecs  # scores() projects the query first
         weights = group_weights(np.load(DATA / "reference_attrs.npz")["race"][source], owner_idx) if head == "reweighted" else None
-        extra["head_w"], extra["head_b"] = train(treated, owner_idx, len(slugs), weights)
+        l2 = best_l2(treated, owner_idx, len(slugs), source, weights)
+        extra["head_w"], extra["head_b"] = train(treated, owner_idx, len(slugs), weights, l2)
+        print(f"head: l2={l2}")
     suffix = f"_{tag}" if tag else ""
     np.savez(DATA / f"index{suffix}.npz", slugs=np.array(slugs), centroids=cents, text_vecs=text_vecs, counts=counts, xy=xy,
              mean_img=mean_img, mean_txt=mean_txt, prior=prior(nodes), masked_faces=np.array(mask_faces), **extra)

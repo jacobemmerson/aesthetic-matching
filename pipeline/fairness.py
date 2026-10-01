@@ -9,7 +9,7 @@ from pipeline.build_index import MIN_IMAGES, normalize
 from pipeline.debias import RACE_GROUPS, apply
 from pipeline.evaluate import accuracy, loo_sims
 from pipeline.logreg import cv_accuracy
-from pipeline.train_head import cv_scores, group_weights, train, zscore
+from pipeline.train_head import best_l2, cv_scores, group_weights, train, zscore
 from server.match import IMAGE_WEIGHT, PRIOR_WEIGHT, TEXT_WEIGHT
 
 DATA = Path(__file__).resolve().parent.parent / "data"
@@ -61,9 +61,12 @@ def node_loading(centroids: np.ndarray, directions: np.ndarray) -> np.ndarray:
     return normalize(centroids) @ normalize(directions).T
 
 
+TAG = ""  # set by --tag: evaluate index_TAG / image_vecs_TAG (e.g. a --crops build) in the unmasked rows
+
+
 def load_bundle(masked: bool):
-    suffix = "_masked" if masked else ""
-    paths = [DATA / f"{n}{suffix}.npz" for n in ("index", "image_vecs", "probe")]
+    suffix = "_masked" if masked else (f"_{TAG}" if TAG else "")
+    paths = [DATA / f"index{suffix}.npz", DATA / f"image_vecs{suffix}.npz", DATA / f"probe{'_masked' if masked else ''}.npz"]
     if not all(p.exists() for p in paths):
         return None
     return tuple(np.load(p) for p in paths)
@@ -101,8 +104,9 @@ def run_config(scorer: str, treatment: str, masked: bool, attrs) -> dict | None:
         pro_s = np.where(counts > 0, IMAGE_WEIGHT * pro + TEXT_WEIGHT * txt_probe, txt_probe) + PRIOR_WEIGHT * prior
     else:
         w = group_weights(attrs["race"][img["source"]], owner_idx) if scorer == "head_rw" else None
-        ref_s = zscore(cv_scores(vecs, owner_idx, len(slugs), img["source"], w))
-        W, hb = train(vecs, owner_idx, len(slugs), w)
+        l2 = best_l2(vecs, owner_idx, len(slugs), img["source"], w)
+        ref_s = zscore(cv_scores(vecs, owner_idx, len(slugs), img["source"], w, l2))
+        W, hb = train(vecs, owner_idx, len(slugs), w, l2)
         pro_s = zscore(pvecs @ W.T + hb)
         fallback = counts < MIN_IMAGES
         ref_s = np.where(fallback, zscore(txt_ref), ref_s) + PRIOR_WEIGHT * prior
@@ -118,7 +122,9 @@ def run_config(scorer: str, treatment: str, masked: bool, attrs) -> dict | None:
             "loading": [(slugs[i], float(np.abs(loading[i]).max())) for i in np.argsort(-np.abs(loading).max(1))[:OVER_TOP]]}
 
 
-def main(only: list[str] | None):
+def main(only: list[str] | None, tag: str = ""):
+    global TAG
+    TAG = tag
     attrs = np.load(DATA / "reference_attrs.npz")
     lines = ["| config | race TVD | gender TVD | race acc (chance 0.143) | gender acc (chance 0.5) | LOO top1 | LOO top5 |",
              "|---|---|---|---|---|---|---|"]
@@ -139,11 +145,13 @@ def main(only: list[str] | None):
         details.append(f"\n### {name}\nmost over-represented nodes per race group (ratio to pooled):\n" +
                        "\n".join(f"- {g}: " + ", ".join(f"{s} x{ratio:.1f}" for s, ratio in v[:5]) for g, v in r["over"].items()) +
                        "\n\nnodes loading most on race directions: " + ", ".join(f"{s} {v:.2f}" for s, v in r["loading"]))
-    (DATA / "fairness_report.md").write_text("\n".join(lines + details) + "\n")
-    print("wrote data/fairness_report.md")
+    (DATA / f"fairness_report{f'_{tag}' if tag else ''}.md").write_text("\n".join(lines + details) + "\n")
+    print(f"wrote data/fairness_report{f'_{tag}' if tag else ''}.md")
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", nargs="*", help="config names to run")
-    main(ap.parse_args().only)
+    ap.add_argument("--tag", default="", help="use index_TAG.npz / image_vecs_TAG.npz for the unmasked rows")
+    a = ap.parse_args()
+    main(a.only, a.tag)
