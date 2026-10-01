@@ -1,52 +1,52 @@
-Parity is measured on the probe half LEACE was not fitted on. Shuffled-label floor for this probe size: race TVD 0.230, gender TVD 0.106.
+Parity is measured on the probe half LEACE was not fitted on. Shuffled-label floor for this probe size: race TVD 0.275, gender TVD 0.104.
 
 | config | race TVD | gender TVD | race acc (chance 0.143) | gender acc (chance 0.5) | LOO top1 | LOO top5 |
 |---|---|---|---|---|---|---|
-| centroid | 0.685 | 0.383 | 0.619 | 0.936 | 0.537 | 0.825 |
-| centroid+prompt | 0.610 | 0.201 | 0.609 | 0.926 | 0.539 | 0.825 |
-| centroid+leace | 0.270 | 0.131 | 0.285 | 0.625 | 0.527 | 0.826 |
+| centroid | 0.765 | 0.513 | 0.619 | 0.936 | 0.522 | 0.816 |
+| centroid+prompt | 0.720 | 0.244 | 0.609 | 0.926 | 0.519 | 0.813 |
+| centroid+leace | 0.315 | 0.136 | 0.285 | 0.625 | 0.513 | 0.806 |
 | centroid+mask | 0.165 | 0.057 | 0.172 | 0.510 | 0.411 | 0.669 |
 | centroid+mask+leace | 0.185 | 0.087 | 0.146 | 0.502 | 0.368 | 0.613 |
-| head | 0.595 | 0.494 | 0.619 | 0.936 | 0.543 | 0.827 |
-| head_rw | 0.615 | 0.500 | 0.619 | 0.936 | 0.539 | 0.828 |
-| head_rw+leace | 0.290 | 0.171 | 0.285 | 0.625 | 0.528 | 0.822 |
+| head | 0.655 | 0.519 | 0.619 | 0.936 | 0.504 | 0.814 |
+| head_rw | 0.665 | 0.537 | 0.619 | 0.936 | 0.504 | 0.813 |
+| head_rw+leace | 0.295 | 0.163 | 0.285 | 0.625 | 0.498 | 0.800 |
 | head_rw+mask+leace | 0.180 | 0.031 | 0.146 | 0.502 | 0.394 | 0.675 |
 
 ### centroid
 most over-represented nodes per race group (ratio to pooled):
-- East Asian: gorpcore x7.0, tiki x7.0, wonyoungism x5.0, kawaii x4.2, gyaru x4.1
-- Indian: baddie x3.5, ancient-egypt x2.7, emo-rap x1.7, liminal-space x1.5, hip-hop x1.3
-- Black: yuppie x4.1, hip-hop x3.3, mcbling x2.9, coconut-girl x2.4, southern-gothic x2.3
-- White: country x7.0, decora x7.0, funk x7.0, pirate x7.0, old-hollywood x7.0
-- Middle Eastern: diner x7.0, clean-girl x3.5, femboy x3.5, beatnik x2.4, greaser x2.2
-- Latino Hispanic: glam-rock x7.0, hippie x7.0, flapper x7.0, coastal-grandmother x3.5, nu-metal x2.5
-- Southeast Asian: biker x7.0, cybercore x7.0, rave x7.0, clean-girl x3.5, y2k-futurism x3.5
+- East Asian: heisei-retro x7.0, soft-boy x7.0, babycore x5.4, wonyoungism x5.1, gyaru x4.8
+- Indian: tropical x7.0, live-laugh-love x3.5, ancient-egypt x3.2, surfer x1.8, gangsta-rap x1.5
+- Black: afrofuturism x5.3, gangsta-rap x3.5, live-laugh-love x3.5, yuppie x3.5, vampire x2.3
+- White: coastal-grandmother x7.0, decora x7.0, cybergoth x7.0, country x7.0, old-hollywood x7.0
+- Middle Eastern: diner x7.0, rave x7.0, dandy x4.7, emo-rap x4.2, neko x3.5
+- Latino Hispanic: glam-rock x7.0, bling-era x4.7, surfer x2.6, dandy x2.3, film-noir x2.0
+- Southeast Asian: cybercore x7.0, y2k-futurism x7.0, neko x3.5, e-boy x3.5, kawaii x3.5
 
-nodes loading most on race directions: wonyoungism 0.31, gyaru 0.24, femboy 0.24, jirai-kei 0.23, kawaii 0.22, lolita 0.20, decora 0.19, emo 0.19, otaku 0.18, scene 0.17
+nodes loading most on race directions: wonyoungism 0.31, gyaru 0.24, babycore 0.24, femboy 0.24, heisei-retro 0.24, jirai-kei 0.23, kawaii 0.22, neko 0.21, gangsta-rap 0.21, lolita 0.20
 
 ### centroid+prompt
 most over-represented nodes per race group (ratio to pooled):
-- East Asian: skater x4.7, kawaii x4.4, kidcore x4.2, wonyoungism x3.7, gyaru x3.5
-- Indian: techwear x7.0, ancient-egypt x2.2, southern-gothic x1.8, emo-rap x1.2, webcore x1.1
-- Black: yuppie x3.6, western x3.5, hip-hop x3.1, mcbling x2.5, dandy x2.3
-- White: country x7.0, decora x7.0, old-hollywood x7.0, pirate x7.0, scene x7.0
-- Middle Eastern: vanilla-girl x7.0, rave x7.0, that-girl x7.0, dandy x4.7, diner x3.5
-- Latino Hispanic: coastal-grandmother x7.0, glam-rock x7.0, gorpcore x3.5, vampire x2.3, skater x2.3
-- Southeast Asian: biker x7.0, cybercore x7.0, e-boy x3.5, clean-girl x2.3, wonyoungism x2.2
+- East Asian: e-boy x7.0, nautical x7.0, gyaru x5.1, kawaii x4.7, wonyoungism x4.1
+- Indian: ancient-egypt x2.3, gangsta-rap x1.6, coconut-girl x1.3, bling-era x1.3, webcore x1.1
+- Black: live-laugh-love x7.0, afrofuturism x4.7, bling-era x3.8, y2k-futurism x3.5, gangsta-rap x2.9
+- White: decora x7.0, country x7.0, old-hollywood x7.0, pirate x7.0, western x7.0
+- Middle Eastern: rave x7.0, that-girl x7.0, dandy x4.7, greaser x3.9, neko x3.5
+- Latino Hispanic: glam-rock x7.0, vampire x3.5, femboy x2.3, femme-fatale x2.3, brazilian-bombshell x1.8
+- Southeast Asian: biker x7.0, cybercore x7.0, y2k-futurism x3.5, dandy x2.3, wonyoungism x2.3
 
-nodes loading most on race directions: wonyoungism 0.26, femboy 0.22, jirai-kei 0.20, kawaii 0.20, gyaru 0.20, emo 0.19, decora 0.18, scene 0.18, otaku 0.18, hipster 0.17
+nodes loading most on race directions: wonyoungism 0.26, femboy 0.22, jirai-kei 0.20, babycore 0.20, kawaii 0.20, gyaru 0.20, emo 0.19, heisei-retro 0.19, afrofuturism 0.19, neko 0.18
 
 ### centroid+leace
 most over-represented nodes per race group (ratio to pooled):
-- East Asian: diner x7.0, kawaii x7.0, kidcore x4.2, e-boy x3.5, 50s-suburbia x2.5
-- Indian: fairycore x7.0, nerd x3.5, rave x3.5, emo-rap x2.4, surfer x2.3
-- Black: hip-hop x7.0, new-romantic x7.0, tropical x7.0, nerd x3.5, yuppie x2.0
-- White: country x7.0, decora x7.0, femboy x7.0, power-dressing x7.0, old-hollywood x7.0
-- Middle Eastern: techwear x7.0, that-girl x7.0, wonyoungism x7.0, new-wave x7.0, dandy x4.7
-- Latino Hispanic: gorpcore x7.0, e-boy x3.5, glam-rock x3.5, nautical x3.5, pirate x2.3
-- Southeast Asian: biker x7.0, cybercore x1.8, emo x1.6, nu-metal x1.6, swag x1.4
+- East Asian: diner x7.0, kawaii x7.0, visual-kei x7.0, wonyoungism x7.0, babycore x4.0
+- Indian: country x7.0, cybercore x3.5, nerd x3.5, live-laugh-love x2.3, scene x1.8
+- Black: tropical x7.0, nerd x3.5, yuppie x2.4, brutalism x2.3, live-laugh-love x2.3
+- White: afrofuturism x7.0, decora x7.0, femboy x7.0, old-hollywood x7.0, scene x5.2
+- Middle Eastern: pirate x7.0, rave x7.0, nautical x7.0, neko x7.0, new-wave x7.0
+- Latino Hispanic: burlesque x7.0, e-boy x7.0, surfer x7.0, femme-fatale x3.5, high-school-dream x3.5
+- Southeast Asian: biker x7.0, cholo x2.0, emo-rap x1.8, emo x1.7, kidcore x1.6
 
-nodes loading most on race directions: scene 0.24, metalhead 0.24, 2014-girly 0.23, nu-metal 0.21, funk 0.21, hypebeast 0.21, hip-hop 0.21, cybercore 0.21, punk 0.21, emo-rap 0.20
+nodes loading most on race directions: scene 0.24, metalhead 0.24, 2014-girly 0.23, scenecore 0.22, nu-metal 0.21, funk 0.21, hypebeast 0.21, hip-hop 0.21, cybercore 0.21, punk 0.21
 
 ### centroid+mask
 most over-represented nodes per race group (ratio to pooled):
@@ -74,39 +74,39 @@ nodes loading most on race directions: devilcore 0.40, decora 0.37, mlg 0.34, cl
 
 ### head
 most over-represented nodes per race group (ratio to pooled):
-- East Asian: indie x7.0, femboy x7.0, scene x7.0, soft-girl x7.0, fairycore x4.7
-- Indian: regency x7.0, swag x7.0, glam-rock x5.2, ethereal x3.5, goth x3.5
-- Black: southern-gothic x7.0, tropical x7.0, coastal-grandmother x4.5, mcbling x4.1, goth x3.5
-- White: e-boy x7.0, britpop x4.3, vampire x3.5, pirate x3.5, femme-fatale x2.6
-- Middle Eastern: pirate x3.5, strega x2.7, hipster x2.7, greaser x2.4, beatnik x2.1
-- Latino Hispanic: new-romantic x7.0, old-hollywood x4.7, americana x3.5, ethereal x3.5, twee x2.8
-- Southeast Asian: biker x7.0, indie-kid x7.0, otaku x7.0, hypebeast x3.9, kidcore x3.5
+- East Asian: kawaii x7.0, soft-boy x5.6, gyaru x4.8, fairycore x4.7, heisei-retro x4.4
+- Indian: film-noir x7.0, maid x7.0, goth x3.5, cybercore x3.5, bimbocore x3.3
+- Black: afrofuturism x5.4, gangsta-rap x4.7, mcbling x4.7, coastal-grandmother x4.0, goth x3.5
+- White: fairy-grunge x7.0, e-boy x7.0, 50s-suburbia x5.2, britpop x4.8, coconut-girl x3.5
+- Middle Eastern: strega x4.9, hipster x4.0, riot-grrrl x3.5, cybercore x3.5, suburban-gothic x3.5
+- Latino Hispanic: ethereal x7.0, new-romantic x7.0, twee x7.0, old-hollywood x3.5, fairycore x2.3
+- Southeast Asian: indie-kid x7.0, hypebeast x3.5, wonyoungism x2.9, gyaru x2.2, heisei-retro x2.2
 
-nodes loading most on race directions: wonyoungism 0.31, gyaru 0.24, femboy 0.24, jirai-kei 0.23, kawaii 0.22, lolita 0.20, decora 0.19, emo 0.19, otaku 0.18, scene 0.17
+nodes loading most on race directions: wonyoungism 0.31, gyaru 0.24, babycore 0.24, femboy 0.24, heisei-retro 0.24, jirai-kei 0.23, kawaii 0.22, neko 0.21, gangsta-rap 0.21, lolita 0.20
 
 ### head_rw
 most over-represented nodes per race group (ratio to pooled):
-- East Asian: indie x7.0, femboy x7.0, scene x7.0, fairycore x5.2, webcore x4.4
-- Indian: swag x7.0, rave x7.0, regency x7.0, glam-rock x5.2, maid x3.5
-- Black: tropical x7.0, coastal-grandmother x4.1, mcbling x3.8, goth x3.5, hip-hop x2.7
-- White: e-boy x7.0, metalhead x7.0, britpop x4.3, pirate x3.5, femme-fatale x3.5
-- Middle Eastern: cybercore x3.5, pirate x3.5, hipster x3.5, strega x3.3, femme-fatale x2.3
-- Latino Hispanic: gorpcore x7.0, new-romantic x7.0, old-hollywood x3.5, americana x3.2, hair-metal x3.0
-- Southeast Asian: biker x7.0, edwardian x7.0, kidcore x7.0, indie-kid x7.0, otaku x7.0
+- East Asian: femboy x7.0, grunge x7.0, soft-boy x5.6, heisei-retro x5.5, gyaru x5.1
+- Indian: maid x7.0, goth x7.0, cybercore x3.5, bimbocore x2.9, hippie x2.6
+- Black: coastal-grandmother x6.0, afrofuturism x4.8, mcbling x4.7, gangsta-rap x4.5, baddie x2.8
+- White: e-boy x7.0, fairy-grunge x7.0, 50s-suburbia x5.2, britpop x4.8, new-wave x3.5
+- Middle Eastern: cybercore x3.5, riot-grrrl x3.5, strega x3.5, greaser x3.0, hair-metal x2.8
+- Latino Hispanic: americana x7.0, new-romantic x7.0, twee x7.0, bling-era x2.5, indie-kid x2.3
+- Southeast Asian: rave x7.0, indie-kid x4.7, wonyoungism x3.7, hypebeast x3.5, kawaii x3.5
 
-nodes loading most on race directions: wonyoungism 0.31, gyaru 0.24, femboy 0.24, jirai-kei 0.23, kawaii 0.22, lolita 0.20, decora 0.19, emo 0.19, otaku 0.18, scene 0.17
+nodes loading most on race directions: wonyoungism 0.31, gyaru 0.24, babycore 0.24, femboy 0.24, heisei-retro 0.24, jirai-kei 0.23, kawaii 0.22, neko 0.21, gangsta-rap 0.21, lolita 0.20
 
 ### head_rw+leace
 most over-represented nodes per race group (ratio to pooled):
-- East Asian: ethereal x7.0, femboy x7.0, gyaru x3.9, goth x3.5, webcore x2.8
-- Indian: hippie x7.0, glam-rock x5.2, cybercore x3.5, clean-girl x2.3, fairycore x2.3
-- Black: webcore x2.8, hip-hop x2.7, mcbling x2.0, dandy x1.6, coastal-grandmother x1.4
-- White: pirate x4.7, britpop x2.9, coconut-girl x2.8, swag x2.6, goth x2.3
-- Middle Eastern: americana x7.0, new-romantic x7.0, cybercore x3.5, hipster x3.5, pirate x2.3
-- Latino Hispanic: gorpcore x7.0, femme-fatale x3.1, hip-hop x2.7, clean-girl x2.3, emo-rap x2.3
-- Southeast Asian: kidcore x7.0, maid x7.0, indie-kid x7.0, wonyoungism x2.7, rave x2.3
+- East Asian: ethereal x7.0, gyaru x3.9, goth x3.5, fairycore x3.5, kawaii x3.5
+- Indian: mod x7.0, regency x7.0, hippie x7.0, clean-girl x3.5, fairycore x3.5
+- Black: femboy x7.0, indie-sleaze x7.0, new-money x4.7, cybercore x2.3, webcore x2.3
+- White: e-boy x7.0, cybergoth x7.0, mob-wife x7.0, pirate x7.0, coconut-girl x3.5
+- Middle Eastern: americana x7.0, baddie x3.5, new-romantic x3.5, beatnik x2.8, cybercore x2.3
+- Latino Hispanic: soft-boy x7.0, glam-rock x3.5, kidcore x3.5, new-romantic x3.5, high-school-dream x3.5
+- Southeast Asian: biker x7.0, indie-kid x7.0, rave x7.0, wonyoungism x3.5, kidcore x3.5
 
-nodes loading most on race directions: scene 0.24, metalhead 0.24, 2014-girly 0.23, nu-metal 0.21, funk 0.21, hypebeast 0.21, hip-hop 0.21, cybercore 0.21, punk 0.21, emo-rap 0.20
+nodes loading most on race directions: scene 0.24, metalhead 0.24, 2014-girly 0.23, scenecore 0.22, nu-metal 0.21, funk 0.21, hypebeast 0.21, hip-hop 0.21, cybercore 0.21, punk 0.21
 
 ### head_rw+mask+leace
 most over-represented nodes per race group (ratio to pooled):
