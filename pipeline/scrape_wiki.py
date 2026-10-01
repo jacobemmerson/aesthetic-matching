@@ -65,6 +65,10 @@ def lead_text(code) -> str:
     return re.sub(r"\n{2,}", "\n", lead.strip_code(normalize=True, collapse=True)).strip()
 
 
+CATEGORY_RE = re.compile(r"\[\[Category:([^\]|]+)")
+HOUSEKEEPING_CATEGORIES = {"Aesthetics Wiki Articles", "Good Articles", "Featured Articles"}
+
+
 def parse_page(title: str, wikitext: str) -> dict:
     """Parse any page; `has_infobox` tells the caller whether it is a proper aesthetic page."""
     box, rest = split_infobox(wikitext.replace("{{PAGENAME}}", title))
@@ -77,6 +81,7 @@ def parse_page(title: str, wikitext: str) -> dict:
         "has_infobox": bool(box),
         "description": lead_text(code),
         "word_count": len(code.strip_code().split()),
+        "categories": [c for c in CATEGORY_RE.findall(wikitext) if c not in HOUSEKEEPING_CATEGORIES],
     }
     page.update({f: mw.parse(box.get(f, "")).strip_code(normalize=True).strip() for f in TEXT_FIELDS})
     page.update({k: link_targets(box.get(v, "")) for k, v in LINK_FIELDS.items()})

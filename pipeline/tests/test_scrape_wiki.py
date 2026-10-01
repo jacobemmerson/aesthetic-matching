@@ -16,6 +16,8 @@ def test_parse_cottagecore():
     assert page["description"].startswith("Cottagecore is an aesthetic inspired")
     assert "{{" not in page["description"] and "[[" not in page["description"]
     assert page["word_count"] > 3000
+    assert "Fashion" in page["categories"] and "Internet Aesthetics" in page["categories"]
+    assert len(page["categories"]) == 15 and "Aesthetics Wiki Articles" not in page["categories"]
 
 
 def test_page_without_infobox_is_flagged():
