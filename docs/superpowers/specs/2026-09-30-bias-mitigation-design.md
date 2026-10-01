@@ -28,14 +28,15 @@ Measured on the FairFace probe and the existing leave-one-out evaluation:
 
 | metric | current | target |
 |---|---|---|
-| top-1 label parity, max TVD across race groups | unknown (baseline run first) | halved from baseline |
-| top-1 label parity, max TVD across gender groups | unknown | halved from baseline |
-| race recoverable from embedding (5-fold logreg acc.) | unknown | within 5 points of chance (1/7) |
-| gender recoverable from embedding | unknown | within 5 points of chance (1/2) |
+| top-1 label parity, max TVD across race groups | 0.787 | <= 0.39 (halved) |
+| top-1 label parity, max TVD across gender groups | 0.448 | <= 0.22 (halved) |
+| race recoverable from embedding (5-fold logreg acc.) | 0.638 | within 5 points of chance (1/7) |
+| gender recoverable from embedding | 0.926 | within 5 points of chance (1/2) |
 | leave-one-out top-5 (plain) | 0.72 | >= 0.69 (floor: at most 3 points lost) |
 
-The baseline run sets the "current" column; targets are revised there if the baseline says they
-are unreachable or trivial.
+"Current" column measured 2026-10-01 on the 2,800-face FairFace probe (`data/fairness_report.md`).
+Recoverability is measured on the same probe the LEACE map is fitted on, so for LEACE rows it
+reads below chance; a held-out probe split would give the honest number and is a follow-up.
 
 ## Attributes
 
