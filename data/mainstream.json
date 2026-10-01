@@ -1,0 +1,3272 @@
+{
+ "2014-girly": {
+  "autocomplete": null,
+  "mainstream": 4.0,
+  "notes": [
+   "Resurfaced TikTok 2022-2024 peak summer",
+   "TikTok revival 2022-2024, peaked summer 2024"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "50s-suburbia": {
+  "autocomplete": 4,
+  "mainstream": 3.5,
+  "notes": [
+   "Idealized post-war suburban life",
+   "Retro aesthetic, known in fashion circles"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "8-bit": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Retro gaming graphic style, not wearable",
+   "Gaming/pixel graphics style, not fashion"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "90s-cool": {
+  "autocomplete": 3,
+  "mainstream": 2.5,
+  "notes": [
+   "Matrix-style cybercore visual aesthetic",
+   "CGI-heavy film aesthetic, not wearable"
+  ],
+  "photographable_votes": 1,
+  "spread": 1
+ },
+ "abstract-tech": {
+  "autocomplete": 5,
+  "mainstream": 1.5,
+  "notes": [
+   "UI design concept, not wearable",
+   "UI/design concept, not wearable or spatial"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "acid-house": {
+  "autocomplete": 7,
+  "mainstream": 2.0,
+  "notes": [
+   "Music genre, rave culture identity",
+   "Music genre; rave culture foundation"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "afrofuturism": {
+  "autocomplete": 4,
+  "mainstream": 3.0,
+  "notes": [
+   "Techno-cultural fashion blend",
+   "Fashion styling with futuristic Black diaspora themes"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "after-hours": {
+  "autocomplete": 9,
+  "mainstream": 3.0,
+  "notes": [
+   "Empty, eerie locations and abandoned spaces",
+   "Empty places aesthetic, internet-known"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "alternative": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Umbrella term for subculture styles",
+   "Umbrella term for counterculture movements"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "americana": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Umbrella for American nostalgia",
+   "Broad nostalgia umbrella, strong search interest"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "analog-horror": {
+  "autocomplete": 9,
+  "mainstream": 2.0,
+  "notes": [
+   "VHS horror genre, media format focus",
+   "Found footage film subgenre, not wearable"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "ancient-egypt": {
+  "autocomplete": 9,
+  "mainstream": 3.5,
+  "notes": [
+   "Historical period fashion, Cleopatra vibes",
+   "Historical, Victorian revival influence"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "angelcore": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Ethereal divine angel fashion",
+   "Ethereal celestial outfits, trending on Pinterest"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "animecore": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Anime merchandise and fashion display",
+   "Romanticized 1990s-2000s anime fandom"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "art-academia": {
+  "autocomplete": 3,
+  "mainstream": 3.0,
+  "notes": [
+   "Visual arts school aesthetic",
+   "Artistic vintage-inspired academic aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "art-deco": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Iconic 1920s-1930s design movement",
+   "Iconic historical design movement"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "atompunk": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Science fiction subgenre visual style",
+   "Sci-fi genre, 1950s-60s retro-futurism vision"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "avant-apocalypse": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Layered neutral fashion trend",
+   "TikTok microtrend from 2021, niche following"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "avant-basic": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Pastel maximalism microtrend",
+   "2020s fashion/interior microtrend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "b-movie-horror": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Retro horror film aesthetic outfits",
+   "1930s-80s horror cinema aesthetic"
+  ],
+  "photographable_votes": 1,
+  "spread": 1
+ },
+ "babycore": {
+  "autocomplete": 8,
+  "mainstream": 3.0,
+  "notes": [
+   "Pastel infant nostalgia fashion",
+   "Pastel cute aesthetic, wearable and styleable"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "babygirl": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Soft pastels, childlike aesthetic",
+   "Soft pastel childhood nostalgia"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "baddie": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Instagram glam conventionally attractive",
+   "Conventionally attractive Instagram beauty aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "balletcore": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Hyper-feminine ballet-inspired TikTok trend",
+   "2020s feminine fashion trend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "barbiecore": {
+  "autocomplete": 9,
+  "mainstream": 4.5,
+  "notes": [
+   "Driven by 2023 Barbie movie trend",
+   "Pink hyperfeminine, peaked with 2023 film"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "baroque": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Ornate dramatic historical style",
+   "Ornate maximalism, known in design circles"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "bauhaus": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Design movement, rooms embody it",
+   "Design movement, interiors/minimalism"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "beatnik": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "1950s jazz and literature subculture",
+   "Iconic 1950s beret, turtleneck"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "berlin-techno-fashion": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Niche Berlin club scene",
+   "Niche club subculture, recognizable silhouette"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "biker": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Leather, tough motorcycle persona",
+   "Tough dangerous motorcycle lifestyle"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "bimbocore": {
+  "autocomplete": 6,
+  "mainstream": 3.5,
+  "notes": [
+   "Reclaimed hyper-feminine TikTok",
+   "Hyper-feminine pink 2020s TikTok aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "biopunk": {
+  "autocomplete": 7,
+  "mainstream": 2.0,
+  "notes": [
+   "Science fiction genre fiction subgenre",
+   "Genre fiction, not visual aesthetic"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "bling-era": {
+  "autocomplete": 5,
+  "mainstream": 3.0,
+  "notes": [
+   "Late 1990s hip-hop era maximalist",
+   "Late 90s-mid 2000s hip-hop luxury fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "blokette": {
+  "autocomplete": 10,
+  "mainstream": 2.0,
+  "notes": [
+   "TikTok masculine-feminine blend",
+   "TikTok microtrend, fashion mashup blend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "bohemian": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Historical fashion/lifestyle subculture",
+   "Established lifestyle/fashion aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "boho-chic": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Flowing fabrics, earthy tones mainstream",
+   "Early 2000s bohemian mainstream fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "bon-chic-bon-genre": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "French bourgeois elegance style",
+   "French luxury aesthetic, understated elegant"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "bootleg-aesthetic": {
+  "autocomplete": 5,
+  "mainstream": 1.5,
+  "notes": [
+   "Counterfeit product design concept",
+   "Knockoff product design aesthetic"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "boujee": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Wealth display and luxury",
+   "Wealthy luxury lifestyle aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "brazilian-bombshell": {
+  "autocomplete": 5,
+  "mainstream": 3.0,
+  "notes": [
+   "2000s-2010s supermodel fashion aesthetic",
+   "2000s supermodel fashion style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "britpop": {
+  "autocomplete": 9,
+  "mainstream": 4.0,
+  "notes": [
+   "1990s British music cultural movement",
+   "1990s British music and fashion movement"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "brutalism": {
+  "autocomplete": 6,
+  "mainstream": 3.5,
+  "notes": [
+   "Austere angular architecture",
+   "Architectural style, design-interested audiences"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "burlesque": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Performance art fashion and styling",
+   "Performance costume/fashion style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cabincore": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Rustic cabin living romantic aesthetic",
+   "Rustic cabin nature escape aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "camp": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Ironic gaudy excess aesthetic",
+   "Gaudy ironic aesthetic, widely used in fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "campcore": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "Outdoor camping and hiking style",
+   "Camping hiking nature stargazing"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "candycore": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Bright candy sugar colors",
+   "Bright candy-colored maximalist internet trend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "casino": {
+  "autocomplete": 10,
+  "mainstream": 2.5,
+  "notes": [
+   "Glamorous casino and gambling atmosphere",
+   "Glamorous gambling theme, niche"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "cassette-futurism": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Retrofuturistic 1970-90s tech design",
+   "1970s-90s tech nostalgia, retrofuturism design"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "chic-modernist": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Elegant modern minimalist fashion",
+   "Generic descriptor, minimalist and elegant"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "cholo": {
+  "autocomplete": 8,
+  "mainstream": 3.0,
+  "notes": [
+   "Chicano subculture fashion aesthetic",
+   "Chicano subculture fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "choni": {
+  "autocomplete": 4,
+  "mainstream": 1.5,
+  "notes": [
+   "Spanish urban working-class subculture",
+   "Spanish 90s working-class subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "clean-girl": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Minimalist effortless curated look",
+   "Household name on TikTok and Pinterest"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cleancore": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Hygiene products, antiseptic spaces",
+   "Clean antiseptic hygiene aesthetic"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "clowncore": {
+  "autocomplete": 10,
+  "mainstream": 2.5,
+  "notes": [
+   "Carnival and clown art",
+   "Circus-inspired colorful performance costume style"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "coastal-grandmother": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Elegant, affluent coastal lifestyle trend",
+   "2022 affluent lifestyle trend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "coconut-girl": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Tropical beach coquette internet trend",
+   "Beach luxury, tropical vacation fashion aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "communist-chic": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Communist symbols in fashion",
+   "Political aestheticization, niche fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "coquette": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Mainstream TikTok feminine microtrend",
+   "Household name, feminine TikTok aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cottagecore": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Pastoral agricultural romanticized living",
+   "Rural romanticization, major TikTok trend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "country": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Rural American fashion lifestyle",
+   "Mainstream American subculture and music"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "crowcore": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Nature collecting, dark aesthetic",
+   "Nature environmentalism collecting shiny"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cryptidcore": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Mystery and cryptid fashion",
+   "Dark cryptozoology-inspired nature aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cult-party-kei": {
+  "autocomplete": 6,
+  "mainstream": 1.5,
+  "notes": [
+   "Obscure Japanese vintage fashion subculture",
+   "Japanese vintage layered fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "cutecore": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Kawaii horror digital edit aesthetic",
+   "Cute plus horror, internet-born design focus"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "cyber-doll": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Artificial porcelain aesthetic",
+   "TikTok subculture, heavy editing and makeup"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cyber-grunge": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Y2K grunge blend microtrend",
+   "2020s futuristic fashion microtrend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cybercore": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Y2K retro-futurism internet aesthetic",
+   "Y2K retro-futurism and anime influence"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cybergoth": {
+  "autocomplete": 6,
+  "mainstream": 3.0,
+  "notes": [
+   "Neon futuristic industrial goth",
+   "Recognizable cyberlox dreadfalls and goggles"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cyberpop": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Y2K futuristic bright style",
+   "Retro-futuristic Y2K positive"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "cyberprep": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Cyberpunk utopia meets preppy",
+   "Futuristic utopian preppy sci-fi aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "cyberpunk": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Dystopian sci-fi aesthetic, widely recognized",
+   "Futuristic dystopian style"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "cybersigilism": {
+  "autocomplete": 7,
+  "mainstream": 1.5,
+  "notes": [
+   "Berlin underground tattoo design style",
+   "Tattoo and visual design, Berlin underground"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "dandy": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Refined elegant male aesthetic",
+   "Historical figure, refined fashion aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "dark-academia": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Household name Pinterest/TikTok aesthetic",
+   "Household name, Pinterest/TikTok household"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "dark-cabaret": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Gothic theatrical music and fashion",
+   "Theatrical music genre with goth elements"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "dark-fantasy": {
+  "autocomplete": 10,
+  "mainstream": 2.0,
+  "notes": [
+   "Literary horror film genre",
+   "Literary/film genre, not outfit-based"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "dark-naturalism": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Academic nature, mysterious study",
+   "Dark academia nature mystery"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "deathrock": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Theatrical 1980s punk-goth",
+   "Theatrical 1980s gothic punk subculture style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "decopunk": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Art Deco influenced sci-fi design niche",
+   "Art deco meets punk sci-fi"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "decora": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Japanese maximalist street fashion",
+   "Japanese maximalist street fashion, 1990s"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "deep-fried-meme": {
+  "autocomplete": 5,
+  "mainstream": 1.0,
+  "notes": [
+   "Image compression meme format",
+   "Meme format, not wearable or room aesthetic"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "delicate-sweet": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Cottage-inspired feminine aesthetic",
+   "Cute/cozy aesthetic with pastel tones"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "demoscene": {
+  "autocomplete": 3,
+  "mainstream": 1.0,
+  "notes": [
+   "Computer programming art subculture",
+   "1980s computer art demos, niche"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "devilcore": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Dark occult fashion styling",
+   "Dark occult aesthetic, wearable satanic imagery"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "dieselpunk": {
+  "autocomplete": 4,
+  "mainstream": 1.0,
+  "notes": [
+   "Retrofuturistic fiction design concept",
+   "Retrofuturistic 1910s-1950s fiction"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "digital-horror": {
+  "autocomplete": 6,
+  "mainstream": 2.5,
+  "notes": [
+   "Tech nostalgia horror genre",
+   "Early digital-era horror genre aesthetic"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "diner": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Nostalgic 1950s-1960s American diner aesthetic",
+   "1950s American retro aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "disco": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "1970s-80s music and subculture iconic",
+   "Iconic 1970s-80s music and subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "dokukawaii": {
+  "autocomplete": 3,
+  "mainstream": 1.5,
+  "notes": [
+   "Bright eye-assaulting Japanese colors",
+   "Japanese niche, toxicity meets bright colors"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "dollcore": {
+  "autocomplete": 8,
+  "mainstream": 2.0,
+  "notes": [
+   "Doll-inspired fashion aesthetic",
+   "Doll-inspired fashion/photography style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "dollette": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Hyperfeminine delicate pink coquette",
+   "Hyperfeminine coquette, soft pink"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "dolly-kei": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese vintage doll fashion",
+   "Niche Japanese vintage-doll fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "doomer": {
+  "autocomplete": 9,
+  "mainstream": 3.0,
+  "notes": [
+   "Internet meme, mindset not style",
+   "Pessimistic nihilistic mindset meme"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "dopamine-dressing": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Bright colors boost mood",
+   "Bright saturated cheerful mood-boosting fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "dragoncore": {
+  "autocomplete": 4,
+  "mainstream": 1.5,
+  "notes": [
+   "Mythical collecting philosophy, not visually apparel",
+   "2010s fantasy collection aesthetic"
+  ],
+  "photographable_votes": 1,
+  "spread": 1
+ },
+ "e-boy": {
+  "autocomplete": 8,
+  "mainstream": 4.0,
+  "notes": [
+   "TikTok emo-fusion subculture aesthetic",
+   "2010s-2020s e-culture, emo-influenced streetwear"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "e-girl": {
+  "autocomplete": 9,
+  "mainstream": 4.0,
+  "notes": [
+   "Online gamer girl subculture",
+   "TikTok phenomenon, dark makeup and gaming"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "eclectic-grandpa": {
+  "autocomplete": 8,
+  "mainstream": 2.0,
+  "notes": [
+   "2024 TikTok microtrend, retro menswear",
+   "2024 TikTok fashion microtrend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "edwardian": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Early 1900s fashion and design",
+   "Early 1900s British historical fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "electronic-body-music": {
+  "autocomplete": 6,
+  "mainstream": 1.0,
+  "notes": [
+   "Music genre, not visual",
+   "Niche 1980s music genre primarily"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "emo": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Black androgynous emotional youth",
+   "Emotional punk rock angsty youth"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "emo-rap": {
+  "autocomplete": 5,
+  "mainstream": 3.5,
+  "notes": [
+   "Emotional SoundCloud hip-hop",
+   "Emotional hip-hop streetwear hybrid subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "ethereal": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Delicate fairy-tale Disney princess aesthetic",
+   "Delicate dreamy princess-like"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "fairy-grunge": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Pandemic-era fairy and grunge fusion",
+   "Fairy plus grunge blend, pandemic fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "fairy-kei": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Pastel fluffy Japanese style",
+   "Japanese Harajuku style, pastel and fluffy"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "fairycore": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Magical nature TikTok aesthetic",
+   "Popular TikTok/Instagram mystical aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "fantasy": {
+  "autocomplete": 10,
+  "mainstream": 2.5,
+  "notes": [
+   "Medieval fantasy cosplay and aesthetics",
+   "Literary genre, not visual aesthetic"
+  ],
+  "photographable_votes": 1,
+  "spread": 3
+ },
+ "femboy": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Feminine presentation soft styling",
+   "Gen Z feminine presentation, recognizable trend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "femcel-anime-subculture": {
+  "autocomplete": 3,
+  "mainstream": 1.0,
+  "notes": [
+   "Internet persona, chronically online",
+   "Chronically online anime fandom"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "femme-fatale": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Seductive dangerous woman archetype",
+   "Mysterious seductive elegant female character style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "film-noir": {
+  "autocomplete": 6,
+  "mainstream": 3.5,
+  "notes": [
+   "1930s-1950s moody crime film aesthetic",
+   "Black and white dramatic style"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "fjortis": {
+  "autocomplete": 3,
+  "mainstream": 1.0,
+  "notes": [
+   "Swedish 2000s youth subculture obscure",
+   "Swedish youth subculture, niche outside Scandinavia"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "flapper": {
+  "autocomplete": 5,
+  "mainstream": 4.0,
+  "notes": [
+   "1920s liberated youth fashion",
+   "1920s subculture, recognizable in fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 2
+ },
+ "flat-design": {
+  "autocomplete": 9,
+  "mainstream": 3.0,
+  "notes": [
+   "UI/graphic design, not wearable",
+   "UI/design style, not wearable aesthetic"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "flower-power": {
+  "autocomplete": 7,
+  "mainstream": 3.5,
+  "notes": [
+   "1960s peace and flower movement",
+   "1960s peace movement, psychedelic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "forestpunk": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "Dark wild nature survival",
+   "Rugged nature aesthetic, wearable outdoor style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "frutiger-eco": {
+  "autocomplete": 4,
+  "mainstream": 1.0,
+  "notes": [
+   "Corporate design, vector graphics",
+   "Corporate vector graphics design"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "funk": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "1970s groovy and style",
+   "1970s groovy funky music era styling"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "gabber": {
+  "autocomplete": 4,
+  "mainstream": 1.5,
+  "notes": [
+   "Dutch 1990s hardcore techno subculture",
+   "1990s Dutch rave subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "galaxy-print": {
+  "autocomplete": 5,
+  "mainstream": 3.0,
+  "notes": [
+   "Early 2010s cosmic print fashion trend",
+   "2010s Tumblr space print trend, dated now"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "gangsta-rap": {
+  "autocomplete": 6,
+  "mainstream": 3.0,
+  "notes": [
+   "Hip-hop street culture",
+   "Music genre with fashion, baggy streetwear"
+  ],
+  "photographable_votes": 2,
+  "spread": 2
+ },
+ "gardencore": {
+  "autocomplete": 3,
+  "mainstream": 1.5,
+  "notes": [
+   "Garden-focused nature microtrend",
+   "Niche cottagecore subgenre, gardening-focused"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "geek-chic": {
+  "autocomplete": 6,
+  "mainstream": 3.0,
+  "notes": [
+   "Nerdy fashion with oversized glasses",
+   "Mid-2000s hipster horn-rimmed glasses"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "gen-x-soft-club": {
+  "autocomplete": 10,
+  "mainstream": 2.5,
+  "notes": [
+   "90s urban minimalist aesthetic",
+   "Urban minimalist Y2K variant"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "gen-z-maximalism": {
+  "autocomplete": 4,
+  "mainstream": 3.0,
+  "notes": [
+   "Colorful cluttered rooms fashion",
+   "Colorful cluttered Gen Z"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "glam-rock": {
+  "autocomplete": 8,
+  "mainstream": 4.0,
+  "notes": [
+   "Theatrical glitter and platforms",
+   "1970s theatrical glitter rock subculture style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "glitch-art": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "Digital art movement, not wearable or spatial",
+   "Digital error art movement"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "goblincore": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Nature appreciation ugly beauty philosophy",
+   "Appreciation of nature's 'ugliness', frogs moss"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "googie": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Space age retro diner architecture",
+   "Futuristic architecture, 1950s-70s buildings"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "gopnik": {
+  "autocomplete": 8,
+  "mainstream": 2.0,
+  "notes": [
+   "Russian working-class subculture",
+   "Russian working-class subculture fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "gorpcore": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Hiking outdoor practical functional",
+   "Functional outdoor hiking fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "goth": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Post-punk iconic subculture",
+   "Household name since 1980s"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "gothic": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Dark mysterious romantic classic",
+   "Dark literature horror aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "greaser": {
+  "autocomplete": 7,
+  "mainstream": 3.5,
+  "notes": [
+   "1950s working-class rebel youth",
+   "1950s rebellious motorcycle youth subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "grocery-girl-fall": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "Food-inspired fashion and decor microtrend",
+   "2023 food-inspired fashion trend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "grunge": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Seattle 1990s music fashion movement iconic",
+   "Iconic 1990s Seattle music and fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "guido": {
+  "autocomplete": 5,
+  "mainstream": 2.5,
+  "notes": [
+   "Italian-American flashy style",
+   "Y2K subculture, designer and tanned aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "guochao": {
+  "autocomplete": 3,
+  "mainstream": 1.5,
+  "notes": [
+   "Chinese cultural pride microtrend",
+   "Chinese nationalist fashion trend"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "gurokawa": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese grotesque-cute aesthetic fusion",
+   "Japanese cute-horror juxtaposition"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "gutter-punk": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Anti-consumerist nomadic punk",
+   "Niche transient punk subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "gyaru": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Bold makeup confident Japanese style",
+   "Bold makeup Japanese subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "hair-metal": {
+  "autocomplete": 6,
+  "mainstream": 3.5,
+  "notes": [
+   "1980s big hair makeup",
+   "1980s androgynous glam metal rock style"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "halloween": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Major holiday with costumes and decoration",
+   "Spooky seasonal universal holiday"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "haunted-mound": {
+  "autocomplete": 5,
+  "mainstream": 1.0,
+  "notes": [
+   "Underground horrorcore hip-hop niche",
+   "Underground horror hip-hop collective branding"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "health-goth": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Technical sportswear goth blend",
+   "Sportswear meets goth minimalism, 2010s"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "heisei-retro": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Japanese 90s/00s nostalgia aesthetic",
+   "Japanese 90s-2010s nostalgia aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "heroin-chic": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "1990s pale minimalist drug aesthetic",
+   "1990s pale androgynous minimalism"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "hexatron": {
+  "autocomplete": 5,
+  "mainstream": 1.0,
+  "notes": [
+   "Sci-fi design UI concept",
+   "Niche sci-fi design aesthetic, UI-focused"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "high-school-dream": {
+  "autocomplete": 5,
+  "mainstream": 3.0,
+  "notes": [
+   "Late nineties teen media aesthetic",
+   "Idealized 1990s-2000s teen media"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "himekaji": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Casual princess Japanese gyaru",
+   "Casual Japanese princess-inspired feminine fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "hip-hop": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Major music and fashion cultural movement",
+   "Global cultural movement streetwear"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "hippie": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "1960s-70s counterculture peace iconic",
+   "Iconic 1960s counterculture, peace and love"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "hipster": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Alternative indie subculture",
+   "Widely known subculture, vintage and indie"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "horror": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Genre fiction, abstract concept",
+   "Film/literary genre, not fashion category"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "horror-punk": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Horror-themed punk music subculture",
+   "Punk plus horror film imagery"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "hot-rod": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "American modified car culture",
+   "American car culture aesthetic and styling"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "hygge": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Cozy Danish comfortable living style",
+   "Danish cozy comfortable mood"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "hypebeast": {
+  "autocomplete": 9,
+  "mainstream": 4.5,
+  "notes": [
+   "Luxury streetwear sneaker collector",
+   "High-status limited-edition streetwear collector aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "indie": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Independent music and fashion aesthetic",
+   "Music genre, fashion-forward style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "indie-kid": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "TikTok 2020 bright indie skater aesthetic",
+   "2020s TikTok trend, bright colors and skaters"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "indie-sleaze": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Hedonistic party scene aesthetic",
+   "2000s-2010s party culture, documentary aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "industrial": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Music subculture, metallic aesthetic",
+   "1970s music subculture, fashion compatible"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "internet-awesomesauce": {
+  "autocomplete": 3,
+  "mainstream": 1.5,
+  "notes": [
+   "Chaotic surreal 2000s meme aesthetic",
+   "Late 2000s chaotic internet meme culture"
+  ],
+  "photographable_votes": 1,
+  "spread": 1
+ },
+ "japandi": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Japanese Scandinavian minimalist",
+   "Trending interior design hybrid aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "jejemon": {
+  "autocomplete": 7,
+  "mainstream": 2.0,
+  "notes": [
+   "Philippine street fashion 2010s",
+   "Filipino youth distinctive writing"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "jirai-kei": {
+  "autocomplete": 9,
+  "mainstream": 4.0,
+  "notes": [
+   "Dark hyperfeminine Japanese",
+   "Japanese nightlife cute-dark feminine aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "juminocore": {
+  "autocomplete": 10,
+  "mainstream": 2.5,
+  "notes": [
+   "Very recent Japanese kawaii toy collecting 2024",
+   "Japanese kawaii collectibles aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "kawaii": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Japanese cuteness concept widely recognized",
+   "Japanese cuteness concept, globally recognized"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "kawaii-gamer": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Cute pastel gamer girl style",
+   "Pastel e-girl, Twitch streamer aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "kidcore": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "90s/00s nostalgia bright colors",
+   "Popular TikTok 90s/2000s nostalgia style"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "kitsch": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Gaudy tacky design concept",
+   "Ornamental gaudy design and art"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "knightcore": {
+  "autocomplete": 4,
+  "mainstream": 1.5,
+  "notes": [
+   "Medieval knight fashion fantasy",
+   "Niche medieval knight fantasy aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "kogal": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese school uniform styling",
+   "Japanese high school uniform"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "kuromicore": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "Dark cute Sanrio inspired",
+   "Dark cute Sanrio character-inspired aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "lad-culture": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "1990s British working-class subculture",
+   "1990s British working-class subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "larme-kei": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese dainty feminine magazine fashion",
+   "Japanese girly fashion, hyper-feminine makeup"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "laser-grid": {
+  "autocomplete": 4,
+  "mainstream": 1.0,
+  "notes": [
+   "1980s chrome grid design aesthetic",
+   "1980s design, chrome and glass futurism"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "light-academia": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Positive academic Pinterest aesthetic",
+   "Well-known bright academia counterpart"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "liminal-space": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Eerie empty architectural spaces",
+   "Eerie empty transitional spaces"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "live-laugh-love": {
+  "autocomplete": 9,
+  "mainstream": 3.0,
+  "notes": [
+   "Motivational interior word art",
+   "Design aesthetic with word-art home decor"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "lolita": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Victorian petticoats frilly fashion",
+   "Victorian-Rococo Japanese fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "lovecore": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Pink romantic Valentine aesthetics",
+   "Hyper-feminine pink romantic internet aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "low-poly": {
+  "autocomplete": 9,
+  "mainstream": 3.0,
+  "notes": [
+   "Video game graphics aesthetic, digital medium only",
+   "1990s-2000s digital rendering style"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "lowbrow": {
+  "autocomplete": 4,
+  "mainstream": 1.5,
+  "notes": [
+   "Underground art movement Pop Surrealism",
+   "Pop surrealism art movement, design-focused"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "mafia-aesthetic": {
+  "autocomplete": 5,
+  "mainstream": 2.5,
+  "notes": [
+   "Romanticized mob fashion aesthetic",
+   "Film-inspired vintage fashion styling"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "magical-girl": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Hyperfeminine anime-inspired fashion",
+   "Anime genre, hyperfeminine pink"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "maid": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Anime maid outfit aesthetic",
+   "Widely recognized anime and fashion aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "maillard-style": {
+  "autocomplete": 5,
+  "mainstream": 2.5,
+  "notes": [
+   "Brown monochrome luxury outfits",
+   "Monochrome brown outfit microtrend"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "mcbling": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "2000s luxury brand display",
+   "Glossy glamorous early 2000s luxury fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "medicalcore": {
+  "autocomplete": 3,
+  "mainstream": 1.0,
+  "notes": [
+   "Medical-themed internet aesthetic, abstract concept",
+   "Medical-themed niche internet aesthetic"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "medieval-fantasy": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Fantasy fiction literary genre",
+   "Medieval-inspired fantasy, cosplay and aesthetic"
+  ],
+  "photographable_votes": 1,
+  "spread": 2
+ },
+ "metalhead": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Heavy metal subculture fashion",
+   "Longstanding subculture, black metal fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "midwest-gothic": {
+  "autocomplete": 3,
+  "mainstream": 1.5,
+  "notes": [
+   "Literary regional gothic subgenre",
+   "Very niche regional gothic subgenre"
+  ],
+  "photographable_votes": 1,
+  "spread": 1
+ },
+ "minimalism": {
+  "autocomplete": 4,
+  "mainstream": 4.5,
+  "notes": [
+   "Clean clutter-free lifestyle mainstream",
+   "Clean uncluttered lifestyle and design"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "mizuiro": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese cool-tone youth style",
+   "Niche Japanese light-blue otaku aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "mlg": {
+  "autocomplete": 6,
+  "mainstream": 1.0,
+  "notes": [
+   "Gaming montage meme format",
+   "Meme format, not wearable or room style"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "mob-wife": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Glamorous mafia-inspired maximalist",
+   "Mafia wife glamour 2023-2025"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "mod": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "1960s modernist London subculture",
+   "1960s British modernist youth subculture style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "moe": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Japanese anime character design philosophy",
+   "Anime character design philosophy"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "mori-kei": {
+  "autocomplete": 8,
+  "mainstream": 3.0,
+  "notes": [
+   "Japanese forest-inspired fashion aesthetic",
+   "Japanese forest girl fashion, nature-inspired"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "morute": {
+  "autocomplete": 10,
+  "mainstream": 2.0,
+  "notes": [
+   "Cute and morbid internet aesthetic",
+   "Internet aesthetic, morbid meets cute"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "mushroomcore": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Fungi-focused nature microtrend",
+   "2020s nature-inspired fashion microtrend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "nanchatte-seifuku": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese romanticized school uniform",
+   "Japanese school uniform fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "naturecore": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "Nature-focused umbrella aesthetic",
+   "Umbrella nature term, wearable styling"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "nautical": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Navy white coastal theme classic",
+   "Coastal yacht club navy"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "nazi-chic": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Transgressive shock value",
+   "Shock-value Nazi-era historical appropriation"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "neko": {
+  "autocomplete": 8,
+  "mainstream": 3.0,
+  "notes": [
+   "Anime cat-person aesthetic, cosplayable fashion",
+   "Cat-person anime trope fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "neo-chinese-style": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Contemporary Chinese design integration",
+   "Modern Chinese cultural design movement"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "neofolk": {
+  "autocomplete": 4,
+  "mainstream": 1.5,
+  "notes": [
+   "Post-industrial folk music culture",
+   "Post-industrial subculture, acoustic and pagan"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "nerd": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Widely recognized stereotype aesthetic",
+   "Mainstream character type, fashion compatible"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "net-art": {
+  "autocomplete": 3,
+  "mainstream": 1.0,
+  "notes": [
+   "1990s internet digital art",
+   "1990s digital art, internet medium"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "new-beat": {
+  "autocomplete": 3,
+  "mainstream": 1.0,
+  "notes": [
+   "Short-lived Belgian electronic",
+   "Obscure 1980s Belgian music genre"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "new-money": {
+  "autocomplete": 9,
+  "mainstream": 3.0,
+  "notes": [
+   "Luxury brand conspicuous wealth display",
+   "Conspicuous wealth luxury display"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "new-romantic": {
+  "autocomplete": 6,
+  "mainstream": 3.5,
+  "notes": [
+   "1980s theatrical flamboyant",
+   "1980s British theatrical androgynous subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "new-wave": {
+  "autocomplete": 9,
+  "mainstream": 4.0,
+  "notes": [
+   "1980s music and fashion movement aesthetic",
+   "1980s synthetic music design style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "normcore": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "2010s anti-trend intentional averageness",
+   "Anti-trend intentional averageness, 2010s fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "northern-soul": {
+  "autocomplete": 5,
+  "mainstream": 1.5,
+  "notes": [
+   "1970s British soul music culture",
+   "1970s British subculture, rare soul records"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "nostalgiacore": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Personal 90s/00s nostalgia microtrend",
+   "TikTok 90s/2000s nostalgia aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "nu-goth": {
+  "autocomplete": 4,
+  "mainstream": 3.0,
+  "notes": [
+   "Contemporary streamlined goth aesthetic",
+   "Contemporary goth with minimalist edge"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "nu-metal": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "90s metal fusion streetwear",
+   "1990s-2000s widely recognized mainstream trend"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "old-hollywood": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Glamorous thirties sixties elegance",
+   "Glamorous 1930s-1960s cinema"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "old-money": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Inherited wealth classic style",
+   "Classic inherited-wealth sophisticated lifestyle aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "old-web": {
+  "autocomplete": 6,
+  "mainstream": 2.5,
+  "notes": [
+   "1990s-2000s website design and UI style",
+   "1990s website design nostalgia"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "opium": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Playboi Carti dark haute couture",
+   "Playboi Carti darkwear hip-hop, 2020s"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "otaku": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Japanese anime fan subculture",
+   "Anime and gaming obsession, growing mainstream"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "partille-johnny": {
+  "autocomplete": 5,
+  "mainstream": 1.0,
+  "notes": [
+   "Swedish youth subculture, extreme grooming",
+   "Obscure Swedish subculture, 2000s era"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "pastel-goth": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Pastel colors mixed goth",
+   "Dark goth with pastel color twist"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "peacock-revolution": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "1960s masculine floral fashion",
+   "Historical 1960s men's fashion movement"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "pin-up": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Retro glamorous playful styling",
+   "Playful mid-20th century glamour"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "pink-parisian": {
+  "autocomplete": 4,
+  "mainstream": 3.5,
+  "notes": [
+   "Luxury Parisian mid-century",
+   "Pink vintage Parisian luxury aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "pink-princess": {
+  "autocomplete": 7,
+  "mainstream": 3.0,
+  "notes": [
+   "Rococo-inspired feminine luxury aesthetic",
+   "Rococo-inspired feminine luxury"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "pirate": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Nautical pirate themed aesthetic",
+   "Pirate-themed fashion and lifestyle aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "pixel-ui": {
+  "autocomplete": 5,
+  "mainstream": 1.0,
+  "notes": [
+   "Retro computer interface aesthetic",
+   "Graphic design, retro UI not wearable"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "plant-mom": {
+  "autocomplete": 5,
+  "mainstream": 3.0,
+  "notes": [
+   "Houseplant lifestyle aesthetic",
+   "Lifestyle trend, plant-filled interiors"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "poolcore": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Eerie serene pool aesthetic",
+   "Liminal pool imagery, retro tiled"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "pop-art": {
+  "autocomplete": 8,
+  "mainstream": 2.5,
+  "notes": [
+   "Art movement graphic design",
+   "Art movement, design-focused not wearable"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "post-apocalyptic": {
+  "autocomplete": 9,
+  "mainstream": 2.5,
+  "notes": [
+   "Dystopian rugged survival outfit",
+   "Dystopian collapse survival aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "post-grunge-maximalism": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "2000s embellished hard rock",
+   "Embellished 2000s grunge nu-metal style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "post-punk": {
+  "autocomplete": 4,
+  "mainstream": 3.0,
+  "notes": [
+   "1980s music genre with fashion subculture",
+   "1980s music subculture fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "power-dressing": {
+  "autocomplete": 5,
+  "mainstream": 4.0,
+  "notes": [
+   "1970s-80s corporate authority fashion",
+   "1980s corporate fashion, female empowerment"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "preppy": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Elite university preparatory style",
+   "Household name, TikTok and Pinterest dominant"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "princesscore": {
+  "autocomplete": 4,
+  "mainstream": 2.5,
+  "notes": [
+   "Fantasy princess fashion microtrend",
+   "Fairytale-inspired fashion microtrend"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "punk": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Rebellious 1970s rock subculture",
+   "Anti-establishment 1970s music fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "raggare": {
+  "autocomplete": 5,
+  "mainstream": 1.0,
+  "notes": [
+   "Scandinavian car enthusiast",
+   "Very regional Scandinavian car-culture subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "rave": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Neon electronic music dance culture",
+   "Electronic music dance party culture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "recession-pop": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Neon optimism design",
+   "Hedonistic neon electropop 2008-2013 era aesthetic"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "regency": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "1810s-1820s historical period fashion and decor",
+   "1810s-1820s historical era"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "riot-grrrl": {
+  "autocomplete": 7,
+  "mainstream": 3.0,
+  "notes": [
+   "1990s feminist punk music movement",
+   "1990s feminist punk movement and music"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "rivethead": {
+  "autocomplete": 4,
+  "mainstream": 1.5,
+  "notes": [
+   "Industrial military subculture",
+   "Industrial subculture, military surplus style"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "rockabilly": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "50s rock and roll subculture",
+   "Established 1950s music/fashion subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "rococo": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Ornate 18th century design",
+   "Ornate 18th-century French aristocratic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "romantic-academia": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "Romantic literature academic",
+   "Niche romantic literature-inspired aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "romantic-goth": {
+  "autocomplete": 8,
+  "mainstream": 3.0,
+  "notes": [
+   "Velvet dark tragic beauty romantic",
+   "Romantic dark passion gothic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "royalcore": {
+  "autocomplete": 6,
+  "mainstream": 3.5,
+  "notes": [
+   "Baroque rococo royal fantasy",
+   "Baroque romantic royal fantasy aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "rude-boy": {
+  "autocomplete": 7,
+  "mainstream": 2.0,
+  "notes": [
+   "1960s Jamaican ska subculture fashion",
+   "1960s Jamaican subculture style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "rustic": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Romanticized rural farmhouse aesthetic",
+   "Rural romanticized aesthetic, farm-inspired"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "sadboi": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Lonely streetwear aesthetic",
+   "SoundCloud rap aesthetic, streetwear and sadness"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "sanriocore": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Sanrio character merchandise aesthetic",
+   "Sanrio character fan-created aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "scene": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Colorful emo MySpace era",
+   "2000s colorful emo and hardcore"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "scenecore": {
+  "autocomplete": 9,
+  "mainstream": 3.0,
+  "notes": [
+   "2000s scene Gen Z revival",
+   "2020s Gen Z revival of 2000s Scene"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "seapunk": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Aquatic cyberculture turquoise tropical",
+   "Aquatic 1990s cyber aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "shamate": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Chinese emo scene spiky",
+   "Chinese edgy spiky dark subculture makeup"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "shibuya-kei": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "1990s Japanese eclectic music and fashion",
+   "1990s Japanese music fashion subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "shibuya-punk": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese Y2K gaming urban aesthetic",
+   "Japanese late 90s-2000s gaming and street style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "skater": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Skateboarding subculture aesthetic",
+   "Widely recognized subculture, creative lifestyle"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "skinhead": {
+  "autocomplete": 5,
+  "mainstream": 3.0,
+  "notes": [
+   "Working-class music subculture",
+   "1960s British music subculture, fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "slavic-doll": {
+  "autocomplete": 8,
+  "mainstream": 2.5,
+  "notes": [
+   "Eastern European model high-fashion",
+   "Early 2000s Eastern European model"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "slavic-winter": {
+  "autocomplete": 3,
+  "mainstream": 1.5,
+  "notes": [
+   "Soviet winter urban photography",
+   "Recent post-Soviet urban winter aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "soft-boy": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Androgynous pastels emotional male",
+   "Emotional sensitive masculine style"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "soft-girl": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Hyper-feminine pastel TikTok",
+   "Pastel hyper-feminine cute TikTok aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "soft-grunge": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Tumblr aesthetic muted colors and melancholy",
+   "2013-2018 Tumblr aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "solarpunk": {
+  "autocomplete": 10,
+  "mainstream": 2.0,
+  "notes": [
+   "Brazilian speculative fiction genre",
+   "Speculative fiction, renewable energy worldbuilding"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "southern-gothic": {
+  "autocomplete": 10,
+  "mainstream": 3.5,
+  "notes": [
+   "Southern decay and gothic imagery",
+   "Literary and internet aesthetic, dark Southern"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "soviet-chic": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "Soviet iconography underground music",
+   "1980s-90s underground music fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "spacecore": {
+  "autocomplete": 7,
+  "mainstream": 3.0,
+  "notes": [
+   "Romanticized cosmos aesthetic",
+   "Cosmic fantasy, saturated space imagery"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "steampunk": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Victorian industrial fantasy",
+   "Widely known retrofuturistic subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "stilyagi": {
+  "autocomplete": 3,
+  "mainstream": 1.0,
+  "notes": [
+   "Soviet Western imitation fashion style",
+   "Soviet youth Western imitation"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "strega": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "European witch fashion",
+   "Italian witch-inspired dark earthy aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "suburban-gothic": {
+  "autocomplete": 8,
+  "mainstream": 3.0,
+  "notes": [
+   "Alienated suburban atmosphere with gothic",
+   "Alienation in suburban neighborhoods"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "superflat": {
+  "autocomplete": 5,
+  "mainstream": 1.5,
+  "notes": [
+   "Japanese postmodern art movement",
+   "Takashi Murakami neo-pop art movement"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "surfer": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Ocean surfing lifestyle aesthetic",
+   "Longstanding subculture, beach lifestyle iconic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "surrealism": {
+  "autocomplete": 9,
+  "mainstream": 4.0,
+  "notes": [
+   "Art movement, abstract concept",
+   "Art movement, not personal aesthetic"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "swag": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Hip-hop street fashion confidence",
+   "Late 2000s hip-hop West Coast"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "technozen": {
+  "autocomplete": 5,
+  "mainstream": 1.0,
+  "notes": [
+   "Japanese minimalist tech UI",
+   "Niche Japanese tech design concept"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "techwear": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Functional streetwear tactical materials",
+   "Functional urban fashion streetwear"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "tecktonik": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "French electro dance",
+   "French 2000s electro dance subculture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "that-girl": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Productive self-improvement lifestyle microtrend",
+   "2020s wellness productivity aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "tiki": {
+  "autocomplete": 8,
+  "mainstream": 4.0,
+  "notes": [
+   "Polynesian-inspired midcentury bar aesthetic",
+   "Polynesian-inspired 1950s bar aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "tomato-girl-summer": {
+  "autocomplete": 7,
+  "mainstream": 2.0,
+  "notes": [
+   "Mediterranean summer vacation",
+   "TikTok microtrend, Mediterranean escapism"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "too-cool": {
+  "autocomplete": 4,
+  "mainstream": 1.0,
+  "notes": [
+   "Chinese kitsch fashion microtrend",
+   "Obscure Chinese kitsch movement"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "trailer-park-princess": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Camp kitsch Americana aesthetic",
+   "Camp working-class femininity shock"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "trap-metal": {
+  "autocomplete": 5,
+  "mainstream": 1.5,
+  "notes": [
+   "SoundCloud rap metal fusion",
+   "Niche music fusion with streetwear elements"
+  ],
+  "photographable_votes": 1,
+  "spread": 1
+ },
+ "traumacore": {
+  "autocomplete": 5,
+  "mainstream": 1.0,
+  "notes": [
+   "Corrupted innocence, shock imagery",
+   "Cute imagery trauma juxtaposition"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "tropical": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Warm island vacation vibes",
+   "Warm bright natural tropical vacation aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "twee": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "1980s indie pop cute and precious aesthetic",
+   "1980s indie pop sweet cuteness"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "tweencore": {
+  "autocomplete": 5,
+  "mainstream": 3.0,
+  "notes": [
+   "2000s pre-teen mall commercialized fashion",
+   "2000s-2010s Justice and Claire's tween culture"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "urbancore": {
+  "autocomplete": 3,
+  "mainstream": 1.5,
+  "notes": [
+   "Modern urban street life aesthetic",
+   "Broad street and city imagery, vague naming"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "vampire": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Gothic aristocratic romantic aesthetic",
+   "Gothic aristocracy and dark romance"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "vanilla-girl": {
+  "autocomplete": 10,
+  "mainstream": 4.5,
+  "notes": [
+   "Minimalist cream white aesthetic",
+   "Household name social-media microtrend"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "vaporwave": {
+  "autocomplete": 10,
+  "mainstream": 3.0,
+  "notes": [
+   "Music genre, nostalgic design primarily",
+   "Nostalgic 1980s-1990s surreal"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "vectorheart": {
+  "autocomplete": 7,
+  "mainstream": 2.5,
+  "notes": [
+   "Geometric 1990s graphic design",
+   "1990s/2000s vector graphic digital design aesthetic"
+  ],
+  "photographable_votes": 0,
+  "spread": 1
+ },
+ "victorian": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "19th century British historical aesthetic",
+   "1837-1901 historical fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "victorian-goth": {
+  "autocomplete": 7,
+  "mainstream": 3.5,
+  "notes": [
+   "Victorian-inspired goth fashion substyle",
+   "Victorian-inspired goth fashion and elegance"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "vintage": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Authentic items from past eras",
+   "Household name, Pinterest staple, umbrella term"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "vintage-americana": {
+  "autocomplete": 8,
+  "mainstream": 4.0,
+  "notes": [
+   "1950s-inspired feminine aesthetic",
+   "1950s-60s inspired fashion/lifestyle"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "visual-kei": {
+  "autocomplete": 9,
+  "mainstream": 3.0,
+  "notes": [
+   "Elaborate Japanese theatrical fashion",
+   "1980s Japanese elaborate makeup bands"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "vsco-girl": {
+  "autocomplete": 9,
+  "mainstream": 4.5,
+  "notes": [
+   "Early 2020s internet microtrend",
+   "Household name viral 2019 meme aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "vulture-culture": {
+  "autocomplete": 4,
+  "mainstream": 1.0,
+  "notes": [
+   "Animal remains collection hobby",
+   "Niche hobby subculture, collection-based"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "waif": {
+  "autocomplete": 7,
+  "mainstream": 2.0,
+  "notes": [
+   "Elegant vulnerable girlblogger persona",
+   "Misunderstood troubled feminine"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "webcore": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Y2K internet nostalgia pixelated",
+   "1990s-2000s early internet digital nostalgia aesthetic"
+  ],
+  "photographable_votes": 1,
+  "spread": 0
+ },
+ "weeaboo": {
+  "autocomplete": 6,
+  "mainstream": 2.0,
+  "notes": [
+   "Western anime fan subculture fashion",
+   "Western anime fan aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "weimar-cabaret": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "1920s German cabaret performance aesthetic",
+   "1920s Berlin performance art and fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "werewolf": {
+  "autocomplete": 10,
+  "mainstream": 1.0,
+  "notes": [
+   "Horror werewolf character imagery",
+   "Character archetype, horror concept not clothing"
+  ],
+  "photographable_votes": 0,
+  "spread": 0
+ },
+ "western": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Cowboy/frontier genre and fashion",
+   "Established cowboy/frontier aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "whimsicraft": {
+  "autocomplete": 3,
+  "mainstream": 1.0,
+  "notes": [
+   "Quirky 1990s art fair aesthetic",
+   "1980s-90s quirky art fair aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "whimsy-twee": {
+  "autocomplete": 8,
+  "mainstream": 2.5,
+  "notes": [
+   "Playful colorful pattern-mixing",
+   "2020s playful pattern-mixing aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "winter-bimbo": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Glamorous feminine winter outfits",
+   "Cozy winter revealing glamorous"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "witchcore": {
+  "autocomplete": 6,
+  "mainstream": 4.0,
+  "notes": [
+   "Modern witchcraft crystal aesthetic",
+   "Modern mystical witchcraft-inspired lifestyle aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "wonyoungism": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "K-pop idol self-improvement lifestyle trend",
+   "2023 K-pop inspired self-improvement"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "y2k": {
+  "autocomplete": 10,
+  "mainstream": 5.0,
+  "notes": [
+   "Late 1990s-early 2000s cultural zeitgeist",
+   "Late 1990s-2000s cultural aesthetic, widely revived"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "y2k-futurism": {
+  "autocomplete": 6,
+  "mainstream": 3.5,
+  "notes": [
+   "Late 90s tech optimism aesthetic",
+   "Retro futurism, 1997-2004 design and fashion"
+  ],
+  "photographable_votes": 2,
+  "spread": 1
+ },
+ "yami-kawaii": {
+  "autocomplete": 5,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese cute-meets-dark aesthetic",
+   "Japanese cute/sickly fashion subgenre"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "yugo-nostalgia": {
+  "autocomplete": 4,
+  "mainstream": 1.0,
+  "notes": [
+   "Yugoslav socialist era nostalgia",
+   "Yugoslav 1960s-80s socialist nostalgia"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "yume-kawaii": {
+  "autocomplete": 4,
+  "mainstream": 2.0,
+  "notes": [
+   "Japanese pastel dreamy fantasy",
+   "Niche Japanese pastel fantasy aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "yuppie": {
+  "autocomplete": 10,
+  "mainstream": 4.0,
+  "notes": [
+   "Eighties professional wealth display",
+   "1980s urban professional wealth"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ },
+ "zen-x": {
+  "autocomplete": 3,
+  "mainstream": 2.0,
+  "notes": [
+   "1990s minimalist Zen Buddhism",
+   "Minimalist 1990s Zen Buddhist nature aesthetic"
+  ],
+  "photographable_votes": 2,
+  "spread": 0
+ }
+}

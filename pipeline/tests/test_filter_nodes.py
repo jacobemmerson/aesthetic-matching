@@ -52,8 +52,15 @@ def test_category_drop_and_top_n_by_search_volume():
         {"slug": "plain", "name": "P", "description": "x" * 200, "related": ["fash"], "subgenres": [], "categories": ["2020s"]},
         {"slug": "rare", "name": "R", "description": "x" * 200, "related": ["fash"], "subgenres": [], "categories": ["Fashion"]},
     ]
-    kept, dropped = filter_nodes(nodes, exclude=set(), by_category=True, search_volume={"fash": 500, "plain": 300, "rare": 7}, top=2)
+    kept, dropped = filter_nodes(nodes, exclude=set(), by_category=True, rank={"fash": 5, "plain": 3, "rare": 4}, top=2,
+                                 not_photographable={"rare"})
     assert [n["slug"] for n in kept] == ["fash", "plain"]
     assert dropped["song"] == "music genre only" and dropped["ui"] == "design movement only"
-    assert dropped["rare"] == "search volume rank > 2"
-    assert kept[0]["search_volume"] == 500
+    assert dropped["rare"] == "judged not photographable"
+    assert kept[0]["mainstream"] == 5
+
+
+def test_top_n_drops_lowest_ranked():
+    nodes = [{"slug": s, "name": s, "description": "x" * 200, "related": ["a"], "subgenres": [], "categories": []} for s in "abc"]
+    kept, dropped = filter_nodes(nodes, exclude=set(), rank={"a": 1, "b": 3, "c": 2}, top=2)
+    assert [n["slug"] for n in kept] == ["b", "c"] and dropped == {"a": "mainstream rank > 2"}
