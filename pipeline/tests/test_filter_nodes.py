@@ -42,3 +42,18 @@ def test_min_popularity_only_applies_to_scored_nodes():
     kept, dropped = filter_nodes(nodes, exclude=set(), popularity={"a": 0}, min_popularity=2)
     assert [n["slug"] for n in kept] == ["b"] and dropped == {"a": "< 2 google autocomplete hits"}
     assert kept[0]["popularity"] is None
+
+
+def test_category_drop_and_top_n_by_search_volume():
+    nodes = [
+        {"slug": "fash", "name": "F", "description": "x" * 200, "related": ["song"], "subgenres": [], "categories": ["Fashion", "Music Genres"]},
+        {"slug": "song", "name": "S", "description": "x" * 200, "related": ["fash"], "subgenres": [], "categories": ["Music Genres", "1990s"]},
+        {"slug": "ui", "name": "U", "description": "x" * 200, "related": ["fash"], "subgenres": [], "categories": ["Design Aesthetics"]},
+        {"slug": "plain", "name": "P", "description": "x" * 200, "related": ["fash"], "subgenres": [], "categories": ["2020s"]},
+        {"slug": "rare", "name": "R", "description": "x" * 200, "related": ["fash"], "subgenres": [], "categories": ["Fashion"]},
+    ]
+    kept, dropped = filter_nodes(nodes, exclude=set(), by_category=True, search_volume={"fash": 500, "plain": 300, "rare": 7}, top=2)
+    assert [n["slug"] for n in kept] == ["fash", "plain"]
+    assert dropped["song"] == "music genre only" and dropped["ui"] == "design movement only"
+    assert dropped["rare"] == "search volume rank > 2"
+    assert kept[0]["search_volume"] == 500

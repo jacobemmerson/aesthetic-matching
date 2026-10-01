@@ -9,6 +9,10 @@ DATA = Path(__file__).resolve().parent.parent / "data"
 EXCLUDE = Path(__file__).resolve().parent / "exclude.txt"
 MERGE = Path(__file__).resolve().parent / "merge.txt"
 MIN_DESCRIPTION = 150
+# wiki category tags: a node is dropped when it carries a DROP tag and no KEEP tag, i.e. it is
+# a music genre or a design movement rather than something a person's photos can look like
+KEEP_CATEGORIES = {"Fashion", "Fashion Styles", "Streetwear", "Lifestyle", "Subcultures", "Nature", "Interior Design", "Decor"}
+DROP_CATEGORIES = {"Music Genres": "music genre only", "Music": "music genre only", "Design Aesthetics": "design movement only"}
 RAW = DATA / "raw"
 
 
@@ -60,10 +64,18 @@ def merge_nodes(nodes: list[dict], merge: dict[str, str]) -> list[dict]:
     return kept
 
 
+def category_reason(categories: list[str]) -> str | None:
+    if set(categories) & KEEP_CATEGORIES:
+        return None
+    return next((why for tag, why in DROP_CATEGORIES.items() if tag in categories), None)
+
+
 def filter_nodes(nodes: list[dict], exclude: set[str], mentions: Counter | None = None, min_mentions: int = 0,
-                 popularity: dict[str, int] | None = None, min_popularity: int = 0) -> tuple[list[dict], dict[str, str]]:
+                 popularity: dict[str, int] | None = None, min_popularity: int = 0, by_category: bool = False,
+                 search_volume: dict[str, int] | None = None, top: int | None = None) -> tuple[list[dict], dict[str, str]]:
     mentions = mentions or Counter()
     popularity = popularity or {}
+    search_volume = search_volume or {}
     degree = Counter()
     for n in nodes:
         degree[n["slug"]] += len(n["related"]) + len(n["subgenres"])
@@ -80,10 +92,16 @@ def filter_nodes(nodes: list[dict], exclude: set[str], mentions: Counter | None 
             dropped[n["slug"]] = f"mentioned by < {min_mentions} pages"
         elif n["slug"] in popularity and popularity[n["slug"]] < min_popularity:
             dropped[n["slug"]] = f"< {min_popularity} google autocomplete hits"
+        elif by_category and category_reason(n.get("categories", [])):
+            dropped[n["slug"]] = category_reason(n["categories"])
+    if top is not None:
+        ranked = sorted((n["slug"] for n in nodes if n["slug"] not in dropped), key=lambda s: -search_volume.get(s, 0))
+        dropped.update({s: f"search volume rank > {top}" for s in ranked[top:]})
     kept = [n for n in nodes if n["slug"] not in dropped]
     for n in kept:
         n["mentions"] = mentions[n["slug"]]
         n["popularity"] = popularity.get(n["slug"])
+        n["search_volume"] = search_volume.get(n["slug"])
         for field in ("related", "subgenres"):
             n[field] = [s for s in n[field] if s not in dropped]
     return kept, dropped
@@ -96,7 +114,7 @@ def write_review_page(kept: list[dict], dropped: dict[str, str]) -> None:
         degree[n["slug"]] += len(n["related"]) + len(n["subgenres"])
         degree.update(n["related"] + n["subgenres"])
     rows = [
-        {"slug": n["slug"], "name": n["name"], "degree": degree[n["slug"]], "mentions": n["mentions"], "pop": n.get("popularity"), "words": n["word_count"],
+        {"slug": n["slug"], "name": n["name"], "degree": degree[n["slug"]], "mentions": n["mentions"], "pop": n.get("popularity"), "volume": n.get("search_volume"), "words": n["word_count"],
          "desc": n["description"][:260], "url": n["wiki_url"], "infobox": n["has_infobox"]}
         for n in kept
     ]
@@ -105,7 +123,7 @@ def write_review_page(kept: list[dict], dropped: dict[str, str]) -> None:
 th{cursor:pointer;position:sticky;top:0;background:#fff}.d{color:#555;font-size:13px}button{margin-left:8px}input[type=search]{width:20em}</style>
 <p><input type=search id=q placeholder="filter by name or description"> <span id=n></span>
 <button onclick="copy()">copy checked slugs for exclude.txt</button> <span id=msg></span></p>
-<table id=t><thead><tr><th></th><th data-k=name>name</th><th data-k=degree>edges</th><th data-k=mentions>mentions</th><th data-k=pop>google</th><th data-k=words>words</th><th>description</th></tr></thead><tbody></tbody></table>
+<table id=t><thead><tr><th></th><th data-k=name>name</th><th data-k=degree>edges</th><th data-k=mentions>mentions</th><th data-k=pop>google</th><th data-k=volume>results</th><th data-k=words>words</th><th>description</th></tr></thead><tbody></tbody></table>
 <h3>Already dropped by rules</h3><pre id=dropped></pre>
 <script>
 const rows=__ROWS__, dropped=__DROPPED__, checked=new Set(JSON.parse(localStorage.getItem('exclude')||'[]'));
@@ -113,7 +131,7 @@ let key='name',asc=true;
 function render(){const q=q_.value.toLowerCase();const rs=rows.filter(r=>(r.name+' '+r.desc).toLowerCase().includes(q))
  .sort((a,b)=>(a[key]>b[key]?1:-1)*(asc?1:-1));n.textContent=rs.length+' of '+rows.length;
  t.tBodies[0].innerHTML=rs.map(r=>`<tr><td><input type=checkbox data-s="${r.slug}" ${checked.has(r.slug)?'checked':''}></td>
- <td><a href="${r.url}" target=_blank>${r.name}</a>${r.infobox?'':' <small>(no infobox)</small>'}</td><td>${r.degree}</td><td>${r.mentions}</td><td>${r.pop ?? ''}</td><td>${r.words}</td><td class=d>${r.desc}</td></tr>`).join('')}
+ <td><a href="${r.url}" target=_blank>${r.name}</a>${r.infobox?'':' <small>(no infobox)</small>'}</td><td>${r.degree}</td><td>${r.mentions}</td><td>${r.pop ?? ''}</td><td>${r.volume?.toLocaleString() ?? ''}</td><td>${r.words}</td><td class=d>${r.desc}</td></tr>`).join('')}
 const q_=document.getElementById('q');q_.oninput=render;
 t.tBodies[0].onchange=e=>{const s=e.target.dataset.s;e.target.checked?checked.add(s):checked.delete(s);localStorage.setItem('exclude',JSON.stringify([...checked]))};
 document.querySelectorAll('th[data-k]').forEach(h=>h.onclick=()=>{asc=key===h.dataset.k?!asc:true;key=h.dataset.k;render()});
@@ -128,9 +146,12 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--min-mentions", type=int, default=8, help="drop aesthetics linked from fewer body texts")
     ap.add_argument("--min-popularity", type=int, default=3, help="drop aesthetics with fewer google autocomplete hits (needs data/popularity.json)")
+    ap.add_argument("--by-category", action="store_true", help="drop music-genre-only and design-movement-only pages (wiki category tags)")
+    ap.add_argument("--top", type=int, help="keep only the N highest by google result count (needs data/search_volume.json)")
     args = ap.parse_args()
-    pop_file = DATA / "popularity.json"
+    pop_file, vol_file = DATA / "popularity.json", DATA / "search_volume.json"
     popularity = json.loads(pop_file.read_text()) if pop_file.exists() else {}
+    search_volume = json.loads(vol_file.read_text()) if vol_file.exists() else {}
     nodes = json.loads((DATA / "wiki.json").read_text())
     mentions = mention_counts(nodes)
     for n in nodes:
@@ -138,7 +159,7 @@ if __name__ == "__main__":
         n["popularity"] = popularity.get(n["slug"])
     nodes = merge_nodes(nodes, load_merge())
     kept, dropped = filter_nodes(nodes, load_exclude(), Counter({n["slug"]: n["mentions"] for n in nodes}), args.min_mentions,
-                                 popularity, args.min_popularity)
+                                 popularity, args.min_popularity, args.by_category, search_volume, args.top)
     (DATA / "nodes.json").write_text(json.dumps(kept, indent=1, ensure_ascii=False))
     for slug, why in sorted(dropped.items(), key=lambda kv: kv[1]):
         print(f"drop {slug:40} {why}")
