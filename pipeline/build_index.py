@@ -118,7 +118,9 @@ def embed_texts(texts: list[str]) -> np.ndarray:
 
 
 def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str = "", debias: str = "none", head: str = "none",
-         prune: bool = True):
+         prune: bool = True, debias_tag: str | None = None):
+    """`debias_tag`: which tagged debias map to bake in (defaults to `tag`); the served, untagged
+    index of a new backbone takes the map fitted under that backbone's tag."""
     nodes = json.loads((DATA / "nodes.json").read_text())[:limit]
     slugs = [n["slug"] for n in nodes]
     parent_of = load_merge()  # image folders of merged-away children count toward the parent
@@ -162,7 +164,9 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
     xyz = layout(node_vecs)
     extra = {}
     if debias != "none":
-        t = np.load(DATA / f"debias_{debias}{'_masked' if mask_faces and debias == 'leace' else ''}.npz")
+        from pipeline.debias import suffix
+
+        t = np.load(DATA / f"debias_{debias}{suffix(tag if debias_tag is None else debias_tag, mask_faces and debias == 'leace')}.npz")
         extra = {"proj_P": t["P"], "proj_b": t["b"]}
     if head != "none":
         from pipeline.debias import apply
@@ -195,5 +199,6 @@ if __name__ == "__main__":
     ap.add_argument("--debias", choices=["none", "prompt", "leace"], default="none", help="store this debias map in the index")
     ap.add_argument("--head", choices=["none", "plain", "reweighted"], default="none", help="train a linear head into the index")
     ap.add_argument("--no-prune", action="store_true", help="keep portrait and near-duplicate reference images")
+    ap.add_argument("--debias-tag", help="use debias_*_TAG.npz (default: the build's own --tag)")
     a = ap.parse_args()
-    main(a.limit, a.crops, a.mask_faces, a.tag, a.debias, a.head, prune=not a.no_prune)
+    main(a.limit, a.crops, a.mask_faces, a.tag, a.debias, a.head, prune=not a.no_prune, debias_tag=a.debias_tag)
