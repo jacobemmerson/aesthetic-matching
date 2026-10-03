@@ -17,6 +17,8 @@ const HORIZON = [-0.15, 0.3]  // depth range over which nodes and edges fade out
 const facing = (z) => Math.min(1, Math.max(0, (z - HORIZON[0]) / (HORIZON[1] - HORIZON[0])))
 const LIT_BACK = 0.3          // lit paths stay visible on the far side, at this fraction of full strength
 const DRAG_THRESHOLD = 3      // px of movement before a press counts as a drag rather than a click
+const FRICTION = 0.94         // momentum kept per frame after letting go; stops below MIN_SPIN
+const MIN_SPIN = 0.05         // px per frame
 
 export default function Graph({ graph, result, files, onReady, photosVisible = true }) {
   const el = useRef(null)
@@ -73,8 +75,9 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
         const toward = (d) => ({ ...d, color: mixHex(d.color, COLORS.bg, 1 - f), size: d.size * (d.type === 'image' ? f : .7 + .3 * f), label: f < .5 ? null : d.label })
         if (!lit) return hot.has(node) && f >= .5 && t === 0 ? { ...toward(data), forceLabel: true } : toward(data)  // verdict nodes keep their name
         if (d === 0) return { ...toward(data), zIndex: 4, forceLabel: true }
+        // every lit node facing the viewer shows its name once its hop has lit
         if (d === 1) { const k = Math.min(1, 2 * t); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), zIndex: 3, forceLabel: k > .5 && f >= .5 } }
-        if (d === 2) { const k = .6 * Math.max(0, 2 * t - 1); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), zIndex: 2 } }
+        if (d === 2) { const k = .6 * Math.max(0, 2 * t - 1); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), zIndex: 2, forceLabel: k > .3 && f >= .5 } }
         const dimmed = toward({ ...data, color: mixHex(data.color, COLORS.dim, t) })
         if (t > .5) dimmed.label = null
         return t > .5 && data.size > 8 ? { ...dimmed, image: undefined, type: 'circle', size: 3 } : dimmed  // photos and You shrink to dots
@@ -121,22 +124,36 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
 
     // drag anywhere spins the sphere (pointer events cover mouse and touch)
     // No pointer capture: that would steal the mouse-up and click from sigma's own canvas.
-    let drag = null, dragged = false
+    let drag = null, dragged = false, velocity = [0, 0], lastMove = 0, coast = null
     const container = el.current
-    const down = (e) => { if (e.button === 0 || e.pointerType !== 'mouse') { drag = [e.clientX, e.clientY]; dragged = false } }
     const radiusPx = () => { const o = sigma.graphToViewport({ x: 0, y: 0 }), r = sigma.graphToViewport({ x: SCALE, y: 0 }); return Math.hypot(r.x - o.x, r.y - o.y) }
-    const move = (e) => {  // one pixel turns the globe by one pixel of its on-screen radius, so the point under the pointer tracks it at any zoom
+    const turn = (dx, dy) => { R = multiply(rotationFromDrag(dx, dy, 1 / radiusPx()), R); project() }  // one pixel per pixel of on-screen radius, so the pointer tracks
+    const stopCoast = () => { cancelAnimationFrame(coast); coast = null }
+    const down = (e) => { if (e.button === 0 || e.pointerType !== 'mouse') { stopCoast(); drag = [e.clientX, e.clientY]; dragged = false; velocity = [0, 0] } }
+    const move = (e) => {
       if (!drag) return
       const dx = e.clientX - drag[0], dy = e.clientY - drag[1]
       if (!dragged && Math.hypot(dx, dy) < DRAG_THRESHOLD) return
-      dragged = true; spin.cancel?.(); R = multiply(rotationFromDrag(dx, dy, 1 / radiusPx()), R); drag = [e.clientX, e.clientY]; project()
+      dragged = true; spin.cancel?.(); turn(dx, dy); drag = [e.clientX, e.clientY]
+      const now = performance.now(), dt = Math.max(1, now - lastMove); lastMove = now
+      velocity = [dx / dt * 16, dy / dt * 16]  // px per frame at 60 Hz
     }
-    const up = () => { drag = null }
+    const up = () => {  // keep spinning with what the hand left, decaying each frame
+      if (!drag) return
+      drag = null
+      if (quick || performance.now() - lastMove > 80) return  // a pause before release means a deliberate stop
+      const step = () => {
+        velocity = velocity.map((v) => v * FRICTION)
+        if (Math.hypot(...velocity) < MIN_SPIN) { coast = null; return }
+        turn(velocity[0], velocity[1]); coast = requestAnimationFrame(step)
+      }
+      coast = requestAnimationFrame(step)
+    }
     container.addEventListener('pointerdown', down); window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up)
 
     const spin = { cancel: null }
     const turnTo = (id, duration) => {
-      spin.cancel?.()
+      spin.cancel?.(); stopCoast()
       const from = R, to = lookAt(vec[id])
       spin.cancel = tween(quick ? 0 : duration, (p) => { R = slerpRotation(from, to, p); project() })
     }
@@ -152,7 +169,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     apiRef.current = api
     onReady?.(api)
     return () => {
-      fadeRef.current(); spin.cancel?.(); resizer.disconnect(); hoverRef.current = null; pinRef.current = null; dimRef.current = 0; setHover(null)
+      fadeRef.current(); spin.cancel?.(); stopCoast(); resizer.disconnect(); hoverRef.current = null; pinRef.current = null; dimRef.current = 0; setHover(null)
       container.removeEventListener('pointerdown', down); window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up)
       sigma.kill()
     }
