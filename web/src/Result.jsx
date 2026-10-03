@@ -3,13 +3,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Graph from './Graph.jsx'
 import DevPanel from './DevPanel.jsx'
 import { buildRevealSteps, runSteps, TIMING } from './lib/reveal.js'
-import { useObjectUrls } from './lib/objectUrls.js'
 import Fade from './Fade.jsx'
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const fade = (duration, delay = 0) => (reduced() ? { duration: 0, delay: 0 } : { duration, delay })
 
-export default function Result({ files, result, graph, graphError, onReset }) {
+export default function Result({ files, urls, result, graph, graphError, onReset }) {
   const [stage, setStage] = useState('reveal')   // 'reveal' | 'done'
   const [dev, setDev] = useState(() => new URLSearchParams(location.search).has('dev'))  // ?dev or the d key
   useEffect(() => {
@@ -21,12 +20,11 @@ export default function Result({ files, result, graph, graphError, onReset }) {
   const started = useRef(false)
   const shown = useRef({ photos: [], lit: [], overall: false })  // what the reveal has exposed so far, replayed if the graph rebuilds
   const cancel = useRef(() => {})
-  const urls = useObjectUrls(files)
   useEffect(() => { if (graphError) setStage('done') }, [graphError])
   // Also resets `started`: StrictMode's simulated unmount cancels the steps, and Graph's effect then re-fires onReady.
   useEffect(() => () => { cancel.current(); started.current = false }, [])
 
-  // Graph rebuilds sigma when its inputs change (e.g. object URLs resolve) and calls onReady each time.
+  // Graph calls onReady again if it rebuilds sigma (StrictMode's double mount), so replay what the reveal has shown.
   const onReady = (a) => {
     api.current = a
     shown.current.photos.forEach((i) => a.showPhoto(i))
@@ -60,7 +58,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
   const fly = (id) => api.current?.flyTo(id, .3, reduced() ? 0 : undefined)
   return (
     <main className="result">
-      {graph && <Fade className="graph-fade" duration={.6}><Graph graph={graph} result={result} files={files} onReady={onReady} photosVisible={false} /></Fade>}
+      {graph && <Fade className="graph-fade" duration={.6}><Graph graph={graph} result={result} files={files} urls={urls} onReady={onReady} photosVisible={false} /></Fade>}
       <header className="result-head">
         <AnimatePresence>
           {!graph && !graphError && <Fade as="p" key="loading" className="sub">Loading the map…</Fade>}
@@ -90,7 +88,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
           </motion.div>
         )}</AnimatePresence>
       </header>
-      <AnimatePresence>{dev && <DevPanel key="dev" result={result} files={files} onClose={() => setDev(false)} />}</AnimatePresence>
+      <AnimatePresence>{dev && <DevPanel key="dev" result={result} files={files} urls={urls} onClose={() => setDev(false)} />}</AnimatePresence>
     </main>
   )
 }

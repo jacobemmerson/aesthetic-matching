@@ -1,9 +1,7 @@
-import { useObjectUrls } from './lib/objectUrls.js'
 import Fade from './Fade.jsx'
 
 /** Developer view: every photo's match distribution (probability and raw score), plus the aggregate. */
-export default function DevPanel({ result, files, onClose }) {
-  const urls = useObjectUrls(files)
+export default function DevPanel({ result, files, urls, onClose }) {
   const rows = [...result.images.map((img, k) => ({ key: k, label: `photo ${k + 1}`, src: urls.get(files[k]), matches: img.matches })),
                 { key: 'overall', label: 'You (mixture of the photos)', matches: result.overall.matches.slice(0, 5) }]
   return (

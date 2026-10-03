@@ -3,7 +3,6 @@ import Graphology from 'graphology'
 import Sigma from 'sigma'
 import { NodeImageProgram } from '@sigma/node-image'
 import { drawDiscNodeLabel } from 'sigma/rendering'
-import { useObjectUrls } from './lib/objectUrls.js'
 import Drawer from './Drawer.jsx'
 import { AnimatePresence } from 'framer-motion'
 import Fade from './Fade.jsx'
@@ -22,7 +21,7 @@ const DRAG_THRESHOLD = 3      // px of movement before a press counts as a drag 
 const FRICTION = 0.94         // momentum kept per frame after letting go; stops below MIN_SPIN
 const MIN_SPIN = 0.05         // px per frame
 
-export default function Graph({ graph, result, files, onReady, photosVisible = true }) {
+export default function Graph({ graph, result, files, urls, onReady, photosVisible = true }) {
   const el = useRef(null)
   const sigmaRef = useRef(null)
   const apiRef = useRef(null)
@@ -31,7 +30,6 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
   const depthRef = useRef({})     // hops from the hovered node, up to 2
   const dimRef = useRef(0)        // 0 = nothing highlighted, 1 = fully crawled out
   const fadeRef = useRef(() => {})
-  const urls = useObjectUrls(files)
   const [hover, setHover] = useState(null)      // { slug, x, y }
   const [webglLost, setWebglLost] = useState(false)
   const [selected, setSelected] = useState(null) // node object

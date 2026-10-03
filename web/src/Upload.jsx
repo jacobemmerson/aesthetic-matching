@@ -1,15 +1,13 @@
 import { useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MAX_FILES, MIN_FILES } from './lib/files.js'
-import { useObjectUrls } from './lib/objectUrls.js'
 import Fade from './Fade.jsx'
 
 const fan = (i, n) => ({ rotate: (i - (n - 1) / 2) * 6, y: Math.abs(i - (n - 1) / 2) * 6 })
 
-export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
+export default function Upload({ files, urls, onAdd, onRemove, onAnalyze, error }) {
   const [over, setOver] = useState(false)
   const input = useRef(null)
-  const urls = useObjectUrls(files)
   const missing = MIN_FILES - files.length
   return (
     <main className="hero">

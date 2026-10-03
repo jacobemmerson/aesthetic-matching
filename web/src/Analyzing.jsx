@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useObjectUrls } from './lib/objectUrls.js'
 import { STEP_MS, stepAt } from './lib/loading.js'
 
-export default function Analyzing({ files }) {
-  const urls = useObjectUrls(files)
+export default function Analyzing({ files, urls }) {
   const [line, setLine] = useState(stepAt(0))
   useEffect(() => {
     const start = Date.now()
