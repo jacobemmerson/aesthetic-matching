@@ -63,13 +63,6 @@ const shots = {
     const one = await page(1280); await uploadAll(one, 1); await one.getByRole('button', { name: 'Find my aesthetic' }).click(); await one.waitForSelector('.graph canvas'); await one.waitForTimeout(6000); await shoot(one, 'result-one-photo')
     await p.context().close(); await r.context().close(); await one.context().close()
   },
-  async card() {
-    const p = await page(1280); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click()
-    await p.waitForSelector('.graph canvas'); await p.waitForTimeout(7000)
-    const [dl] = await Promise.all([p.waitForEvent('download'), p.getByRole('button', { name: 'Download card' }).click()])
-    await dl.saveAs(path.join(out, 'card.png')); console.log('shot card')
-    await p.context().close()
-  },
 }
 for (const [name, fn] of Object.entries(shots)) if (!scenarios.length || scenarios.includes(name)) await fn()
 await browser.close()

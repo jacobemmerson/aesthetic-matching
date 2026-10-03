@@ -19,7 +19,7 @@ export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
         onClick={() => input.current.click()} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), input.current.click())}
         onDragOver={(e) => { e.preventDefault(); setOver(true) }} onDragLeave={() => setOver(false)}
         onDrop={(e) => { e.preventDefault(); setOver(false); onAdd(e.dataTransfer.files) }}>
-        <span>Drop {MIN_FILES} to {MAX_FILES} photos here, or click to choose</span>
+        <span>Drop up to {MAX_FILES} photos here, or click to choose</span>
         <small>JPEG or PNG, under 5 MB each. Nothing is stored.</small>
         <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => { onAdd(e.target.files); e.target.value = '' }} />
       </div>

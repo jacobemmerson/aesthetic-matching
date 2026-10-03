@@ -21,8 +21,8 @@ describe('acceptFiles', () => {
     expect(accepted).toHaveLength(MAX_FILES)
     expect(notice).toMatch(/2 more/)
   })
-  it('needs at least three photos for an analysis', () => {
-    expect(MIN_FILES).toBe(3)
+  it('a single photo is enough for an analysis', () => {
+    expect(MIN_FILES).toBe(1)
   })
   it('ignores exact duplicates (same name and size)', () => {
     const { accepted } = acceptFiles([img('a.jpg')], [img('a.jpg')])

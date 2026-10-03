@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Graph from './Graph.jsx'
 import { buildRevealSteps, runSteps, TIMING } from './lib/reveal.js'
-import { shareOrDownload } from './lib/shareCard.js'
 import { useObjectUrls } from './lib/objectUrls.js'
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -77,7 +76,6 @@ export default function Result({ files, result, graph, graphError, onReset }) {
               <small>lower is more niche</small>
             </motion.div>
             <div className="actions">
-              <button className="btn" onClick={() => shareOrDownload(result, graph, files)}>Download card</button>
               <button className="btn ghost" onClick={onReset}>Start over</button>
             </div>
           </motion.div>

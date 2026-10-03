@@ -19,7 +19,6 @@ export default function Drawer({ node, onClose }) {
           {node.other_names && <p className="aliases">{node.other_names}</p>}
           <p className="desc">{node.description}</p>
           {node.key_values && <p className="values"><span>Values</span> {node.key_values}</p>}
-          <a href={node.wiki_url} target="_blank" rel="noreferrer">Read on the Aesthetics Wiki →</a>
         </motion.aside>
       )}
     </AnimatePresence>
