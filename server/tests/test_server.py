@@ -51,6 +51,15 @@ def test_match_probabilities_use_clip_scale():
     assert probs[0] > 0.9 and abs(sum(probs) - 1) < 1e-3  # three nodes, so the top-5 is the whole distribution
 
 
+def test_head_probabilities_use_the_logit_scale():
+    # z-scored head logits sit ~16x further apart than cosine scores, so a near tie must stay a near tie
+    w = np.array([[1, 0, 0], [0.9, 0, 0], [0, 0, 1]], np.float32)  # logits for query [1,0,0]: 1.0, 0.9, 0
+    idx = Index(slugs=["a", "b", "c"], centroids=INDEX.centroids, text_vecs=INDEX.text_vecs, counts=np.array([5, 5, 5]),
+                xyz=INDEX.xyz, head_w=w, head_b=np.zeros(3, np.float32))
+    probs = {m["slug"]: m["prob"] for m in idx.match(np.array([1, 0, 0], np.float32))["matches"]}
+    assert probs["a"] > probs["b"] > 0.05
+
+
 def test_nucleus_is_smallest_set_reaching_p():
     assert nucleus(photo("a", "b", "c")["matches"], 0.9) == ["a"]
     assert nucleus(photo("a", "b", "c", probs=[0.86, 0.14, 0])["matches"], 0.9) == ["a", "b"]

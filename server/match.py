@@ -13,6 +13,7 @@ IMAGE_WEIGHT, TEXT_WEIGHT = 0.7, 0.3
 PRIOR_WEIGHT = 0.08  # from pipeline/evaluate.py: +2pts popularity-weighted top-1 for -0.6pt plain
 TOP_K = 5
 SOFTMAX_T = 0.01  # CLIP's own logit scale (100 x cosine); turns scores into per-photo probabilities
+HEAD_SOFTMAX_T = 0.16  # z-scored head logits: measured #1-#2 gaps are ~16x the cosine gaps (0.78 vs 0.048 median)
 NUCLEUS_P = 0.9   # a photo is explained by the fewest aesthetics whose probabilities reach this
 PLACE_NUDGE = (0.2, 0.1)  # how far the map position leans from the top match toward #2 and #3
 
@@ -76,7 +77,7 @@ class Index:
 
     def match(self, vec: np.ndarray) -> dict:
         s = self.scores(vec)
-        z = np.exp((s - s.max()) / SOFTMAX_T)
+        z = np.exp((s - s.max()) / (HEAD_SOFTMAX_T if self.head_w is not None else SOFTMAX_T))
         prob = z / z.sum()
         top = np.argsort(-s)[:TOP_K]
         # Anchor at the top match so the label and the map position agree (a weighted mean of
