@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MAX_FILES, MIN_FILES } from './lib/files.js'
 import { useObjectUrls } from './lib/objectUrls.js'
+import Fade from './Fade.jsx'
 
 const fan = (i, n) => ({ rotate: (i - (n - 1) / 2) * 6, y: Math.abs(i - (n - 1) / 2) * 6 })
 
@@ -24,7 +25,7 @@ export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
         <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => { onAdd(e.target.files); e.target.value = '' }} />
       </div>
 
-      {error && <p className="notice" role="alert">{error}</p>}
+      <AnimatePresence>{error && <Fade as="p" key="error" className="notice" role="alert">{error}</Fade>}</AnimatePresence>
 
       <motion.ul className="stack" layout>
         <AnimatePresence>

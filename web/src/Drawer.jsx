@@ -9,7 +9,7 @@ export default function Drawer({ node, onClose }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {node && (
         <motion.aside className="drawer" key={node.slug}
           initial={{ [axis]: '100%', opacity: 0 }} animate={{ [axis]: 0, opacity: 1 }} exit={{ [axis]: '100%', opacity: 0 }}

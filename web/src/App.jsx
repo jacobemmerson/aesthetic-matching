@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
+import Fade from './Fade.jsx'
 import Upload from './Upload.jsx'
 import Analyzing from './Analyzing.jsx'
 import Result from './Result.jsx'
@@ -36,10 +38,12 @@ export default function App() {
 
   return (
     <>
-      {phase === 'upload' && <Upload files={files} onAdd={onAdd} onRemove={onRemove} onAnalyze={onAnalyze} error={error} />}
-      {phase === 'analyzing' && <Analyzing files={files} />}
-      {phase === 'result' && <Result files={files} result={result} graph={graph} graphError={graphError} onReset={onReset} />}
-      <footer>Aesthetic names and descriptions are from the <a href="https://aesthetics.fandom.com">Aesthetics Wiki</a> (CC BY-SA). Matching uses CLIP image embeddings. Your photos are not stored.</footer>
+      <AnimatePresence mode="wait">
+        {phase === 'upload' && <Fade key="upload"><Upload files={files} onAdd={onAdd} onRemove={onRemove} onAnalyze={onAnalyze} error={error} /></Fade>}
+        {phase === 'analyzing' && <Fade key="analyzing"><Analyzing files={files} /></Fade>}
+        {phase === 'result' && <Fade key="result"><Result files={files} result={result} graph={graph} graphError={graphError} onReset={onReset} /></Fade>}
+      </AnimatePresence>
+      <footer className={phase === 'result' ? 'over-map' : undefined}>Aesthetic names and descriptions are from the <a href="https://aesthetics.fandom.com">Aesthetics Wiki</a> (CC BY-SA). Matching uses CLIP image embeddings. Your photos are not stored.</footer>
     </>
   )
 }

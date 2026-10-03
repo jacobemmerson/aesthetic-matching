@@ -4,6 +4,7 @@ import Graph from './Graph.jsx'
 import DevPanel from './DevPanel.jsx'
 import { buildRevealSteps, runSteps, TIMING } from './lib/reveal.js'
 import { useObjectUrls } from './lib/objectUrls.js'
+import Fade from './Fade.jsx'
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const fade = (duration, delay = 0) => (reduced() ? { duration: 0, delay: 0 } : { duration, delay })
@@ -59,10 +60,12 @@ export default function Result({ files, result, graph, graphError, onReset }) {
   const fly = (id) => api.current?.flyTo(id, .3, reduced() ? 0 : undefined)
   return (
     <main className="result">
-      {graph && <Graph graph={graph} result={result} files={files} onReady={onReady} photosVisible={false} />}
+      {graph && <Fade className="graph-fade" duration={.6}><Graph graph={graph} result={result} files={files} onReady={onReady} photosVisible={false} /></Fade>}
       <header className="result-head">
-        {!graph && !graphError && <p className="sub">Loading the map…</p>}
-        {graphError && <p className="notice">Couldn't load the map</p>}
+        <AnimatePresence>
+          {!graph && !graphError && <Fade as="p" key="loading" className="sub">Loading the map…</Fade>}
+          {graphError && <Fade as="p" key="error" className="notice">Couldn't load the map</Fade>}
+        </AnimatePresence>
         <AnimatePresence>{stage === 'done' && (
           <motion.div key="verdict" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={fade(.5)}>
             <ol className="verdict">
@@ -77,7 +80,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
             </ol>
             <motion.div className="score" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade(.4, .15 * result.aesthetics.length + .2)}>
               <div className="score-head"><span>Score</span><strong>{result.basic_score}<small> / 100</small></strong></div>
-              <div className="meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={result.basic_score}><span style={{ width: `${result.basic_score}%` }} /></div>
+              <div className="meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={result.basic_score}><motion.span initial={{ width: 0 }} animate={{ width: `${result.basic_score}%` }} transition={fade(.8, .2)} /></div>
               <div className="meter-ends"><small>Niche</small><small>Basic</small></div>
               <p className="statement">{result.statement}</p>
             </motion.div>
@@ -87,7 +90,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
           </motion.div>
         )}</AnimatePresence>
       </header>
-      {dev && <DevPanel result={result} files={files} onClose={() => setDev(false)} />}
+      <AnimatePresence>{dev && <DevPanel key="dev" result={result} files={files} onClose={() => setDev(false)} />}</AnimatePresence>
     </main>
   )
 }

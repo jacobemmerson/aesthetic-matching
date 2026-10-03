@@ -42,7 +42,7 @@ export async function shoot(p, name) {
 
 const shots = {
   async upload() { for (const w of [1280, 390]) { const p = await page(w); await shoot(p, `upload-empty-${w}`); await uploadAll(p); await p.waitForTimeout(900); await shoot(p, `upload-files-${w}`); await p.context().close() } },
-  async result() { for (const w of [1280, 390]) { const p = await page(w); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click(); await p.waitForTimeout(6000); await shoot(p, `result-${w}`); await p.context().close() } },
+  async result() { for (const w of [1280, 390]) { const p = await page(w); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click(); await p.waitForTimeout(9000); await shoot(p, `result-${w}`); await p.context().close() } },
   async analyzing() { const p = await page(1280); await p.route('**/api/analyze', (r) => setTimeout(() => r.fulfill({ status: 200, contentType: 'application/json', body: analyze }), 8000)); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click(); await p.waitForTimeout(800); await shoot(p, 'analyzing-1280'); await p.context().close() },
   async error429() { const p = await page(1280); await p.route('**/api/analyze', (r) => r.fulfill({ status: 429, contentType: 'application/json', body: JSON.stringify({ detail: 'limit is 5 analyses per hour' }) })); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click(); await p.waitForTimeout(800); await shoot(p, 'error-429'); await p.context().close() },
   async reveal() {

@@ -5,6 +5,8 @@ import { NodeImageProgram } from '@sigma/node-image'
 import { drawDiscNodeLabel } from 'sigma/rendering'
 import { useObjectUrls } from './lib/objectUrls.js'
 import Drawer from './Drawer.jsx'
+import { AnimatePresence } from 'framer-motion'
+import Fade from './Fade.jsx'
 import { mixHex, tween } from './lib/tween.js'
 import { identity, lookAt, multiply, rotateVec, rotationFromDrag, slerpRotation } from './lib/sphere.js'
 import EdgeGrowProgram from './lib/edgeGrow.js'
@@ -103,9 +105,6 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     project()
     const resizer = new ResizeObserver(() => sigma.resize())  // sigma only watches the window, not its container
     resizer.observe(el.current)
-    // Safari sometimes revokes every WebGL context (seen on macOS 18.1); sigma can't recover, so say so instead of showing black
-    const lost = () => setWebglLost(true)
-    el.current.addEventListener('webglcontextlost', lost, true)  // the event doesn't bubble; capture still sees it
     const camera = sigma.getCamera()
     camera.on('updated', () => { if (camera.x !== .5 || camera.y !== .5) camera.setState({ x: .5, y: .5 }) })  // zoom about the centre only
 
@@ -132,6 +131,9 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     // No pointer capture: that would steal the mouse-up and click from sigma's own canvas.
     let drag = null, dragged = false, velocity = [0, 0], lastMove = 0, coast = null
     const container = el.current
+    // Safari sometimes revokes every WebGL context (seen on macOS 18.1); sigma can't recover, so say so instead of showing black
+    const lost = () => setWebglLost(true)
+    container.addEventListener('webglcontextlost', lost, true)  // the event doesn't bubble; capture still sees it
     const radiusPx = () => { const o = sigma.graphToViewport({ x: 0, y: 0 }), r = sigma.graphToViewport({ x: SCALE, y: 0 }); return Math.hypot(r.x - o.x, r.y - o.y) }
     const turn = (dx, dy) => { R = multiply(rotationFromDrag(dx, dy, 1 / radiusPx()), R); project() }  // one pixel per pixel of on-screen radius, so the pointer tracks
     const stopCoast = () => { cancelAnimationFrame(coast); coast = null }
@@ -177,7 +179,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     return () => {
       fadeRef.current(); spin.cancel?.(); stopCoast(); resizer.disconnect(); hoverRef.current = null; pinRef.current = null; dimRef.current = 0; setHover(null)
       container.removeEventListener('pointerdown', down); window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up)
-      el.current?.removeEventListener('webglcontextlost', lost, true)
+      container.removeEventListener('webglcontextlost', lost, true)
       sigma.kill()
     }
   }, [graph, result, files, urls])
@@ -185,22 +187,24 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
   return (
     <div className="graph-shell">
       <div className="graph" ref={el} />
-      {webglLost && <p className="notice graph-notice">Your browser dropped WebGL, so the map can't draw. Safari on macOS does this; try Chrome or Firefox.</p>}
-      {hover && nodes[hover.slug] && (
-        <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
-          <strong>{nodes[hover.slug].name}</strong><span>{nodes[hover.slug].description.split(/(?<=\.)\s/)[0]}</span>
-        </div>
-      )}
-      {hover && hover.slug.startsWith('photo-') && (
-        <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
-          <strong>Your photo</strong><span>closest to {result.names[result.images[hover.slug.slice(6)].matches[0].slug]}</span>
-        </div>
-      )}
-      {hover && hover.slug === 'overall' && (
-        <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
-          <strong>You</strong><span>Your photos, averaged. Closest to {result.names[result.overall.matches[0].slug]}.</span>
-        </div>
-      )}
+      <AnimatePresence>
+        {webglLost && <Fade as="p" key="webgl" className="notice graph-notice">Your browser dropped WebGL, so the map can't draw. Safari on macOS does this; try Chrome or Firefox.</Fade>}
+        {hover && nodes[hover.slug] && (
+          <Fade key="tip-node" duration={.15} className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
+            <strong>{nodes[hover.slug].name}</strong><span>{nodes[hover.slug].description.split(/(?<=\.)\s/)[0]}</span>
+          </Fade>
+        )}
+        {hover && hover.slug.startsWith('photo-') && (
+          <Fade key="tip-photo" duration={.15} className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
+            <strong>Your photo</strong><span>closest to {result.names[result.images[hover.slug.slice(6)].matches[0].slug]}</span>
+          </Fade>
+        )}
+        {hover && hover.slug === 'overall' && (
+          <Fade key="tip-you" duration={.15} className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
+            <strong>You</strong><span>Your photos, averaged. Closest to {result.names[result.overall.matches[0].slug]}.</span>
+          </Fade>
+        )}
+      </AnimatePresence>
       <Drawer node={selected} onClose={() => setSelected(null)} />
     </div>
   )
