@@ -5,6 +5,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -17,6 +18,8 @@ MIN_IMAGES, MAX_IMAGES, MAX_BYTES = 1, 10, 5_000_000
 RATE_LIMIT, RATE_WINDOW = int(os.environ.get("RATE_LIMIT", 5)), 3600  # analyses per IP per hour; 0 disables
 
 app = FastAPI(title="aesthetics roast")
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+NODE_FIELDS = ("slug", "name", "x", "y", "z", "description", "other_names", "key_values")  # what the map and the card read
 state: dict = {}
 hits: dict[str, list[float]] = defaultdict(list)  # ponytail: in-memory, per-process; redis if >1 worker
 
@@ -25,10 +28,15 @@ hits: dict[str, list[float]] = defaultdict(list)  # ponytail: in-memory, per-pro
 def load():
     state["index"] = Index.load(DATA / "index.npz")
     graph = json.loads((DATA / "graph.json").read_text())
-    state["graph"] = graph
+    state["graph"] = slim_graph(graph)
     state["nodes"] = {n["slug"]: n for n in graph["nodes"]}
     state["ratings"] = {n["slug"]: n["mainstream"] for n in graph["nodes"] if n.get("mainstream") is not None}
     state.setdefault("encoder", Encoder(masked=state["index"].masked_faces, backbone=state["index"].backbone))
+
+
+def slim_graph(graph: dict) -> dict:
+    return {"nodes": [{k: n.get(k) for k in NODE_FIELDS} for n in graph["nodes"]],
+            "edges": [{"source": e["source"], "target": e["target"]} for e in graph["edges"]]}
 
 
 def client_ip(request: Request) -> str:
@@ -83,6 +91,10 @@ def graph():
 
 if WEB.exists():
     app.mount("/assets", StaticFiles(directory=WEB / "assets"), name="assets")
+
+    @app.get("/favicon.svg")
+    def favicon():
+        return FileResponse(WEB / "favicon.svg")
 
     @app.get("/{path:path}")
     def spa(path: str):

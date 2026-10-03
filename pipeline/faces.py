@@ -1,12 +1,13 @@
 """Face detection (OpenCV YuNet) and masking. Faces carry most of the race and gender signal
 in a CLIP vector while aesthetics live in clothes and setting, so the index can be built and
 queried with faces blanked out."""
+import os
 from pathlib import Path
 
 import numpy as np
 from PIL import Image
 
-DATA = Path(__file__).resolve().parent.parent / "data"
+DATA = Path(os.environ.get("DATA_DIR", Path(__file__).resolve().parent.parent / "data"))
 MODEL_PATH = DATA / "face_detection_yunet_2023mar.onnx"
 MODEL_URL = "https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
 SCORE_THRESHOLD = 0.6

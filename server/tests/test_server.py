@@ -214,3 +214,19 @@ def test_masked_encoder_requires_detector(monkeypatch, tmp_path):
     monkeypatch.setattr(faces, "MODEL_PATH", tmp_path / "missing.onnx")
     with pytest.raises(FileNotFoundError):
         Encoder(masked=True)
+
+
+def test_graph_response_drops_fields_the_client_never_reads(client):
+    full = {"nodes": [{"slug": "red", "name": "Red", "x": 0, "y": 0, "z": 1, "description": "d", "other_names": "", "key_values": "",
+                       "image_count": 5, "wiki_url": "https://w", "mainstream": 3.0}],
+            "edges": [{"source": "red", "target": "green", "type": "related"}]}
+    app_mod.state["graph"] = app_mod.slim_graph(full)
+    body = client.get("/api/graph").json()
+    assert set(body["nodes"][0]) == {"slug", "name", "x", "y", "z", "description", "other_names", "key_values"}
+    assert body["edges"] == [{"source": "red", "target": "green"}]
+
+
+def test_graph_response_is_gzipped(client):
+    app_mod.state["graph"] = {"nodes": [{"slug": f"n{i}", "description": "x" * 50} for i in range(100)], "edges": []}
+    r = client.get("/api/graph", headers={"Accept-Encoding": "gzip"})
+    assert r.headers.get("content-encoding") == "gzip"
