@@ -15,7 +15,7 @@ TOP_K = 5
 SOFTMAX_T = 0.01  # CLIP's own logit scale (100 x cosine); turns scores into per-photo probabilities
 HEAD_SOFTMAX_T = 0.16  # z-scored head logits: measured #1-#2 gaps are ~16x the cosine gaps (0.78 vs 0.048 median)
 TIE_RATIO = 1 / 3  # a runner-up is a label too when it has at least this share of the top match's probability
-PLACE_NUDGE = (0.2, 0.1)  # how far the map position leans from the top match toward #2 and #3
+PLACE_NUDGE = (0.06, 0.03)  # how far the map position leans from the top match toward #2 and #3; small, so the nearest node is always the label
 
 
 def normalize(v: np.ndarray) -> np.ndarray:

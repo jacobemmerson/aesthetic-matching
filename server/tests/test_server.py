@@ -35,9 +35,9 @@ def jpeg(color: str) -> bytes:
 def test_match_and_placement():
     m = INDEX.match(np.array([1, 0, 0], dtype=np.float32))
     assert m["matches"][0]["slug"] == "red" and m["matches"][-1]["slug"] == "text-only"
-    # anchored at the top match (red, 0,0,1), nudged 20% toward #2 (green, 1,0,0) and 10% toward #3 (text-only, 0,1,0), back on the sphere
+    # anchored at the top match (red, 0,0,1), nudged 6% toward #2 (green, 1,0,0) and 3% toward #3 (text-only, 0,1,0), back on the sphere
     v = np.array([m["x"], m["y"], m["z"]])
-    np.testing.assert_allclose(v, np.array([0.2, 0.1, 0.7]) / np.linalg.norm([0.2, 0.1, 0.7]), atol=1e-5)
+    np.testing.assert_allclose(v, np.array([0.06, 0.03, 0.91]) / np.linalg.norm([0.06, 0.03, 0.91]), atol=1e-5)
 
 
 def photo(*slugs, probs=None):
@@ -62,7 +62,7 @@ def test_head_probabilities_use_the_logit_scale():
 
 def test_place_anchors_at_the_first_slug_with_nudges():
     v = INDEX.place(["red", "green", "text-only"])
-    np.testing.assert_allclose([v["x"], v["y"], v["z"]], np.array([0.2, 0.1, 0.7]) / np.linalg.norm([0.2, 0.1, 0.7]), atol=1e-5)
+    np.testing.assert_allclose([v["x"], v["y"], v["z"]], np.array([0.06, 0.03, 0.91]) / np.linalg.norm([0.06, 0.03, 0.91]), atol=1e-5)
     assert INDEX.place(["green"])["x"] == 1.0  # nothing to nudge toward
 
 
