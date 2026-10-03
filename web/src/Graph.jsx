@@ -64,7 +64,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     const sigma = new Sigma(g, el.current, {
       nodeProgramClasses: { image: NodeImageProgram }, edgeProgramClasses: { line: EdgeGrowProgram }, renderLabels: true, labelRenderedSizeThreshold: 7,
       labelColor: { color: COLORS.label }, labelFont: 'Inter', labelSize: 12, zIndex: true, defaultDrawNodeHover: drawDiscNodeLabel,
-      enableCameraPanning: false, enableCameraRotation: false, minCameraRatio: .35, maxCameraRatio: 1.1,
+      enableCameraPanning: false, enableCameraRotation: false, minCameraRatio: .35, maxCameraRatio: 1.1, stagePadding: 8,
       nodeReducer: (node, data) => {
         const h = hoverRef.current, t = dimRef.current, d = depthRef.current[node]
         const lit = h && t > 0 && d !== undefined
