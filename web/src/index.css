@@ -64,10 +64,36 @@ footer a { color: var(--muted); }
 .meter-ends { display: flex; justify-content: space-between; color: var(--muted); }
 .statement { font-family: var(--display); font-size: 1.02rem; line-height: 1.35; margin: 4px 0 0; }
 .actions { display: flex; gap: 8px; }
+.dev { position: fixed; right: 16px; bottom: 16px; top: 16px; width: min(360px, calc(100% - 32px)); z-index: 8; overflow: auto; scrollbar-width: thin; background: rgba(20,20,24,.97); border: 1px solid var(--border); border-radius: 16px; padding: 16px; font-size: .8rem; pointer-events: auto; }
+.dev h3 { margin: 0 36px 10px 0; font-family: var(--ui); font-weight: 600; font-size: .9rem; }
+.dev section { margin-bottom: 12px; }
+.dev header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--muted); }
+.dev header img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.dev .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text); display: inline-block; margin: 0 8px; }
+.dev ol { list-style: none; margin: 0; padding: 0; }
+.dev li { display: grid; grid-template-columns: 1fr 90px 100px; gap: 8px; align-items: center; padding: 2px 0; }
+.dev .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dev .bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.dev .bar i { display: block; height: 100%; background: var(--accent); }
+.dev code { color: var(--muted); font-size: .72rem; text-align: right; }
+.dev .hint { color: var(--muted); margin: 8px 0 0; }
 .result ~ footer { position: fixed; left: 16px; right: 16px; bottom: 0; z-index: 4; padding: 10px 0; margin: 0; max-width: none; pointer-events: none; }
 .result ~ footer a { pointer-events: auto; }
 @media (max-width: 799px) {
-  .result ~ footer { display: none; }
+  .dev { position: fixed; right: 16px; bottom: 16px; top: 16px; width: min(360px, calc(100% - 32px)); z-index: 8; overflow: auto; scrollbar-width: thin; background: rgba(20,20,24,.97); border: 1px solid var(--border); border-radius: 16px; padding: 16px; font-size: .8rem; pointer-events: auto; }
+.dev h3 { margin: 0 36px 10px 0; font-family: var(--ui); font-weight: 600; font-size: .9rem; }
+.dev section { margin-bottom: 12px; }
+.dev header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--muted); }
+.dev header img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.dev .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text); display: inline-block; margin: 0 8px; }
+.dev ol { list-style: none; margin: 0; padding: 0; }
+.dev li { display: grid; grid-template-columns: 1fr 90px 100px; gap: 8px; align-items: center; padding: 2px 0; }
+.dev .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dev .bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.dev .bar i { display: block; height: 100%; background: var(--accent); }
+.dev code { color: var(--muted); font-size: .72rem; text-align: right; }
+.dev .hint { color: var(--muted); margin: 8px 0 0; }
+.result ~ footer { display: none; }
   .result-head { width: calc(100% - 32px); max-height: calc(46dvh - 16px); overflow-y: auto; scrollbar-width: thin; }
   .graph-shell { inset: 46dvh 0 0 0; }  /* the verdict sits above the map instead of over it */
   .drawer { top: auto; bottom: 0; left: 0; right: 0; width: 100%; max-height: 55%; border-radius: 16px 16px 0 0; }
