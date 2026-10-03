@@ -31,6 +31,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
   const fadeRef = useRef(() => {})
   const urls = useObjectUrls(files)
   const [hover, setHover] = useState(null)      // { slug, x, y }
+  const [webglLost, setWebglLost] = useState(false)
   const [selected, setSelected] = useState(null) // node object
   const nodes = Object.fromEntries(graph.nodes.map((n) => [n.slug, n]))
   const hot = new Set(result.aesthetics.map((a) => a.slug))
@@ -102,6 +103,9 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     project()
     const resizer = new ResizeObserver(() => sigma.resize())  // sigma only watches the window, not its container
     resizer.observe(el.current)
+    // Safari sometimes revokes every WebGL context (seen on macOS 18.1); sigma can't recover, so say so instead of showing black
+    const lost = () => setWebglLost(true)
+    el.current.addEventListener('webglcontextlost', lost, true)  // the event doesn't bubble; capture still sees it
     const camera = sigma.getCamera()
     camera.on('updated', () => { if (camera.x !== .5 || camera.y !== .5) camera.setState({ x: .5, y: .5 }) })  // zoom about the centre only
 
@@ -173,6 +177,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     return () => {
       fadeRef.current(); spin.cancel?.(); stopCoast(); resizer.disconnect(); hoverRef.current = null; pinRef.current = null; dimRef.current = 0; setHover(null)
       container.removeEventListener('pointerdown', down); window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up)
+      el.current?.removeEventListener('webglcontextlost', lost, true)
       sigma.kill()
     }
   }, [graph, result, files, urls])
@@ -180,6 +185,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
   return (
     <div className="graph-shell">
       <div className="graph" ref={el} />
+      {webglLost && <p className="notice graph-notice">Your browser dropped WebGL, so the map can't draw. Safari on macOS does this; try Chrome or Firefox.</p>}
       {hover && nodes[hover.slug] && (
         <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
           <strong>{nodes[hover.slug].name}</strong><span>{nodes[hover.slug].description.split(/(?<=\.)\s/)[0]}</span>

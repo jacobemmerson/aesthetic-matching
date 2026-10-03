@@ -98,3 +98,4 @@ footer a { color: var(--muted); }
   .graph-shell { inset: 46dvh 0 0 0; }  /* the verdict sits above the map instead of over it */
   .drawer { top: auto; bottom: 0; left: 0; right: 0; width: 100%; max-height: 55%; border-radius: 16px 16px 0 0; }
 }
+.graph-notice { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: 32ch; text-align: center; pointer-events: none; }
