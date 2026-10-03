@@ -42,12 +42,14 @@ def layout(vectors: np.ndarray, seed: int = 0) -> np.ndarray:
     return ((xy - xy.mean(0)) / xy.std(0)).astype(np.float32)
 
 
-def build_graph(nodes: list[dict], xy: np.ndarray, counts: np.ndarray) -> dict:
+def build_graph(nodes: list[dict], xy: np.ndarray, counts: np.ndarray, ratings: dict[str, float] | None = None) -> dict:
+    """`ratings`: the judges' plain mainstream rating per slug (data/mainstream.json), served as the basic score."""
     slugs = {n["slug"] for n in nodes}
+    ratings = ratings or {}
     return {
         "nodes": [{"slug": n["slug"], "name": n["name"], "x": float(x), "y": float(y), "image_count": int(c),
                    "description": n["description"], "other_names": n["other_names"], "key_values": n["key_values"],
-                   "wiki_url": n["wiki_url"]} for n, (x, y), c in zip(nodes, xy, counts)],
+                   "wiki_url": n["wiki_url"], "mainstream": ratings.get(n["slug"])} for n, (x, y), c in zip(nodes, xy, counts)],
         "edges": [{"source": n["slug"], "target": t, "type": kind}
                   for n in nodes for kind, field in (("related", "related"), ("subgenre", "subgenres"))
                   for t in n[field] if t in slugs],
@@ -156,7 +158,8 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
     np.savez(DATA / f"image_vecs{suffix}.npz", vecs=image_vecs, owner=np.array(owner),  # for evaluate/fairness/probe
              path=np.array([str(paths[i]) for i in source]), source=source)
     if not tag:
-        (DATA / "graph.json").write_text(json.dumps(build_graph(nodes, xy, counts), ensure_ascii=False))
+        ratings = {s: v["mainstream"] for s, v in json.loads((DATA / "mainstream.json").read_text()).items()}
+        (DATA / "graph.json").write_text(json.dumps(build_graph(nodes, xy, counts, ratings), ensure_ascii=False))
     print(f"wrote data/index{suffix}.npz; {int((counts < MIN_IMAGES).sum())} nodes fell back to text vectors")
 
 

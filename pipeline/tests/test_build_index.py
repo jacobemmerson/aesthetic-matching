@@ -25,6 +25,13 @@ def test_build_graph_drops_edges_to_unknown_nodes():
     assert g["nodes"][0]["image_count"] == 3 and g["nodes"][0]["x"] == 0.0
 
 
+def test_build_graph_carries_mainstream_rating():
+    nodes = [{"slug": "a", "name": "A", "description": "d", "other_names": "", "key_values": "", "wiki_url": "u", "related": [], "subgenres": []},
+             {"slug": "b", "name": "B", "description": "d", "other_names": "", "key_values": "", "wiki_url": "u", "related": [], "subgenres": []}]
+    g = build_graph(nodes, np.zeros((2, 2)), np.array([1, 1]), ratings={"a": 3.5})
+    assert g["nodes"][0]["mainstream"] == 3.5 and g["nodes"][1]["mainstream"] is None
+
+
 def test_prior_is_unit_scaled_and_autocomplete_dominates():
     p = prior([{"popularity": 10, "mentions": 5}, {"popularity": 0, "mentions": 100}, {"popularity": 0, "mentions": 0}])
     assert p.tolist()[2] == 0.0 and p.max() == 1.0 and p[0] > p[1]
