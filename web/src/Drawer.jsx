@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
+/** The selected aesthetic's description, laid out in the verdict column in full. */
 export default function Drawer({ node, onClose }) {
-  const axis = window.matchMedia('(max-width: 799px)').matches ? 'y' : 'x'
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
@@ -11,9 +11,7 @@ export default function Drawer({ node, onClose }) {
   return (
     <AnimatePresence>
       {node && (
-        <motion.aside className="drawer" key={node.slug}
-          initial={{ [axis]: '100%', opacity: 0 }} animate={{ [axis]: 0, opacity: 1 }} exit={{ [axis]: '100%', opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+        <motion.aside className="drawer" key={node.slug} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: .25 }}>
           <button className="close" aria-label="close" onClick={onClose}>×</button>
           <h2>{node.name}</h2>
           {node.other_names && <p className="aliases">{node.other_names}</p>}

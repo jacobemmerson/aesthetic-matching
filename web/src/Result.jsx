@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Graph from './Graph.jsx'
+import Drawer from './Drawer.jsx'
 import { buildRevealSteps, runSteps, TIMING } from './lib/reveal.js'
 import { useObjectUrls } from './lib/objectUrls.js'
 
@@ -9,6 +10,7 @@ const fade = (duration, delay = 0) => (reduced() ? { duration: 0, delay: 0 } : {
 
 export default function Result({ files, result, graph, graphError, onReset }) {
   const [stage, setStage] = useState('reveal')   // 'reveal' | 'done'
+  const [selected, setSelected] = useState(null) // aesthetic whose description is open
   const api = useRef(null)
   const started = useRef(false)
   const shown = useRef({ photos: [], lit: [], overall: false })  // what the reveal has exposed so far, replayed if the graph rebuilds
@@ -52,7 +54,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
   const fly = (id) => api.current?.flyTo(id, .3, reduced() ? 0 : undefined)
   return (
     <main className="result">
-      {graph && <Graph graph={graph} result={result} files={files} onReady={onReady} photosVisible={false} />}
+      {graph && <Graph graph={graph} result={result} files={files} onReady={onReady} onSelect={setSelected} photosVisible={false} />}
       <header className="result-head">
         {!graph && !graphError && <p className="sub">Loading the map…</p>}
         {graphError && <p className="notice">Couldn't load the map</p>}
@@ -79,6 +81,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
             </div>
           </motion.div>
         )}</AnimatePresence>
+        <Drawer node={selected} onClose={() => setSelected(null)} />
       </header>
     </main>
   )
