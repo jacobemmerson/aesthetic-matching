@@ -29,7 +29,7 @@ def statement(score: int, names: list[str], client: httpx.Client | None = None) 
     prompt = (
         f"Score {score}/100 where 0 is the most niche and 100 the most mainstream; aesthetics: {', '.join(names)}. "
         "Write ONE sentence, under 20 words, second person, telling them how niche or mainstream their taste is. "
-        "No emoji, no hashtags, no lists, no preamble."
+        "Do not quote the score or any number. No emoji, no hashtags, no lists, no preamble."
     )
     client = client or httpx.Client(timeout=10)
     try:
