@@ -8,7 +8,7 @@ from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from server.match import Encoder, Index, aggregate, basic_score, cover
+from server.match import Encoder, Index, aggregate, basic_score, mixture, verdict
 from server.roast import statement
 
 DATA = Path(os.environ.get("DATA_DIR", Path(__file__).resolve().parent.parent / "data"))
@@ -67,8 +67,8 @@ async def analyze(request: Request, images: list[UploadFile] = File(...)):
             raise HTTPException(400, f"{up.filename} is not a readable image")
         vecs.append(vec)
         results.append({"filename": up.filename, **index.match(vec)})
-    overall = index.match(aggregate(vecs))
-    aesthetics = cover(results, overall["matches"][0]["slug"])
+    overall = {**index.match(aggregate(vecs)), "matches": mixture(results)}  # placed by the mean embedding, described by the mixture
+    aesthetics = verdict(results)
     score = basic_score(results, state["ratings"])
     slugs = {m["slug"] for r in results + [overall] for m in r["matches"]}
     return {"images": results, "overall": overall, "aesthetics": aesthetics, "basic_score": score,

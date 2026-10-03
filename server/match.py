@@ -14,7 +14,7 @@ PRIOR_WEIGHT = 0.08  # from pipeline/evaluate.py: +2pts popularity-weighted top-
 TOP_K = 5
 SOFTMAX_T = 0.01  # CLIP's own logit scale (100 x cosine); turns scores into per-photo probabilities
 HEAD_SOFTMAX_T = 0.16  # z-scored head logits: measured #1-#2 gaps are ~16x the cosine gaps (0.78 vs 0.048 median)
-NUCLEUS_P = 0.9   # a photo is explained by the fewest aesthetics whose probabilities reach this
+TIE_RATIO = 1 / 3  # a runner-up is a label too when it has at least this share of the top match's probability
 PLACE_NUDGE = (0.2, 0.1)  # how far the map position leans from the top match toward #2 and #3
 
 
@@ -93,34 +93,34 @@ def aggregate(vecs: list[np.ndarray]) -> np.ndarray:
     return normalize(np.mean(vecs, axis=0))
 
 
-def nucleus(matches: list[dict], p: float = NUCLEUS_P) -> list[str]:
-    """Top-p over the listed matches: the fewest slugs whose probabilities reach p."""
-    out, total = [], 0.0
-    for m in matches:
-        out.append(m["slug"])
-        total += m["prob"]
-        if total >= p:
-            break
-    return out
+def labels(matches: list[dict], ratio: float = TIE_RATIO) -> list[str]:
+    """A photo's aesthetics: the top match plus any runner-up within `ratio` of it. A photo can
+    carry two aesthetics; a distant second is not one of them."""
+    top = matches[0]["prob"]
+    return [m["slug"] for m in matches if m["prob"] >= ratio * top]
 
 
-def cover(image_results: list[dict], seed: str, p: float = NUCLEUS_P, cap: int = 5) -> list[dict]:
-    """Smallest set of aesthetics that explains every photo, where a photo is explained by any
-    aesthetic in its nucleus (so clear winners stand alone and near-ties merge). Greedy, seeded
-    with the aggregate's best match; grows with how diverse the photos are. Rows are sorted by
-    photos explained, then probability mass."""
-    nuclei = [{m["slug"]: m["prob"] for m in r["matches"] if m["slug"] in nucleus(r["matches"], p)} for r in image_results]
-    uncovered = set(range(len(nuclei)))
-    chosen = [seed]
-    while True:
-        uncovered -= {i for i in uncovered if chosen[-1] in nuclei[i]}
-        if not uncovered or len(chosen) >= cap:
-            break
-        candidates = {s for i in uncovered for s in nuclei[i]}
-        chosen.append(max(candidates, key=lambda s: (sum(s in n for n in nuclei), sum(n.get(s, 0) for n in nuclei),
-                                                     -min(i for i in uncovered if s in nuclei[i]))))
-    found = [{"slug": s, "photos": [i for i, n in enumerate(nuclei) if s in n]} for s in chosen if any(s in n for n in nuclei)]
-    return sorted(found, key=lambda a: (-len(a["photos"]), -sum(nuclei[i][a["slug"]] for i in a["photos"])))
+def mixture(image_results: list[dict]) -> list[dict]:
+    """The upload's overall distribution: the photos' distributions averaged, so a mix stays a mix
+    instead of collapsing to whatever direction the embeddings share."""
+    mass: dict[str, float] = {}
+    for r in image_results:
+        for m in r["matches"]:
+            mass[m["slug"]] = mass.get(m["slug"], 0.0) + m["prob"] / len(image_results)
+    return [{"slug": s, "prob": round(p, 4)} for s, p in sorted(mass.items(), key=lambda kv: -kv[1])]
+
+
+def verdict(image_results: list[dict], cap: int = 5) -> list[dict]:
+    """Every label any photo carries, with the photos that carry it, by probability mass."""
+    mass: dict[str, float] = {}
+    photos: dict[str, list[int]] = {}
+    for i, r in enumerate(image_results):
+        probs = {m["slug"]: m["prob"] for m in r["matches"]}
+        for s in labels(r["matches"]):
+            mass[s] = mass.get(s, 0.0) + probs[s]
+            photos.setdefault(s, []).append(i)
+    rows = sorted(mass, key=lambda s: (-mass[s], -len(photos[s]), photos[s][0]))
+    return [{"slug": s, "photos": photos[s]} for s in rows[:cap]]
 
 
 def basic_score(image_results: list[dict], ratings: dict[str, float]) -> int:

@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 from server import app as app_mod
-from server.match import Index, aggregate, basic_score, cover, normalize, nucleus
+from server.match import Index, aggregate, basic_score, labels, mixture, normalize, verdict
 
 # three synthetic aesthetics on orthogonal axes; "text-only" has no images
 INDEX = Index(
@@ -60,10 +60,16 @@ def test_head_probabilities_use_the_logit_scale():
     assert probs["a"] > probs["b"] > 0.05
 
 
-def test_nucleus_is_smallest_set_reaching_p():
-    assert nucleus(photo("a", "b", "c")["matches"], 0.9) == ["a"]
-    assert nucleus(photo("a", "b", "c", probs=[0.86, 0.14, 0])["matches"], 0.9) == ["a", "b"]
-    assert nucleus(photo("a", "b", probs=[0.5, 0.3])["matches"], 0.9) == ["a", "b"]  # never more than what is listed
+def test_labels_are_every_match_within_a_third_of_the_top():
+    assert labels(photo("a", "b", "c")["matches"]) == ["a"]                                   # 0.95 / 0.025
+    assert labels(photo("a", "b", "c", probs=[0.59, 0.40, 0.01])["matches"]) == ["a", "b"]  # a real tie
+    assert labels(photo("a", "b", "c", probs=[0.88, 0.11, 0.01])["matches"]) == ["a"]       # a distant second is not
+
+
+def test_mixture_averages_the_photos_distributions():
+    res = [photo("a", "b", probs=[0.8, 0.2]), photo("b", "c", probs=[0.6, 0.4])]
+    assert mixture(res)[:2] == [{"slug": "b", "prob": 0.4}, {"slug": "a", "prob": 0.4}] or mixture(res)[:2] == [{"slug": "a", "prob": 0.4}, {"slug": "b", "prob": 0.4}]
+    assert mixture(res)[2] == {"slug": "c", "prob": 0.2}
 
 
 def test_aggregate_is_unit_mean():
@@ -71,25 +77,13 @@ def test_aggregate_is_unit_mean():
     np.testing.assert_allclose(v, [2**-0.5, 2**-0.5, 0], atol=1e-6)
 
 
-def test_cover_collapses_identical_photos_and_splits_disjoint_ones():
+def test_verdict_lists_every_label_with_its_photos_by_mass():
     same = [photo("a", "b", "c")] * 3
-    assert cover(same, "a") == [{"slug": "a", "photos": [0, 1, 2]}]
-    disjoint = [photo("a", "x"), photo("b", "y"), photo("c", "z")]
-    assert [c["slug"] for c in cover(disjoint, "a")] == ["a", "b", "c"]
-
-
-def test_cover_only_merges_near_ties():
-    tie = photo("s", "p", probs=[0.86, 0.14])    # within p=0.9, so explained by either
-    clear = photo("q", "p", probs=[0.99, 0.01])  # p is a distant second: not explained by it
-    assert cover([tie, clear], "p") == [{"slug": "q", "photos": [1]}, {"slug": "p", "photos": [0]}]
-
-
-def test_cover_sorts_by_photos_explained_and_caps():
-    res = [photo("s"), photo("q"), photo("q")]
-    assert cover(res, "s") == [{"slug": "q", "photos": [1, 2]}, {"slug": "s", "photos": [0]}]
-    res = [photo("z"), photo("a"), photo("b"), photo("c")]
-    assert len(cover(res, "z", cap=2)) == 2
-    assert cover([photo("a")], "ghost") == [{"slug": "a", "photos": [0]}]  # a seed that explains nothing is dropped
+    assert verdict(same) == [{"slug": "a", "photos": [0, 1, 2]}]
+    two = [photo("a", "b", probs=[0.59, 0.40]), photo("c", "a", probs=[0.9, 0.1])]
+    assert verdict(two) == [{"slug": "c", "photos": [1]}, {"slug": "a", "photos": [0]}, {"slug": "b", "photos": [0]}]  # photo 0 carries two labels
+    many = [photo(s) for s in "abcdefg"]
+    assert len(verdict(many, cap=5)) == 5
 
 
 def test_basic_score_rescales_over_catalog_range():
@@ -122,8 +116,8 @@ def test_analyze_happy_path(client):
     body = r.json()
     assert [i["matches"][0]["slug"] for i in body["images"]] == ["red", "green", "green"]
     assert body["overall"]["matches"][0]["slug"] in {"red", "green"} and -1 <= body["overall"]["z"] <= 1
-    assert body["aesthetics"][0]["slug"] == body["overall"]["matches"][0]["slug"]
-    assert sorted(i for a in body["aesthetics"] for i in a["photos"]) == [0, 1, 2]  # every photo explained
+    assert body["overall"]["matches"][0]["slug"] in {"red", "green"} and "prob" in body["overall"]["matches"][0]
+    assert sorted(set(i for a in body["aesthetics"] for i in a["photos"])) == [0, 1, 2]  # every photo labelled
     assert 0 <= body["basic_score"] <= 100 and body["statement"]  # fallback line; no model in tests
     assert body["names"]["red"] == "Red"
 
