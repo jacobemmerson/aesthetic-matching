@@ -45,16 +45,6 @@ const shots = {
   async result() { for (const w of [1280, 390]) { const p = await page(w); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click(); await p.waitForTimeout(6000); await shoot(p, `result-${w}`); await p.context().close() } },
   async analyzing() { const p = await page(1280); await p.route('**/api/analyze', (r) => setTimeout(() => r.fulfill({ status: 200, contentType: 'application/json', body: analyze }), 8000)); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click(); await p.waitForTimeout(800); await shoot(p, 'analyzing-1280'); await p.context().close() },
   async error429() { const p = await page(1280); await p.route('**/api/analyze', (r) => r.fulfill({ status: 429, contentType: 'application/json', body: JSON.stringify({ detail: 'limit is 5 analyses per hour' }) })); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click(); await p.waitForTimeout(800); await shoot(p, 'error-429'); await p.context().close() },
-  async graph() {
-    for (const w of [1280, 390]) {
-      const p = await page(w); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click()
-      await p.waitForSelector('.graph canvas'); await p.waitForTimeout(7000)
-      await p.fill('.search input', 'goth'); await p.waitForTimeout(300); await shoot(p, `search-${w}`)
-      await p.press('.search input', 'Enter'); await p.waitForTimeout(900); await shoot(p, `drawer-${w}`)
-      if (w === 1280) { const c = await p.$('.graph canvas'); const b = await c.boundingBox(); await p.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(400); await shoot(p, 'hover-1280') }
-      await p.context().close()
-    }
-  },
   async reveal() {
     const p = await page(1280); await uploadAll(p); await p.getByRole('button', { name: 'Find my aesthetic' }).click()
     await p.waitForSelector('.graph canvas'); await p.waitForTimeout(1600); await shoot(p, 'reveal-mid')

@@ -50,7 +50,6 @@ export default function Result({ files, result, graph, graphError, onReset }) {
   }
 
   const fly = (id) => api.current?.flyTo(id, .3, reduced() ? 0 : undefined)
-  const n = result.aesthetics.length
   return (
     <main className="result">
       {graph && <Graph graph={graph} result={result} files={files} onReady={onReady} photosVisible={false} />}
@@ -59,7 +58,6 @@ export default function Result({ files, result, graph, graphError, onReset }) {
         {graphError && <p className="notice">Couldn't load the map</p>}
         <AnimatePresence>{stage === 'done' && (
           <motion.div key="verdict" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={fade(.5)}>
-            <p className="sub">{n === 1 ? 'One aesthetic' : `${n} aesthetics`} across {files.length} photos</p>
             <ol className="verdict">
               {result.aesthetics.map((a, i) => (
                 <motion.li key={a.slug} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={fade(.4, .15 * i)}>
@@ -70,7 +68,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
                 </motion.li>
               ))}
             </ol>
-            <motion.div className="score" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade(.4, .15 * n + .2)}>
+            <motion.div className="score" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade(.4, .15 * result.aesthetics.length + .2)}>
               <div className="score-head"><span>Score</span><strong>{result.basic_score}<small> / 100</small></strong></div>
               <div className="meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={result.basic_score}><span style={{ width: `${result.basic_score}%` }} /></div>
               <div className="meter-ends"><small>Niche</small><small>Basic</small></div>

@@ -5,7 +5,6 @@ import { NodeImageProgram } from '@sigma/node-image'
 import { drawDiscNodeLabel } from 'sigma/rendering'
 import { useObjectUrls } from './lib/objectUrls.js'
 import Drawer from './Drawer.jsx'
-import { searchNodes } from './lib/search.js'
 import { mixHex, tween } from './lib/tween.js'
 import { identity, lookAt, multiply, rotateVec, rotationFromDrag, slerpRotation } from './lib/sphere.js'
 import EdgeGrowProgram from './lib/edgeGrow.js'
@@ -33,7 +32,6 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
   const urls = useObjectUrls(files)
   const [hover, setHover] = useState(null)      // { slug, x, y }
   const [selected, setSelected] = useState(null) // node object
-  const [query, setQuery] = useState('')
   const nodes = Object.fromEntries(graph.nodes.map((n) => [n.slug, n]))
   const hot = new Set(result.aesthetics.map((a) => a.slug))
   const litAtStart = photosVisible ? hot : new Set()  // reveal lights matches via api.light
@@ -179,16 +177,9 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     }
   }, [graph, result, files, urls])
 
-  const hits = searchNodes(graph.nodes, query)
-  const pick = (n) => { setQuery(''); apiRef.current?.flyTo(n.slug); setSelected(n) }
-
   return (
     <div className="graph-shell">
       <div className="graph" ref={el} />
-      <div className="search">
-        <input placeholder="Find an aesthetic…" value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Escape') setQuery(''); if (e.key === 'Enter' && hits[0]) pick(hits[0]) }} />
-        {hits.length > 0 && <ul>{hits.map((n) => <li key={n.slug} onMouseDown={() => pick(n)}>{n.name}</li>)}</ul>}
-      </div>
       {hover && nodes[hover.slug] && (
         <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
           <strong>{nodes[hover.slug].name}</strong><span>{nodes[hover.slug].description.split(/(?<=\.)\s/)[0]}</span>

@@ -40,11 +40,6 @@ footer a { color: var(--muted); }
 .result-head > * { pointer-events: auto; }
 .graph-shell { position: absolute; inset: 0; left: min(470px, 34vw); }  /* the sphere sits beside the verdict, not under it */
 .graph { position: absolute; inset: 0; }
-.search { position: absolute; top: 16px; right: 16px; width: min(280px, calc(100% - 32px)); z-index: 5; }
-.search input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: rgba(20,20,24,.9); color: var(--text); font: inherit; }
-.search ul { list-style: none; margin: 6px 0 0; padding: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
-.search li { padding: 8px 10px; border-radius: 6px; cursor: pointer; }
-.search li:hover { background: var(--accent-soft); }
 .tip { position: absolute; z-index: 6; pointer-events: none; max-width: 260px; background: rgba(20,20,24,.95); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: .85rem; display: flex; flex-direction: column; gap: 2px; }
 .tip span { color: var(--muted); }
 .drawer { position: absolute; top: 0; right: 0; bottom: 0; width: min(380px, 100%); z-index: 7; background: rgba(20,20,24,.97); border-left: 1px solid var(--border); padding: 24px; overflow: auto; }
@@ -54,8 +49,6 @@ footer a { color: var(--muted); }
 .values span { color: var(--muted); }
 .close { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; }
 @media (max-width: 799px) {
-  .search { top: auto; bottom: 16px; left: 16px; right: 16px; width: auto; }
-  .search ul { position: absolute; bottom: 100%; left: 0; right: 0; margin: 0 0 6px; }
   .drawer { top: auto; left: 0; right: 0; width: 100%; max-height: 55%; border-left: 0; border-top: 1px solid var(--border); border-radius: 16px 16px 0 0; }
 }
 .verdict { list-style: none; margin: 8px 0 16px; padding: 0; display: flex; flex-direction: column; gap: 6px; }

@@ -4,7 +4,7 @@ import os
 import httpx
 
 OLLAMA = os.environ.get("OLLAMA_URL", "http://localhost:11434")
-MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2:3b")
+MODEL = os.environ.get("OLLAMA_MODEL", "llama3.1:8b")  # Ollama's default tag is the Q4_K_M quant
 
 # One line per score decile (0-9, 10-19, ... 90-100): served when the model is unreachable.
 BANDS = [
@@ -27,10 +27,13 @@ def fallback(score: int) -> str:
 
 def statement(score: int, names: list[str], client: httpx.Client | None = None) -> str:
     prompt = (
-        f"Score {score}/100 where 0 is the most obscure taste and 100 the most mainstream; aesthetics: {', '.join(names)}. "
-        "Write two sentences, 30 to 45 words in total, second person, telling them how obscure or mainstream their "
-        "taste is and what that says about them. Never use the word 'niche'. Do not quote the score or any number. "
-        "No emoji, no hashtags, no lists, no preamble."
+        "You write the verdict for a playful web quiz that places people's photos on a map of internet aesthetics. "
+        f"This person's taste scored {score} out of 100, where 0 is the most obscure taste in the catalog and 100 "
+        f"the most mainstream. The aesthetics their photos matched: {', '.join(names)}.\n"
+        "Write exactly two sentences, 30 to 45 words in total, second person, conversational and a little wry. "
+        "The first sentence says how obscure or mainstream their taste is and what that suggests about them. "
+        "The second may nod to one of the matched aesthetics. Never use the word 'niche'. Never quote a number. "
+        "No emoji, hashtags, lists, quotation marks, or preamble; reply with the two sentences only."
     )
     client = client or httpx.Client(timeout=10)
     try:
