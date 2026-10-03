@@ -1,4 +1,4 @@
-"""data/nodes.json + data/img -> data/index.npz (CLIP vectors) + data/graph.json (layout + edges)."""
+"""data/nodes.json + data/img -> data/index.npz (image vectors) + data/graph.json (layout + edges)."""
 import argparse
 import json
 import os
@@ -13,8 +13,8 @@ DATA = Path(__file__).resolve().parent.parent / "data"
 IMG_DIR = DATA / "img"
 # Backbone for every embedding in a build; the index records it so the server loads the same one.
 # Override with CLIP_MODEL / CLIP_PRETRAINED when building a tagged index with another backbone.
-MODEL = os.environ.get("CLIP_MODEL", "ViT-B-32")
-PRETRAINED = os.environ.get("CLIP_PRETRAINED", "laion2b_s34b_b79k")
+MODEL = os.environ.get("CLIP_MODEL", "ViT-B-16-SigLIP2")  # env names predate the SigLIP switch
+PRETRAINED = os.environ.get("CLIP_PRETRAINED", "webli")
 MIN_IMAGES = 3  # below this the image centroid is too noisy; fall back to the text vector
 
 

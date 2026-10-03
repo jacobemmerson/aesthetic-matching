@@ -1,5 +1,5 @@
 """Face detection (OpenCV YuNet) and masking. Faces carry most of the race and gender signal
-in a CLIP vector while aesthetics live in clothes and setting, so the index can be built and
+in an image embedding while aesthetics live in clothes and setting, so the index can be built and
 queried with faces blanked out."""
 import os
 from pathlib import Path

@@ -12,7 +12,7 @@ from pipeline.train_head import zscore
 IMAGE_WEIGHT, TEXT_WEIGHT = 0.7, 0.3
 PRIOR_WEIGHT = 0.08  # from pipeline/evaluate.py: +2pts popularity-weighted top-1 for -0.6pt plain
 TOP_K = 5
-SOFTMAX_T = 0.01  # CLIP's own logit scale (100 x cosine); turns scores into per-photo probabilities
+SOFTMAX_T = 0.01  # the contrastive logit scale (100 x cosine); turns scores into per-photo probabilities
 HEAD_SOFTMAX_T = 0.16  # z-scored head logits: measured #1-#2 gaps are ~16x the cosine gaps (0.78 vs 0.048 median)
 TIE_RATIO = 1 / 3  # a runner-up is a label too when it has at least this share of the top match's probability
 PLACE_NUDGE = (0.06, 0.03)  # how far the map position leans from the top match toward #2 and #3; small, so the nearest node is always the label
@@ -37,7 +37,7 @@ class Index:
     head_w: np.ndarray | None = None  # linear head; None = nearest centroid
     head_b: np.ndarray | None = None
     masked_faces: bool = False  # index was built from face-masked images, so mask uploads too
-    backbone: tuple[str, str] = ("ViT-B-32", "laion2b_s34b_b79k")  # (open_clip model, pretrained) the vectors came from
+    backbone: tuple[str, str] = ("ViT-B-32", "laion2b_s34b_b79k")  # (open_clip model, pretrained) the vectors came from; files without the field predate SigLIP
 
     def __post_init__(self):
         d = self.centroids.shape[1]
@@ -93,11 +93,6 @@ class Index:
                 **self.place([self.slugs[i] for i in top])}
 
 
-def aggregate(vecs: list[np.ndarray]) -> np.ndarray:
-    """One unit vector for the whole upload, scored like a photo."""
-    return normalize(np.mean(vecs, axis=0))
-
-
 def labels(matches: list[dict], ratio: float = TIE_RATIO) -> list[str]:
     """A photo's aesthetics: the top match plus any runner-up within `ratio` of it. A photo can
     carry two aesthetics; a distant second is not one of them."""
@@ -140,7 +135,7 @@ def basic_score(image_results: list[dict], ratings: dict[str, float]) -> int:
 
 
 class Encoder:
-    """CLIP image encoder, loaded once. Kept separate so tests can swap in a fake."""
+    """Image encoder (open_clip backbone), loaded once. Kept separate so tests can swap in a fake."""
 
     def __init__(self, masked: bool = False, backbone: tuple[str, str] | None = None):
         from pipeline.build_index import load_model
@@ -149,7 +144,7 @@ class Encoder:
         if masked:
             from pipeline.faces import Detector
 
-            self.masker = Detector()  # before CLIP so a missing model file fails fast at startup
+            self.masker = Detector()  # before the backbone so a missing model file fails fast at startup
         self.model, self.preprocess, _, self.torch = load_model(*backbone) if backbone else load_model()
 
     def encode(self, data: bytes) -> np.ndarray:

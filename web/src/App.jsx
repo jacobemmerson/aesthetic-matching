@@ -45,7 +45,7 @@ export default function App() {
         {phase === 'analyzing' && <Fade key="analyzing"><Analyzing files={files} urls={urls} /></Fade>}
         {phase === 'result' && <Fade key="result"><Result files={files} urls={urls} result={result} graph={graph} graphError={graphError} onReset={onReset} /></Fade>}
       </AnimatePresence>
-      <footer className={phase === 'result' ? 'over-map' : undefined}>Aesthetic names and descriptions are from the <a href="https://aesthetics.fandom.com">Aesthetics Wiki</a> (CC BY-SA). Matching uses CLIP image embeddings. Your photos are not stored.</footer>
+      <footer className={phase === 'result' ? 'over-map' : undefined}>Aesthetic names and descriptions are from the <a href="https://aesthetics.fandom.com">Aesthetics Wiki</a> (CC BY-SA). Matching uses SigLIP 2 image embeddings. Your photos are not stored.</footer>
     </>
   )
 }

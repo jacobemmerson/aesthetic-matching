@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 from server import app as app_mod
-from server.match import Index, aggregate, basic_score, labels, mixture, normalize, verdict
+from server.match import Index, basic_score, labels, mixture, normalize, verdict
 
 # three synthetic aesthetics on orthogonal axes; "text-only" has no images
 INDEX = Index(
@@ -77,10 +77,6 @@ def test_mixture_averages_the_photos_distributions():
     assert mixture(res)[:2] == [{"slug": "b", "prob": 0.4}, {"slug": "a", "prob": 0.4}] or mixture(res)[:2] == [{"slug": "a", "prob": 0.4}, {"slug": "b", "prob": 0.4}]
     assert mixture(res)[2] == {"slug": "c", "prob": 0.2}
 
-
-def test_aggregate_is_unit_mean():
-    v = aggregate([np.array([1, 0, 0], np.float32), np.array([0, 1, 0], np.float32)])
-    np.testing.assert_allclose(v, [2**-0.5, 2**-0.5, 0], atol=1e-6)
 
 
 def test_verdict_lists_every_label_with_its_photos_by_mass():
