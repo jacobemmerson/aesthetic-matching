@@ -114,12 +114,13 @@ def test_analyze_happy_path(client):
     assert body["overall"]["matches"][0]["slug"] in {"red", "green"} and -1 <= body["overall"]["z"] <= 1
     assert body["aesthetics"][0]["slug"] == body["overall"]["matches"][0]["slug"]
     assert sorted(i for a in body["aesthetics"] for i in a["photos"]) == [0, 1, 2]  # every photo explained
-    assert 0 <= body["basic_score"] <= 100 and "roast" not in body
+    assert 0 <= body["basic_score"] <= 100 and body["statement"]  # fallback line; no model in tests
     assert body["names"]["red"] == "Red"
 
 
-def test_analyze_needs_three_photos(client):
-    assert client.post("/api/analyze", files=upload("red", "green")).status_code == 400
+def test_analyze_accepts_one_photo_but_not_zero(client):
+    assert client.post("/api/analyze", files=upload("red")).status_code == 200
+    assert client.post("/api/analyze", files=[]).status_code in (400, 422)
 
 
 def test_rejects_junk_and_rate_limits(client):

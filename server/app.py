@@ -9,10 +9,11 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from server.match import Encoder, Index, aggregate, basic_score, cover
+from server.roast import statement
 
 DATA = Path(os.environ.get("DATA_DIR", Path(__file__).resolve().parent.parent / "data"))
 WEB = Path(__file__).resolve().parent.parent / "web" / "dist"
-MIN_IMAGES, MAX_IMAGES, MAX_BYTES = 3, 10, 5_000_000
+MIN_IMAGES, MAX_IMAGES, MAX_BYTES = 1, 10, 5_000_000
 RATE_LIMIT, RATE_WINDOW = int(os.environ.get("RATE_LIMIT", 5)), 3600  # analyses per IP per hour; 0 disables
 
 app = FastAPI(title="aesthetics roast")
@@ -68,8 +69,10 @@ async def analyze(request: Request, images: list[UploadFile] = File(...)):
         results.append({"filename": up.filename, **index.match(vec)})
     overall = index.match(aggregate(vecs))
     aesthetics = cover(results, overall["matches"][0]["slug"])
+    score = basic_score(results, state["ratings"])
     slugs = {m["slug"] for r in results + [overall] for m in r["matches"]}
-    return {"images": results, "overall": overall, "aesthetics": aesthetics, "basic_score": basic_score(results, state["ratings"]),
+    return {"images": results, "overall": overall, "aesthetics": aesthetics, "basic_score": score,
+            "statement": statement(score, [nodes[a["slug"]]["name"] for a in aesthetics]),
             "names": {s: nodes[s]["name"] for s in slugs}}
 
 
