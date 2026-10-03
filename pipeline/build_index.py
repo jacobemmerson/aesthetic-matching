@@ -34,22 +34,25 @@ def centroids(image_vecs: np.ndarray, owner: list[str], slugs: list[str]) -> tup
 def layout(vectors: np.ndarray, seed: int = 0) -> np.ndarray:
     import umap  # slow import, keep it out of the test path for the pure functions
 
+    """Unit vectors on a sphere: UMAP embeds straight into (latitude, longitude) so the map has no
+    edges to pan off."""
     n = len(vectors)
-    if n < 5:  # umap needs neighbours; tiny inputs (tests, smoke runs) get a circle
+    if n < 5:  # umap needs neighbours; tiny inputs (tests, smoke runs) sit on the equator
         t = np.linspace(0, 2 * np.pi, n, endpoint=False)
-        return np.stack([np.cos(t), np.sin(t)], 1).astype(np.float32)
-    xy = umap.UMAP(n_neighbors=min(15, n - 1), min_dist=0.1, metric="cosine", random_state=seed).fit_transform(vectors)
-    return ((xy - xy.mean(0)) / xy.std(0)).astype(np.float32)
+        return np.stack([np.cos(t), np.sin(t), np.zeros(n)], 1).astype(np.float32)
+    lat, lon = umap.UMAP(n_neighbors=min(15, n - 1), min_dist=0.1, metric="cosine", output_metric="haversine",
+                         random_state=seed).fit_transform(vectors).T
+    return np.stack([np.cos(lat) * np.cos(lon), np.cos(lat) * np.sin(lon), np.sin(lat)], 1).astype(np.float32)
 
 
-def build_graph(nodes: list[dict], xy: np.ndarray, counts: np.ndarray, ratings: dict[str, float] | None = None) -> dict:
+def build_graph(nodes: list[dict], xyz: np.ndarray, counts: np.ndarray, ratings: dict[str, float] | None = None) -> dict:
     """`ratings`: the judges' plain mainstream rating per slug (data/mainstream.json), served as the basic score."""
     slugs = {n["slug"] for n in nodes}
     ratings = ratings or {}
     return {
-        "nodes": [{"slug": n["slug"], "name": n["name"], "x": float(x), "y": float(y), "image_count": int(c),
+        "nodes": [{"slug": n["slug"], "name": n["name"], "x": float(x), "y": float(y), "z": float(z), "image_count": int(c),
                    "description": n["description"], "other_names": n["other_names"], "key_values": n["key_values"],
-                   "wiki_url": n["wiki_url"], "mainstream": ratings.get(n["slug"])} for n, (x, y), c in zip(nodes, xy, counts)],
+                   "wiki_url": n["wiki_url"], "mainstream": ratings.get(n["slug"])} for n, (x, y, z), c in zip(nodes, xyz, counts)],
         "edges": [{"source": n["slug"], "target": t, "type": kind}
                   for n in nodes for kind, field in (("related", "related"), ("subgenre", "subgenres"))
                   for t in n[field] if t in slugs],
@@ -137,7 +140,7 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
     # ponytail: text vectors sit in a different region of CLIP space than image centroids, so
     # text-only nodes land in their own UMAP cluster; fine while they're rare after the fetch.
     node_vecs = np.where((counts >= MIN_IMAGES)[:, None], normalize(cents - mean_img), normalize(text_vecs - mean_txt))
-    xy = layout(node_vecs)
+    xyz = layout(node_vecs)
     extra = {}
     if debias != "none":
         t = np.load(DATA / f"debias_{debias}{'_masked' if mask_faces and debias == 'leace' else ''}.npz")
@@ -153,13 +156,13 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
         extra["head_w"], extra["head_b"] = train(treated, owner_idx, len(slugs), weights, l2)
         print(f"head: l2={l2}")
     suffix = f"_{tag}" if tag else ""
-    np.savez(DATA / f"index{suffix}.npz", slugs=np.array(slugs), centroids=cents, text_vecs=text_vecs, counts=counts, xy=xy,
+    np.savez(DATA / f"index{suffix}.npz", slugs=np.array(slugs), centroids=cents, text_vecs=text_vecs, counts=counts, xyz=xyz,
              mean_img=mean_img, mean_txt=mean_txt, prior=prior(nodes), masked_faces=np.array(mask_faces), **extra)
     np.savez(DATA / f"image_vecs{suffix}.npz", vecs=image_vecs, owner=np.array(owner),  # for evaluate/fairness/probe
              path=np.array([str(paths[i]) for i in source]), source=source)
     if not tag:
         ratings = {s: v["mainstream"] for s, v in json.loads((DATA / "mainstream.json").read_text()).items()}
-        (DATA / "graph.json").write_text(json.dumps(build_graph(nodes, xy, counts, ratings), ensure_ascii=False))
+        (DATA / "graph.json").write_text(json.dumps(build_graph(nodes, xyz, counts, ratings), ensure_ascii=False))
     print(f"wrote data/index{suffix}.npz; {int((counts < MIN_IMAGES).sum())} nodes fell back to text vectors")
 
 

@@ -12,23 +12,25 @@ def test_centroids_are_unit_means_and_counts():
     assert not cents[2].any()
 
 
-def test_layout_shape():
-    assert layout(np.random.rand(3, 8).astype(np.float32)).shape == (3, 2)
-    assert layout(np.random.rand(40, 8).astype(np.float32)).shape == (40, 2)
+def test_layout_is_unit_vectors_on_a_sphere():
+    for n in (3, 40):
+        xyz = layout(np.random.rand(n, 8).astype(np.float32))
+        assert xyz.shape == (n, 3)
+        np.testing.assert_allclose(np.linalg.norm(xyz, axis=1), 1, atol=1e-5)
 
 
 def test_build_graph_drops_edges_to_unknown_nodes():
     nodes = [{"slug": "a", "name": "A", "description": "d", "other_names": "", "key_values": "", "wiki_url": "u", "related": ["b", "ghost"], "subgenres": []},
              {"slug": "b", "name": "B", "description": "d", "other_names": "", "key_values": "", "wiki_url": "u", "related": [], "subgenres": ["a"]}]
-    g = build_graph(nodes, np.zeros((2, 2)), np.array([3, 0]))
+    g = build_graph(nodes, np.array([[0, 0, 1], [1, 0, 0]], np.float32), np.array([3, 0]))
     assert [e["target"] for e in g["edges"]] == ["b", "a"] and g["edges"][1]["type"] == "subgenre"
-    assert g["nodes"][0]["image_count"] == 3 and g["nodes"][0]["x"] == 0.0
+    assert g["nodes"][0]["image_count"] == 3 and (g["nodes"][0]["x"], g["nodes"][0]["z"]) == (0.0, 1.0)
 
 
 def test_build_graph_carries_mainstream_rating():
     nodes = [{"slug": "a", "name": "A", "description": "d", "other_names": "", "key_values": "", "wiki_url": "u", "related": [], "subgenres": []},
              {"slug": "b", "name": "B", "description": "d", "other_names": "", "key_values": "", "wiki_url": "u", "related": [], "subgenres": []}]
-    g = build_graph(nodes, np.zeros((2, 2)), np.array([1, 1]), ratings={"a": 3.5})
+    g = build_graph(nodes, np.zeros((2, 3)), np.array([1, 1]), ratings={"a": 3.5})
     assert g["nodes"][0]["mainstream"] == 3.5 and g["nodes"][1]["mainstream"] is None
 
 
