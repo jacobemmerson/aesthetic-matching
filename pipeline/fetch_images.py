@@ -28,9 +28,14 @@ class QuotaExhausted(Exception):
     pass
 
 
-def search(client: httpx.Client, node: dict, num: int, key: str) -> list[dict]:
+DEFAULT_PHRASINGS = ("{name} aesthetic", "{name} style")
+
+
+def search(client: httpx.Client, node: dict, num: int, key: str, phrasings: tuple[str, ...] = DEFAULT_PHRASINGS) -> list[dict]:
+    """Default phrasings are fallbacks (first non-empty wins); explicit ones are all fetched and
+    pooled, which is how a thin or skewed node gets a broader reference set."""
     rows = []
-    for phrasing in (f"{node['name']} aesthetic", f"{node['name']} style"):  # some queries come back empty; retry once reworded
+    for phrasing in (p.format(name=node["name"]) for p in phrasings):  # some queries come back empty; retry once reworded
         for attempt in range(3):
             try:
                 r = client.post(SERPER, headers={"X-API-KEY": key}, json={"q": phrasing, "num": num})
@@ -42,9 +47,9 @@ def search(client: httpx.Client, node: dict, num: int, key: str) -> list[dict]:
         if r.status_code in (400, 401, 402, 403, 429):
             raise QuotaExhausted(r.text[:200])
         r.raise_for_status()
-        rows = [{"slug": node["slug"], "url": it["imageUrl"], "page_url": it.get("link", ""), "title": it.get("title", "")}
-                for it in r.json().get("images", [])]
-        if rows:
+        rows += [{"slug": node["slug"], "url": it["imageUrl"], "page_url": it.get("link", ""), "title": it.get("title", "")}
+                 for it in r.json().get("images", [])]
+        if rows and phrasings is DEFAULT_PHRASINGS:
             return rows
     return rows
 
@@ -76,21 +81,22 @@ def api_key() -> str:
     return key or sys.exit("set SERPER_API_KEY in the environment or in .env")
 
 
-def main(limit: int | None, num: int):
+def main(limit: int | None, num: int, slugs: list[str] | None = None, phrasings: tuple[str, ...] = DEFAULT_PHRASINGS):
     key = api_key()
     nodes = json.loads((DATA / "nodes.json").read_text())
     done = done_slugs(IMAGES)
-    todo = [n for n in nodes if n["slug"] not in done][:limit]
+    todo = [n for n in nodes if n["slug"] in slugs] if slugs else [n for n in nodes if n["slug"] not in done][:limit]
     print(f"{len(todo)} aesthetics to fetch this run ({len(done)} already done, {len(nodes)} total)")
     ua = {"User-Agent": "Mozilla/5.0 (compatible; aesthetics-roast-app/0.1)"}
     with httpx.Client(headers=ua, timeout=20) as client, IMAGES.open("a") as out:
         for i, node in enumerate(todo, 1):
             try:
-                rows = search(client, node, num, key)
+                rows = search(client, node, num, key, phrasings)
             except QuotaExhausted as e:
                 print(f"quota exhausted after {i - 1} aesthetics ({e}); rerun later to resume")
                 return
             rows = list({hashlib.sha1(r["url"].encode()).hexdigest()[:12]: r for r in rows}.items())  # dedupe by url
+            rows = [(h, r) for h, r in rows if not (IMG_DIR / node["slug"] / f"{h}.jpg").exists()]  # a re-fetch only adds
             with ThreadPoolExecutor(8) as pool:
                 flags = pool.map(lambda dr: download(client, dr[1]["url"], IMG_DIR / node["slug"] / f"{dr[0]}.jpg"), rows)
             saved = 0
@@ -106,5 +112,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, help="only the first N not-yet-fetched aesthetics (smoke run)")
     ap.add_argument("--num", type=int, default=20, help="images requested per aesthetic")
+    ap.add_argument("--slugs", help="comma-separated slugs to (re)fetch even if already done; new images are added")
+    ap.add_argument("--phrasings", help="comma-separated query templates with {name}, all fetched and pooled")
     a = ap.parse_args()
-    main(a.limit, a.num)
+    main(a.limit, a.num, a.slugs.split(",") if a.slugs else None, tuple(a.phrasings.split(",")) if a.phrasings else DEFAULT_PHRASINGS)
