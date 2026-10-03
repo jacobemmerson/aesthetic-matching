@@ -1,5 +1,6 @@
 data/img/
 data/raw/
+docs/
 .venv/
 __pycache__/
 .env

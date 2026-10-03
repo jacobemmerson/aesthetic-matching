@@ -1,8 +1,7 @@
 # What's your aesthetic?
 
 Drop up to ten photos and get placed on a globe of 152 internet aesthetics, with a score from
-niche to basic and a two-sentence verdict from a local language model. Names and descriptions
-come from the [Aesthetics Wiki](https://aesthetics.fandom.com) (CC BY-SA). Photos are never stored.
+niche to basic and a two-sentence verdict from a local language model. 
 
 ## How it works
 
