@@ -8,7 +8,7 @@ from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from server.match import Encoder, Index, aggregate, basic_score, mixture, verdict
+from server.match import Encoder, Index, basic_score, mixture, verdict
 from server.roast import statement
 
 DATA = Path(os.environ.get("DATA_DIR", Path(__file__).resolve().parent.parent / "data"))
@@ -56,7 +56,7 @@ async def analyze(request: Request, images: list[UploadFile] = File(...)):
         raise HTTPException(400, f"upload {MIN_IMAGES}-{MAX_IMAGES} images")
     check_rate(client_ip(request))
     index, encoder, nodes = state["index"], state["encoder"], state["nodes"]
-    results, vecs = [], []
+    results = []
     for up in images:
         data = await up.read()
         if len(data) > MAX_BYTES:
@@ -65,9 +65,9 @@ async def analyze(request: Request, images: list[UploadFile] = File(...)):
             vec = encoder.encode(data)
         except Exception:
             raise HTTPException(400, f"{up.filename} is not a readable image")
-        vecs.append(vec)
         results.append({"filename": up.filename, **index.match(vec)})
-    overall = {**index.match(aggregate(vecs)), "matches": mixture(results)}  # placed by the mean embedding, described by the mixture
+    mix = mixture(results)
+    overall = {"matches": mix, **index.place([m["slug"] for m in mix[:3]])}  # the You dot sits by the mixture's top label
     aesthetics = verdict(results)
     score = basic_score(results, state["ratings"])
     slugs = {m["slug"] for r in results + [overall] for m in r["matches"]}

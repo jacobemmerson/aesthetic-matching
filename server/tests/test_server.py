@@ -60,6 +60,12 @@ def test_head_probabilities_use_the_logit_scale():
     assert probs["a"] > probs["b"] > 0.05
 
 
+def test_place_anchors_at_the_first_slug_with_nudges():
+    v = INDEX.place(["red", "green", "text-only"])
+    np.testing.assert_allclose([v["x"], v["y"], v["z"]], np.array([0.2, 0.1, 0.7]) / np.linalg.norm([0.2, 0.1, 0.7]), atol=1e-5)
+    assert INDEX.place(["green"])["x"] == 1.0  # nothing to nudge toward
+
+
 def test_labels_are_every_match_within_a_third_of_the_top():
     assert labels(photo("a", "b", "c")["matches"]) == ["a"]                                   # 0.95 / 0.025
     assert labels(photo("a", "b", "c", probs=[0.59, 0.40, 0.01])["matches"]) == ["a", "b"]  # a real tie
@@ -116,7 +122,10 @@ def test_analyze_happy_path(client):
     body = r.json()
     assert [i["matches"][0]["slug"] for i in body["images"]] == ["red", "green", "green"]
     assert body["overall"]["matches"][0]["slug"] in {"red", "green"} and -1 <= body["overall"]["z"] <= 1
-    assert body["overall"]["matches"][0]["slug"] in {"red", "green"} and "prob" in body["overall"]["matches"][0]
+    top = body["overall"]["matches"][0]["slug"]
+    assert top in {"red", "green"} and "prob" in body["overall"]["matches"][0]
+    anchor = {"red": [0, 0, 1], "green": [1, 0, 0]}[top]  # the You dot sits by the mixture's top label
+    assert np.dot(anchor, [body["overall"]["x"], body["overall"]["y"], body["overall"]["z"]]) > 0.9
     assert sorted(set(i for a in body["aesthetics"] for i in a["photos"])) == [0, 1, 2]  # every photo labelled
     assert 0 <= body["basic_score"] <= 100 and body["statement"]  # fallback line; no model in tests
     assert body["names"]["red"] == "Red"

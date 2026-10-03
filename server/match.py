@@ -75,17 +75,22 @@ class Index:
         img = self._img @ normalize(vec - self.mean_img)
         return np.where(self.counts > 0, IMAGE_WEIGHT * img + TEXT_WEIGHT * txt, txt) + PRIOR_WEIGHT * self.prior
 
+    def place(self, slugs: list[str]) -> dict:
+        """Map position for an ordered list of aesthetics: anchored at the first so the label and
+        the position agree (a weighted mean of three nodes could land beside an unrelated fourth),
+        nudged toward the next two."""
+        idx = [self.slugs.index(s) for s in slugs]
+        anchor = self.xyz[idx[0]]
+        x, y, z = normalize(anchor + sum(w * (self.xyz[i] - anchor) for w, i in zip(PLACE_NUDGE, idx[1:])))
+        return {"x": float(x), "y": float(y), "z": float(z)}
+
     def match(self, vec: np.ndarray) -> dict:
         s = self.scores(vec)
         z = np.exp((s - s.max()) / (HEAD_SOFTMAX_T if self.head_w is not None else SOFTMAX_T))
         prob = z / z.sum()
         top = np.argsort(-s)[:TOP_K]
-        # Anchor at the top match so the label and the map position agree (a weighted mean of
-        # three nodes could land beside an unrelated fourth); the nudges hint at the runners-up.
-        anchor = self.xyz[top[0]]
-        x, y, z = normalize(anchor + sum(w * (self.xyz[i] - anchor) for w, i in zip(PLACE_NUDGE, top[1:])))
         return {"matches": [{"slug": self.slugs[i], "score": float(s[i]), "prob": float(prob[i])} for i in top],
-                "x": float(x), "y": float(y), "z": float(z)}
+                **self.place([self.slugs[i] for i in top])}
 
 
 def aggregate(vecs: list[np.ndarray]) -> np.ndarray:
