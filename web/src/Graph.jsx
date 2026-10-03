@@ -86,6 +86,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       const depth = { [from]: 0 }
       let frontier = [from]
       for (let d = 1; d <= 2; d++) frontier = frontier.flatMap((n) => g.neighbors(n).filter((m) => depth[m] === undefined && (depth[m] = d)))
+      if (from === 'overall') result.images.forEach((_, k) => { depth[`photo-${k}`] = 1 })  // the photos are You's neighbours
       return depth
     }
     const fade = (to, then) => {
