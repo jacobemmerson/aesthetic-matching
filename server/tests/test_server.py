@@ -164,6 +164,14 @@ def test_index_without_new_keys_scores_as_before(tmp_path):
     q = normalize(np.array([1, 0.2, 0], np.float32))
     np.testing.assert_allclose(loaded.scores(q), INDEX.scores(q), atol=1e-6)
     assert loaded.masked_faces is False and loaded.head_w is None
+    assert loaded.backbone == ("ViT-B-32", "laion2b_s34b_b79k")  # indexes from before the field was stored
+
+
+def test_index_records_its_backbone(tmp_path):
+    np.savez(tmp_path / "i.npz", slugs=np.array(INDEX.slugs), centroids=INDEX.centroids, text_vecs=INDEX.text_vecs,
+             counts=INDEX.counts, xyz=INDEX.xyz, mean_img=np.zeros(3, np.float32), mean_txt=np.zeros(3, np.float32),
+             prior=np.zeros(3, np.float32), model=np.array("ViT-B-16-SigLIP2"), pretrained=np.array("webli"))
+    assert Index.load(tmp_path / "i.npz").backbone == ("ViT-B-16-SigLIP2", "webli")
 
 
 def test_projection_applies_to_query_and_centroids():

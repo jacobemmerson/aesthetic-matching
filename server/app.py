@@ -28,7 +28,7 @@ def load():
     state["graph"] = graph
     state["nodes"] = {n["slug"]: n for n in graph["nodes"]}
     state["ratings"] = {n["slug"]: n["mainstream"] for n in graph["nodes"] if n.get("mainstream") is not None}
-    state.setdefault("encoder", Encoder(masked=state["index"].masked_faces))
+    state.setdefault("encoder", Encoder(masked=state["index"].masked_faces, backbone=state["index"].backbone))
 
 
 def client_ip(request: Request) -> str:

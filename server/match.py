@@ -36,6 +36,7 @@ class Index:
     head_w: np.ndarray | None = None  # linear head; None = nearest centroid
     head_b: np.ndarray | None = None
     masked_faces: bool = False  # index was built from face-masked images, so mask uploads too
+    backbone: tuple[str, str] = ("ViT-B-32", "laion2b_s34b_b79k")  # (open_clip model, pretrained) the vectors came from
 
     def __post_init__(self):
         d = self.centroids.shape[1]
@@ -56,6 +57,8 @@ class Index:
         z = np.load(path)
         optional = {k: z[k] for k in ("proj_P", "proj_b", "head_w", "head_b") if k in z.files}
         masked = bool(z["masked_faces"]) if "masked_faces" in z.files else False
+        if "model" in z.files:
+            optional["backbone"] = (str(z["model"]), str(z["pretrained"]))
         return cls(list(z["slugs"]), z["centroids"], z["text_vecs"], z["counts"], z["xyz"], z["mean_img"], z["mean_txt"], z["prior"],
                    masked_faces=masked, **optional)
 
@@ -133,7 +136,7 @@ def basic_score(image_results: list[dict], ratings: dict[str, float]) -> int:
 class Encoder:
     """CLIP image encoder, loaded once. Kept separate so tests can swap in a fake."""
 
-    def __init__(self, masked: bool = False):
+    def __init__(self, masked: bool = False, backbone: tuple[str, str] | None = None):
         from pipeline.build_index import load_model
 
         self.masker = None
@@ -141,7 +144,7 @@ class Encoder:
             from pipeline.faces import Detector
 
             self.masker = Detector()  # before CLIP so a missing model file fails fast at startup
-        self.model, self.preprocess, _, self.torch = load_model()
+        self.model, self.preprocess, _, self.torch = load_model(*backbone) if backbone else load_model()
 
     def encode(self, data: bytes) -> np.ndarray:
         img = Image.open(io.BytesIO(data)).convert("RGB")  # raises on non-images; caller maps to 400

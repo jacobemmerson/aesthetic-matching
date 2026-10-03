@@ -1,6 +1,7 @@
 """data/nodes.json + data/img -> data/index.npz (CLIP vectors) + data/graph.json (layout + edges)."""
 import argparse
 import json
+import os
 from collections import defaultdict
 from pathlib import Path
 
@@ -10,7 +11,10 @@ from pipeline.filter_nodes import load_merge
 
 DATA = Path(__file__).resolve().parent.parent / "data"
 IMG_DIR = DATA / "img"
-MODEL, PRETRAINED = "ViT-B-32", "laion2b_s34b_b79k"
+# Backbone for every embedding in a build; the index records it so the server loads the same one.
+# Override with CLIP_MODEL / CLIP_PRETRAINED when building a tagged index with another backbone.
+MODEL = os.environ.get("CLIP_MODEL", "ViT-B-32")
+PRETRAINED = os.environ.get("CLIP_PRETRAINED", "laion2b_s34b_b79k")
 MIN_IMAGES = 3  # below this the image centroid is too noisy; fall back to the text vector
 
 
@@ -66,13 +70,13 @@ def prior(nodes: list[dict]) -> np.ndarray:
     return (raw - raw.min()) / max(raw.max() - raw.min(), 1e-6)
 
 
-def load_model():
+def load_model(name: str = MODEL, pretrained: str = PRETRAINED):
     import open_clip
     import torch
 
-    model, _, preprocess = open_clip.create_model_and_transforms(MODEL, pretrained=PRETRAINED)
+    model, _, preprocess = open_clip.create_model_and_transforms(name, pretrained=pretrained)
     model.eval()
-    return model, preprocess, open_clip.get_tokenizer(MODEL), torch
+    return model, preprocess, open_clip.get_tokenizer(name), torch
 
 
 def random_crop(img, rng):
@@ -113,7 +117,8 @@ def embed_texts(texts: list[str]) -> np.ndarray:
         return normalize(model.encode_text(tokenizer(texts)).float().numpy())
 
 
-def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str = "", debias: str = "none", head: str = "none"):
+def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str = "", debias: str = "none", head: str = "none",
+         prune: bool = True):
     nodes = json.loads((DATA / "nodes.json").read_text())[:limit]
     slugs = [n["slug"] for n in nodes]
     parent_of = load_merge()  # image folders of merged-away children count toward the parent
@@ -126,12 +131,26 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
                 owner.append(slug)
     print(f"{len(nodes)} nodes, {len(paths)} images")
     masker = None
-    if mask_faces:
+    if mask_faces or prune:
         from pipeline.faces import Detector
 
         masker = Detector()
-    image_vecs, source = embed_images(paths, crops=crops, masker=masker)
+    if prune:  # portraits encode who was photographed, not the aesthetic
+        from PIL import Image
+
+        from pipeline.prune import MAX_FACE_FRACTION, face_fraction
+
+        keep = [face_fraction(masker.boxes(im := Image.open(p).convert("RGB")), im.width, im.height) <= MAX_FACE_FRACTION for p in paths]
+        print(f"pruned {len(paths) - sum(keep)} portrait images")
+        paths, owner = [p for p, k in zip(paths, keep) if k], [o for o, k in zip(owner, keep) if k]
+    image_vecs, source = embed_images(paths, crops=crops, masker=masker if mask_faces else None)
     owner = [owner[i] for i in source]
+    if prune:
+        from pipeline.prune import near_duplicates
+
+        dup = near_duplicates(image_vecs, owner)
+        print(f"pruned {int(dup.sum())} near-duplicate images")
+        image_vecs, source, owner = image_vecs[~dup], source[~dup], [o for o, d in zip(owner, dup) if not d]
     cents, counts = centroids(image_vecs, owner, slugs)
     text_vecs = embed_texts([f"{n['name']} aesthetic. {n['description'][:300]}" for n in nodes])
     # CLIP vectors share a large common component, so generic "photo of a person" aesthetics
@@ -157,7 +176,8 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
         print(f"head: l2={l2}")
     suffix = f"_{tag}" if tag else ""
     np.savez(DATA / f"index{suffix}.npz", slugs=np.array(slugs), centroids=cents, text_vecs=text_vecs, counts=counts, xyz=xyz,
-             mean_img=mean_img, mean_txt=mean_txt, prior=prior(nodes), masked_faces=np.array(mask_faces), **extra)
+             mean_img=mean_img, mean_txt=mean_txt, prior=prior(nodes), masked_faces=np.array(mask_faces),
+             model=np.array(MODEL), pretrained=np.array(PRETRAINED), **extra)
     np.savez(DATA / f"image_vecs{suffix}.npz", vecs=image_vecs, owner=np.array(owner),  # for evaluate/fairness/probe
              path=np.array([str(paths[i]) for i in source]), source=source)
     if not tag:
@@ -174,5 +194,6 @@ if __name__ == "__main__":
     ap.add_argument("--tag", default="", help="write index_TAG.npz / image_vecs_TAG.npz and skip graph.json")
     ap.add_argument("--debias", choices=["none", "prompt", "leace"], default="none", help="store this debias map in the index")
     ap.add_argument("--head", choices=["none", "plain", "reweighted"], default="none", help="train a linear head into the index")
+    ap.add_argument("--no-prune", action="store_true", help="keep portrait and near-duplicate reference images")
     a = ap.parse_args()
-    main(a.limit, a.crops, a.mask_faces, a.tag, a.debias, a.head)
+    main(a.limit, a.crops, a.mask_faces, a.tag, a.debias, a.head, prune=not a.no_prune)
