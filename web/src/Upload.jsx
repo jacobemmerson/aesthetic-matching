@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { MAX_FILES } from './lib/files.js'
+import { MAX_FILES, MIN_FILES } from './lib/files.js'
 import { useObjectUrls } from './lib/objectUrls.js'
 
 const fan = (i, n) => ({ rotate: (i - (n - 1) / 2) * 6, y: Math.abs(i - (n - 1) / 2) * 6 })
@@ -9,6 +9,7 @@ export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
   const [over, setOver] = useState(false)
   const input = useRef(null)
   const urls = useObjectUrls(files)
+  const missing = MIN_FILES - files.length
   return (
     <main className="hero">
       <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>What's your aesthetic?</motion.h1>
@@ -18,7 +19,7 @@ export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
         onClick={() => input.current.click()} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), input.current.click())}
         onDragOver={(e) => { e.preventDefault(); setOver(true) }} onDragLeave={() => setOver(false)}
         onDrop={(e) => { e.preventDefault(); setOver(false); onAdd(e.dataTransfer.files) }}>
-        <span>Drop up to {MAX_FILES} photos here, or click to choose</span>
+        <span>Drop {MIN_FILES} to {MAX_FILES} photos here, or click to choose</span>
         <small>JPEG or PNG, under 5 MB each. Nothing is stored.</small>
         <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => { onAdd(e.target.files); e.target.value = '' }} />
       </div>
@@ -42,8 +43,8 @@ export default function Upload({ files, onAdd, onRemove, onAnalyze, error }) {
 
       <AnimatePresence>
         {files.length > 0 && (
-          <motion.button className="btn" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} onClick={onAnalyze}>
-            Find my aesthetic
+          <motion.button className="btn" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} onClick={onAnalyze} disabled={missing > 0}>
+            {missing > 0 ? `Add ${missing} more photo${missing === 1 ? '' : 's'}` : 'Find my aesthetic'}
           </motion.button>
         )}
       </AnimatePresence>

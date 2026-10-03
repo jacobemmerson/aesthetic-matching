@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { acceptFiles, MAX_BYTES, MAX_FILES } from './files.js'
+import { acceptFiles, MAX_BYTES, MAX_FILES, MIN_FILES } from './files.js'
 
 const img = (name, size = 1000, type = 'image/jpeg') => ({ name, size, type })
 
@@ -20,6 +20,9 @@ describe('acceptFiles', () => {
     const { accepted, notice } = acceptFiles([], many)
     expect(accepted).toHaveLength(MAX_FILES)
     expect(notice).toMatch(/2 more/)
+  })
+  it('needs at least three photos for an analysis', () => {
+    expect(MIN_FILES).toBe(3)
   })
   it('ignores exact duplicates (same name and size)', () => {
     const { accepted } = acceptFiles([img('a.jpg')], [img('a.jpg')])

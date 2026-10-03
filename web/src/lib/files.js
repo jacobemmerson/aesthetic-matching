@@ -1,3 +1,4 @@
+export const MIN_FILES = 3
 export const MAX_FILES = 10
 export const MAX_BYTES = 5_000_000
 
