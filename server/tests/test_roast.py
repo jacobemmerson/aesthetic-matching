@@ -1,6 +1,6 @@
 import httpx
 
-from server.roast import BANDS, fallback, statement
+from server.roast import BANDS, fallback, register, statement
 
 
 class FakeClient:
@@ -23,3 +23,7 @@ def test_statement_uses_the_model_text_or_the_fallback():
     assert statement(42, ["Goth"], FakeClient("  You're fairly niche.  ")) == "You're fairly niche."
     assert statement(42, ["Goth"], FakeClient(error=httpx.ConnectError("down"))) == fallback(42)
     assert statement(42, ["Goth"], FakeClient("")) == fallback(42)
+
+
+def test_register_follows_the_score():
+    assert "impressed" in register(10) and "teasing" in register(50) and "roast" in register(90)

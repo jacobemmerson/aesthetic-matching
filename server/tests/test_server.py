@@ -99,6 +99,7 @@ def client(monkeypatch):
                          nodes={s: {"name": s.title(), "description": "d", "key_values": ""} for s in INDEX.slugs})
     app_mod.hits.clear()
     monkeypatch.setattr(app_mod.app.router, "on_startup", [])
+    monkeypatch.setattr(app_mod, "statement", lambda score, names: f"fallback for {score}")  # never call a real model from tests
     return TestClient(app_mod.app)
 
 

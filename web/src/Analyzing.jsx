@@ -12,7 +12,7 @@ export default function Analyzing({ files }) {
           </motion.li>
         ))}
       </ul>
-      <p className="display analyzing">Reading {files.length} photo{files.length === 1 ? '' : 's'} with CLIP…</p>
+      <p className="display analyzing">Feeding your photo{files.length === 1 ? '' : 's'} through a neural network…</p>
       <div className="bar" role="progressbar" aria-busy="true"><span /></div>
     </main>
   )
