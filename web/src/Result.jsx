@@ -71,9 +71,10 @@ export default function Result({ files, result, graph, graphError, onReset }) {
               ))}
             </ol>
             <motion.div className="score" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={fade(.4, .15 * n + .2)}>
-              <div className="score-head"><span>Basic score</span><strong>{result.basic_score}<small> / 100</small></strong></div>
+              <div className="score-head"><span>Score</span><strong>{result.basic_score}<small> / 100</small></strong></div>
               <div className="meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={result.basic_score}><span style={{ width: `${result.basic_score}%` }} /></div>
               <small>lower is more niche</small>
+              <p className="statement">{result.statement}</p>
             </motion.div>
             <div className="actions">
               <button className="btn ghost" onClick={onReset}>Start over</button>
