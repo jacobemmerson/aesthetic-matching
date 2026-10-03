@@ -15,6 +15,8 @@ const HOVER_MS = 360       // hop 1 lights during the first half, hop 2 during t
 const PHOTO_SIZE = 20
 const HORIZON = [-0.15, 0.3]  // depth range over which nodes and edges fade out toward the back of the sphere
 const facing = (z) => Math.min(1, Math.max(0, (z - HORIZON[0]) / (HORIZON[1] - HORIZON[0])))
+const LIT_BACK = 0.3          // lit paths stay visible on the far side, at this fraction of full strength
+const DRAG_THRESHOLD = 3      // px of movement before a press counts as a drag rather than a click
 
 export default function Graph({ graph, result, files, onReady, photosVisible = true }) {
   const el = useRef(null)
@@ -45,18 +47,16 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     vec.overall = [result.overall.x, result.overall.y, result.overall.z]
     g.addNode('overall', { x: 0, y: 0, depth: 1, size: photosVisible ? 11 : 0, label: 'You', color: COLORS.you, zIndex: 3 })
 
-    const visible = (n) => facing(g.getNodeAttribute(n, 'depth')) >= .5
-    const hops = (from) => {  // BFS to two hops over the visible face, so every lit node shows its edge and label
+    const hops = (from) => {  // BFS to two hops
       const depth = { [from]: 0 }
       let frontier = [from]
-      for (let d = 1; d <= 2; d++) frontier = frontier.flatMap((n) => g.neighbors(n).filter((m) => depth[m] === undefined && visible(m) && (depth[m] = d)))
+      for (let d = 1; d <= 2; d++) frontier = frontier.flatMap((n) => g.neighbors(n).filter((m) => depth[m] === undefined && (depth[m] = d)))
       if (from === 'overall') result.images.forEach((_, k) => { depth[`photo-${k}`] = 1 })  // the photos are You's neighbours
       return depth
     }
     let R = identity()
     const project = () => {
       g.forEachNode((id) => { const [x, y, z] = rotateVec(R, vec[id]); g.mergeNodeAttributes(id, { x: x * SCALE, y: y * SCALE, depth: z }) })
-      if (hoverRef.current) depthRef.current = hops(hoverRef.current)  // paths only run over the visible face, which the turn just changed
       sigma.refresh()
     }
 
@@ -65,12 +65,13 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       labelColor: { color: COLORS.label }, labelFont: 'Inter', labelSize: 12, zIndex: true, defaultDrawNodeHover: drawDiscNodeLabel,
       enableCameraPanning: false, enableCameraRotation: false, minCameraRatio: .35, maxCameraRatio: 1.1,
       nodeReducer: (node, data) => {
-        const f = facing(data.depth)
+        const h = hoverRef.current, t = dimRef.current, d = depthRef.current[node]
+        const lit = h && t > 0 && d !== undefined
+        const f = lit ? Math.max(facing(data.depth), LIT_BACK) : facing(data.depth)  // lit paths show through the far side
         if (f === 0) return { ...data, hidden: true }
         // fade toward the horizon: colour for dots, size for photos (textures can't be tinted)
         const toward = (d) => ({ ...d, color: mixHex(d.color, COLORS.bg, 1 - f), size: d.size * (d.type === 'image' ? f : .7 + .3 * f), label: f < .5 ? null : d.label })
-        const h = hoverRef.current, t = dimRef.current, d = depthRef.current[node]
-        if (!h || t === 0) return toward(data)
+        if (!lit) return hot.has(node) && f >= .5 && t === 0 ? { ...toward(data), forceLabel: true } : toward(data)  // verdict nodes keep their name
         if (d === 0) return { ...toward(data), zIndex: 4, forceLabel: true }
         if (d === 1) { const k = Math.min(1, 2 * t); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), zIndex: 3, forceLabel: k > .5 && f >= .5 } }
         if (d === 2) { const k = .6 * Math.max(0, 2 * t - 1); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), zIndex: 2 } }
@@ -80,12 +81,13 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       },
       edgeReducer: (edge, data) => {
         const [sa, sb] = g.extremities(edge)
-        const f = Math.min(facing(g.getNodeAttribute(sa, 'depth')), facing(g.getNodeAttribute(sb, 'depth')))
-        const toward = (d) => ({ ...d, color: mixHex(d.color, COLORS.bg, 1 - f) })
         const h = hoverRef.current, t = dimRef.current
-        if (!h || t === 0) return toward(data)
         const [a, b] = [depthRef.current[sa], depthRef.current[sb]]
-        const hop = a !== undefined && b !== undefined && Math.abs(a - b) === 1 ? Math.max(a, b) : 0
+        const hop = h && t > 0 && a !== undefined && b !== undefined && Math.abs(a - b) === 1 ? Math.max(a, b) : 0
+        const faceOf = (n) => facing(g.getNodeAttribute(n, 'depth'))
+        const f = hop ? Math.max(Math.min(faceOf(sa), faceOf(sb)), LIT_BACK) : Math.min(faceOf(sa), faceOf(sb))
+        const toward = (d) => ({ ...d, color: mixHex(d.color, COLORS.bg, 1 - f) })
+        if (!h || t === 0) return toward(data)
         if (hop) { const k = hop === 1 ? Math.min(1, 2 * t) : .6 * Math.max(0, 2 * t - 1); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), size: data.size + (1.2 - data.size) * k, zIndex: 1 } }
         return t >= 1 ? { ...data, hidden: true } : toward({ ...data, color: mixHex(data.color, COLORS.bg, t) })
       },
@@ -115,19 +117,22 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       if (pinRef.current) focus(node); else unfocus()
       nodes[node] && setSelected(nodes[node])
     })
-    sigma.on('clickStage', () => { setSelected(null); if (pinRef.current) { pinRef.current = null; unfocus() } })
+    sigma.on('clickStage', () => { if (dragged) return; setSelected(null); if (pinRef.current) { pinRef.current = null; unfocus() } })  // a drag ending on the stage is not a click
 
     // drag anywhere spins the sphere (pointer events cover mouse and touch)
-    let drag = null
+    // No pointer capture: that would steal the mouse-up and click from sigma's own canvas.
+    let drag = null, dragged = false
     const container = el.current
-    const down = (e) => { if (e.button === 0 || e.pointerType !== 'mouse') { drag = [e.clientX, e.clientY]; container.setPointerCapture?.(e.pointerId) } }
+    const down = (e) => { if (e.button === 0 || e.pointerType !== 'mouse') { drag = [e.clientX, e.clientY]; dragged = false } }
     const radiusPx = () => { const o = sigma.graphToViewport({ x: 0, y: 0 }), r = sigma.graphToViewport({ x: SCALE, y: 0 }); return Math.hypot(r.x - o.x, r.y - o.y) }
     const move = (e) => {  // one pixel turns the globe by one pixel of its on-screen radius, so the point under the pointer tracks it at any zoom
       if (!drag) return
-      spin.cancel?.(); R = multiply(rotationFromDrag(e.clientX - drag[0], e.clientY - drag[1], 1 / radiusPx()), R); drag = [e.clientX, e.clientY]; project()
+      const dx = e.clientX - drag[0], dy = e.clientY - drag[1]
+      if (!dragged && Math.hypot(dx, dy) < DRAG_THRESHOLD) return
+      dragged = true; spin.cancel?.(); R = multiply(rotationFromDrag(dx, dy, 1 / radiusPx()), R); drag = [e.clientX, e.clientY]; project()
     }
     const up = () => { drag = null }
-    container.addEventListener('pointerdown', down); container.addEventListener('pointermove', move); container.addEventListener('pointerup', up); container.addEventListener('pointercancel', up)
+    container.addEventListener('pointerdown', down); window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up)
 
     const spin = { cancel: null }
     const turnTo = (id, duration) => {
@@ -148,7 +153,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     onReady?.(api)
     return () => {
       fadeRef.current(); spin.cancel?.(); resizer.disconnect(); hoverRef.current = null; pinRef.current = null; dimRef.current = 0; setHover(null)
-      container.removeEventListener('pointerdown', down); container.removeEventListener('pointermove', move); container.removeEventListener('pointerup', up); container.removeEventListener('pointercancel', up)
+      container.removeEventListener('pointerdown', down); window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up)
       sigma.kill()
     }
   }, [graph, result, files, urls])
