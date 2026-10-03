@@ -4,6 +4,7 @@ import Sigma from 'sigma'
 import { NodeImageProgram } from '@sigma/node-image'
 import { drawDiscNodeLabel } from 'sigma/rendering'
 import { useObjectUrls } from './lib/objectUrls.js'
+import Drawer from './Drawer.jsx'
 import { mixHex, tween } from './lib/tween.js'
 import { identity, lookAt, multiply, rotateVec, rotationFromDrag, slerpRotation } from './lib/sphere.js'
 import EdgeGrowProgram from './lib/edgeGrow.js'
@@ -19,7 +20,7 @@ const DRAG_THRESHOLD = 3      // px of movement before a press counts as a drag 
 const FRICTION = 0.94         // momentum kept per frame after letting go; stops below MIN_SPIN
 const MIN_SPIN = 0.05         // px per frame
 
-export default function Graph({ graph, result, files, onReady, onSelect, photosVisible = true }) {
+export default function Graph({ graph, result, files, onReady, photosVisible = true }) {
   const el = useRef(null)
   const sigmaRef = useRef(null)
   const apiRef = useRef(null)
@@ -30,6 +31,7 @@ export default function Graph({ graph, result, files, onReady, onSelect, photosV
   const fadeRef = useRef(() => {})
   const urls = useObjectUrls(files)
   const [hover, setHover] = useState(null)      // { slug, x, y }
+  const [selected, setSelected] = useState(null) // node object
   const nodes = Object.fromEntries(graph.nodes.map((n) => [n.slug, n]))
   const hot = new Set(result.aesthetics.map((a) => a.slug))
   const litAtStart = photosVisible ? hot : new Set()  // reveal lights matches via api.light
@@ -118,9 +120,9 @@ export default function Graph({ graph, result, files, onReady, onSelect, photosV
     sigma.on('clickNode', ({ node }) => {  // click freezes the lit paths; clicking the same node or the stage lets go
       pinRef.current = pinRef.current === node ? null : node
       if (pinRef.current) focus(node); else unfocus()
-      nodes[node] && onSelect?.(nodes[node])
+      nodes[node] && setSelected(nodes[node])
     })
-    sigma.on('clickStage', () => { if (dragged) return; onSelect?.(null); if (pinRef.current) { pinRef.current = null; unfocus() } })  // a drag ending on the stage is not a click
+    sigma.on('clickStage', () => { if (dragged) return; setSelected(null); if (pinRef.current) { pinRef.current = null; unfocus() } })  // a drag ending on the stage is not a click
 
     // drag anywhere spins the sphere (pointer events cover mouse and touch)
     // No pointer capture: that would steal the mouse-up and click from sigma's own canvas.
@@ -164,7 +166,7 @@ export default function Graph({ graph, result, files, onReady, onSelect, photosV
       hidePhotos: () => { pinned = false; sizePhotos(0) },
       showOverall: () => { g.setNodeAttribute('overall', 'size', 11); sigma.refresh() },
       light: (slug) => { if (g.hasNode(slug)) { g.mergeNodeAttributes(slug, { color: COLORS.hot, size: 8, zIndex: 2 }); sigma.refresh() } },
-      select: (slug) => onSelect?.(nodes[slug] || null),
+      select: (slug) => setSelected(nodes[slug] || null),
     }
     apiRef.current = api
     onReady?.(api)
@@ -193,6 +195,7 @@ export default function Graph({ graph, result, files, onReady, onSelect, photosV
           <strong>You</strong><span>Your photos, averaged. Closest to {result.names[result.overall.matches[0].slug]}.</span>
         </div>
       )}
+      <Drawer node={selected} onClose={() => setSelected(null)} />
     </div>
   )
 }
