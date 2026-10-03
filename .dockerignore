@@ -1,0 +1,13 @@
+.git
+.venv
+.env
+.superpowers
+data
+docs
+web/node_modules
+web/dist
+web/scripts/shots
+**/__pycache__
+**/.pytest_cache
+pipeline/tests
+server/tests

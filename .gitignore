@@ -13,4 +13,4 @@ data/image_vecs_*.npz
 data/index_*.npz
 data/probe*.npz
 data/debias_*.npz
-data/reference_attrs.npz
+data/reference_attrs*.npz
