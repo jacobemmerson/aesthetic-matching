@@ -14,6 +14,8 @@ const DRAG_SPEED = 0.006   // radians per pixel
 const COLORS = { node: '#4a4740', edge: '#1e1e23', bg: '#0b0b0d', hot: '#ff4d6d', label: '#f2efe9', dim: '#1c1c20', you: '#f2efe9' }
 const HOVER_MS = 360       // hop 1 lights during the first half, hop 2 during the second
 const PHOTO_SIZE = 20
+const HORIZON = [-0.15, 0.3]  // depth range over which nodes and edges fade out toward the back of the sphere
+const facing = (z) => Math.min(1, Math.max(0, (z - HORIZON[0]) / (HORIZON[1] - HORIZON[0])))
 
 export default function Graph({ graph, result, files, onReady, photosVisible = true }) {
   const el = useRef(null)
@@ -54,23 +56,29 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       labelColor: { color: COLORS.label }, labelFont: 'Inter', labelSize: 12, zIndex: true, defaultDrawNodeHover: drawDiscNodeLabel,
       enableCameraPanning: false, enableCameraRotation: false, minCameraRatio: .35, maxCameraRatio: 1.1,
       nodeReducer: (node, data) => {
-        // the back of the sphere is hidden; the front gets a little bigger for depth
-        const base = data.depth < 0 ? { ...data, hidden: true } : { ...data, size: data.size * (.6 + .4 * data.depth) }
+        const f = facing(data.depth)
+        if (f === 0) return { ...data, hidden: true }
+        // fade toward the horizon: colour for dots, size for photos (textures can't be tinted)
+        const toward = (d) => ({ ...d, color: mixHex(d.color, COLORS.bg, 1 - f), size: d.size * (d.type === 'image' ? f : .7 + .3 * f), label: f < .5 ? null : d.label })
         const h = hoverRef.current, t = dimRef.current, d = depthRef.current[node]
-        if (!h || t === 0) return base
-        if (d === 0) return { ...base, zIndex: 4, forceLabel: true }
-        if (d === 1) { const k = Math.min(1, 2 * t); return { ...base, color: mixHex(data.color, COLORS.hot, k), zIndex: 3, forceLabel: k > .5 } }
-        if (d === 2) { const k = .6 * Math.max(0, 2 * t - 1); return { ...base, color: mixHex(data.color, COLORS.hot, k), zIndex: 2 } }
-        const dimmed = { ...base, color: mixHex(data.color, COLORS.dim, t), label: t > .5 ? null : data.label }
+        if (!h || t === 0) return toward(data)
+        if (d === 0) return { ...toward(data), zIndex: 4, forceLabel: true }
+        if (d === 1) { const k = Math.min(1, 2 * t); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), zIndex: 3, forceLabel: k > .5 && f >= .5 } }
+        if (d === 2) { const k = .6 * Math.max(0, 2 * t - 1); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), zIndex: 2 } }
+        const dimmed = toward({ ...data, color: mixHex(data.color, COLORS.dim, t) })
+        if (t > .5) dimmed.label = null
         return t > .5 && data.size > 8 ? { ...dimmed, image: undefined, type: 'circle', size: 3 } : dimmed  // photos and You shrink to dots
       },
       edgeReducer: (edge, data) => {
+        const [sa, sb] = g.extremities(edge)
+        const f = Math.min(facing(g.getNodeAttribute(sa, 'depth')), facing(g.getNodeAttribute(sb, 'depth')))
+        const toward = (d) => ({ ...d, color: mixHex(d.color, COLORS.bg, 1 - f) })
         const h = hoverRef.current, t = dimRef.current
-        if (!h || t === 0) return data
-        const [a, b] = g.extremities(edge).map((n) => depthRef.current[n])
+        if (!h || t === 0) return toward(data)
+        const [a, b] = [depthRef.current[sa], depthRef.current[sb]]
         const hop = a !== undefined && b !== undefined && Math.abs(a - b) === 1 ? Math.max(a, b) : 0
-        if (hop) { const k = hop === 1 ? Math.min(1, 2 * t) : .6 * Math.max(0, 2 * t - 1); return { ...data, color: mixHex(data.color, COLORS.hot, k), size: data.size + (1.2 - data.size) * k, zIndex: 1 } }
-        return t >= 1 ? { ...data, hidden: true } : { ...data, color: mixHex(data.color, COLORS.bg, t) }
+        if (hop) { const k = hop === 1 ? Math.min(1, 2 * t) : .6 * Math.max(0, 2 * t - 1); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), size: data.size + (1.2 - data.size) * k, zIndex: 1 } }
+        return t >= 1 ? { ...data, hidden: true } : toward({ ...data, color: mixHex(data.color, COLORS.bg, t) })
       },
     })
     sigmaRef.current = sigma

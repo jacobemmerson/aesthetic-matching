@@ -18,7 +18,7 @@ export function axisAngle([x, y, z], angle) {
 }
 
 /** Screen drag of (dx, dy) pixels spins the sphere about the vertical then the horizontal axis. */
-export const rotationFromDrag = (dx, dy, speed) => multiply(axisAngle([1, 0, 0], -dy * speed), axisAngle([0, 1, 0], dx * speed))
+export const rotationFromDrag = (dx, dy, speed) => multiply(axisAngle([1, 0, 0], dy * speed), axisAngle([0, 1, 0], dx * speed))
 
 /** Rotation that brings unit vector v to the front, (0, 0, 1). */
 export function lookAt([x, y, z]) {

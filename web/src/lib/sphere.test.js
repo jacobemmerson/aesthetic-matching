@@ -16,9 +16,9 @@ it('rotations stay orthonormal after many drags', () => {
   expect(v[0] * w[0] + v[1] * w[1] + v[2] * w[2]).toBeCloseTo(0, 6)
 })
 
-it('dragging right rotates a front vector toward the right', () => {
-  const v = rotateVec(rotationFromDrag(10, 0, 0.01), [0, 0, 1])
-  expect(v[0]).toBeGreaterThan(0)
+it('dragging pulls the front of the sphere along with the pointer', () => {
+  expect(rotateVec(rotationFromDrag(10, 0, 0.01), [0, 0, 1])[0]).toBeGreaterThan(0)   // right
+  expect(rotateVec(rotationFromDrag(0, 10, 0.01), [0, 0, 1])[1]).toBeLessThan(0)      // down (sigma's y points up)
 })
 
 it('slerp hits both endpoints and stays on the sphere midway', () => {
