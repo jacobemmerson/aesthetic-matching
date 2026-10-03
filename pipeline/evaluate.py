@@ -45,8 +45,9 @@ def accuracy(scores: np.ndarray, owner_idx: np.ndarray, weights: np.ndarray, k: 
     return float((hit * weights).sum() / weights.sum())
 
 
-def main(alphas, image_weights):
-    z, img = np.load(DATA / "index.npz"), np.load(DATA / "image_vecs.npz")
+def main(alphas, image_weights, tag: str = ""):
+    suffix = f"_{tag}" if tag else ""
+    z, img = np.load(DATA / f"index{suffix}.npz"), np.load(DATA / f"image_vecs{suffix}.npz")
     slugs = list(z["slugs"])
     owner_idx = np.array([slugs.index(o) for o in img["owner"]])
     vecs, counts = img["vecs"], z["counts"]
@@ -67,5 +68,6 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--alphas", type=float, nargs="+", default=[0, 0.01, 0.02, 0.03, 0.05, 0.08])
     ap.add_argument("--image-weights", type=float, nargs="+", default=[0.5, 0.7, 0.85, 1.0])
+    ap.add_argument("--tag", default="", help="evaluate index_TAG.npz / image_vecs_TAG.npz")
     a = ap.parse_args()
-    main(a.alphas, a.image_weights)
+    main(a.alphas, a.image_weights, a.tag)
