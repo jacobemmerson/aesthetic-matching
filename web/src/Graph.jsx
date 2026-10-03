@@ -44,7 +44,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
         if (!h || t === 0) return data
         if (node === h || g.hasEdge(node, h) || g.hasEdge(h, node)) return { ...data, zIndex: 4, forceLabel: true }
         const dimmed = { ...data, color: mixHex(data.color, COLORS.dim, t), label: t > .5 ? null : data.label }
-        return t > .5 && data.type === 'image' ? { ...dimmed, image: undefined, type: 'circle' } : dimmed
+        return t > .5 && data.size > 8 ? { ...dimmed, image: undefined, type: 'circle', size: 3 } : dimmed  // photos and "you" shrink to dots
       },
       edgeReducer: (edge, data) => {
         const h = hoverRef.current, t = dimRef.current

@@ -36,7 +36,7 @@ footer a { color: var(--muted); }
 @keyframes slide { from { transform: translateX(-100%) } to { transform: translateX(250%) } }
 
 .result { position: fixed; inset: 0; max-width: none; padding: 0; }
-.result-head { position: absolute; top: 16px; left: 16px; z-index: 5; width: min(440px, calc(100% - 32px)); max-height: calc(100dvh - 32px); overflow: auto; pointer-events: none; }
+.result-head { position: absolute; top: 16px; left: 16px; z-index: 5; width: min(440px, calc(100% - 32px)); pointer-events: none; }
 .result-head > * { pointer-events: auto; }
 .graph-shell { position: absolute; inset: 0; }
 .graph { position: absolute; inset: 0; }
@@ -76,6 +76,6 @@ footer a { color: var(--muted); }
 .result ~ footer a { pointer-events: auto; }
 @media (max-width: 799px) {
   .result ~ footer { display: none; }
-  .result-head { width: calc(100% - 32px); max-height: calc(46dvh - 16px); }
+  .result-head { width: calc(100% - 32px); max-height: calc(46dvh - 16px); overflow-y: auto; scrollbar-width: thin; }
   .graph-shell { top: 46dvh; }  /* the verdict sits above the map instead of over it */
 }
