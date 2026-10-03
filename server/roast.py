@@ -35,10 +35,11 @@ def statement(score: int, names: list[str], client: httpx.Client | None = None) 
         "The second may nod to one of the matched aesthetics. Never use the word 'niche'. Never quote a number. "
         "No emoji, hashtags, lists, quotation marks, or preamble; reply with the two sentences only."
     )
-    client = client or httpx.Client(timeout=10)
+    client = client or httpx.Client(timeout=60)  # the 8B model takes ~15 s on CPU, more on a cold load
     try:
         r = client.post(f"{OLLAMA}/api/generate", json={
-            "model": MODEL, "prompt": prompt, "stream": False, "options": {"temperature": 0.8, "num_predict": 90},
+            "model": MODEL, "prompt": prompt, "stream": False, "keep_alive": "1h",  # stay loaded between visitors
+            "options": {"temperature": 0.8, "num_predict": 90},
         })
         r.raise_for_status()
         return r.json()["response"].strip() or fallback(score)
