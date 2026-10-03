@@ -6,14 +6,18 @@ import { drawDiscNodeLabel } from 'sigma/rendering'
 import { useObjectUrls } from './lib/objectUrls.js'
 import Drawer from './Drawer.jsx'
 import { searchNodes } from './lib/search.js'
+import { mixHex, tween } from './lib/tween.js'
 
 const SCALE = 60
-const COLORS = { node: '#4a4740', edge: '#1e1e23', hot: '#ff4d6d', label: '#f2efe9', dim: '#1c1c20', you: '#f2efe9' }
+const COLORS = { node: '#4a4740', edge: '#1e1e23', bg: '#0b0b0d', hot: '#ff4d6d', label: '#f2efe9', dim: '#1c1c20', you: '#f2efe9' }
+const HOVER_MS = 180
 
 export default function Graph({ graph, result, files, onReady, photosVisible = true }) {
   const el = useRef(null)
   const sigmaRef = useRef(null)
-  const hoverRef = useRef(null)
+  const hoverRef = useRef(null)   // node under the cursor (kept while the dim fades back out)
+  const dimRef = useRef(0)        // 0 = nothing dimmed, 1 = fully focused on hoverRef
+  const fadeRef = useRef(() => {})
   const urls = useObjectUrls(files)
   const [hover, setHover] = useState(null)      // { slug, x, y }
   const [selected, setSelected] = useState(null) // node object
@@ -36,20 +40,28 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       nodeProgramClasses: { image: NodeImageProgram }, renderLabels: true, labelRenderedSizeThreshold: 7,
       labelColor: { color: COLORS.label }, labelFont: 'Inter', labelSize: 12, zIndex: true, defaultDrawNodeHover: drawDiscNodeLabel,
       nodeReducer: (node, data) => {
-        const h = hoverRef.current
-        if (!h) return data
+        const h = hoverRef.current, t = dimRef.current
+        if (!h || t === 0) return data
         if (node === h || g.hasEdge(node, h) || g.hasEdge(h, node)) return { ...data, zIndex: 4, forceLabel: true }
-        return { ...data, color: COLORS.dim, label: null, image: undefined, type: data.type === 'image' ? 'circle' : data.type }
+        const dimmed = { ...data, color: mixHex(data.color, COLORS.dim, t), label: t > .5 ? null : data.label }
+        return t > .5 && data.type === 'image' ? { ...dimmed, image: undefined, type: 'circle' } : dimmed
       },
       edgeReducer: (edge, data) => {
-        const h = hoverRef.current
-        if (!h) return data
-        return g.hasExtremity(edge, h) ? { ...data, color: COLORS.hot, size: 1.2, zIndex: 1 } : { ...data, hidden: true }
+        const h = hoverRef.current, t = dimRef.current
+        if (!h || t === 0) return data
+        if (g.hasExtremity(edge, h)) return { ...data, color: mixHex(data.color, COLORS.hot, t), size: data.size + (1.2 - data.size) * t, zIndex: 1 }
+        return t >= 1 ? { ...data, hidden: true } : { ...data, color: mixHex(data.color, COLORS.bg, t) }
       },
     })
     sigmaRef.current = sigma
-    sigma.on('enterNode', ({ node, event }) => { hoverRef.current = node; setHover({ slug: node, x: event.x, y: event.y }); sigma.refresh() })
-    sigma.on('leaveNode', () => { hoverRef.current = null; setHover(null); sigma.refresh() })
+    const quick = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const fade = (to, then) => {
+      fadeRef.current()
+      const from = dimRef.current
+      fadeRef.current = tween(quick ? 0 : HOVER_MS * Math.abs(to - from), (p) => { dimRef.current = from + (to - from) * p; sigma.refresh(); if (p === 1) then?.() })
+    }
+    sigma.on('enterNode', ({ node, event }) => { hoverRef.current = node; setHover({ slug: node, x: event.x, y: event.y }); fade(1) })
+    sigma.on('leaveNode', () => { setHover(null); fade(0, () => { hoverRef.current = null; sigma.refresh() }) })
     sigma.on('clickNode', ({ node }) => nodes[node] && setSelected(nodes[node]))
     sigma.on('clickStage', () => setSelected(null))
     const api = {
@@ -61,7 +73,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       select: (slug) => setSelected(nodes[slug] || null),
     }
     onReady?.(api)
-    return () => { hoverRef.current = null; setHover(null); sigma.kill() }
+    return () => { fadeRef.current(); hoverRef.current = null; dimRef.current = 0; setHover(null); sigma.kill() }
   }, [graph, result, files, urls])
 
   const hits = searchNodes(graph.nodes, query)
