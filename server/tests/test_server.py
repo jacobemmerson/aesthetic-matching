@@ -59,7 +59,7 @@ def test_cover_keeps_seed_first_prefers_coverage_and_caps():
     assert cover(res, "s") == [{"slug": "s", "photos": [0]}, {"slug": "q", "photos": [1, 2]}]
     res = [photo("z"), photo("a"), photo("b"), photo("c")]
     assert [c["slug"] for c in cover(res, "z", cap=2)] == ["z", "a"]
-    assert cover([photo("a")], "ghost")[0] == {"slug": "ghost", "photos": []}
+    assert cover([photo("a")], "ghost") == [{"slug": "a", "photos": [0]}]  # a seed that explains nothing is dropped
 
 
 def test_basic_score_rescales_over_catalog_range():

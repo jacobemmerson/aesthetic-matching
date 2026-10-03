@@ -84,8 +84,8 @@ def aggregate(vecs: list[np.ndarray]) -> np.ndarray:
 
 def cover(image_results: list[dict], seed: str, k: int = 3, cap: int = 5) -> list[dict]:
     """Smallest set of aesthetics that explains every photo: a photo is explained when the
-    aesthetic is in its top-k. Greedy, seeded with the aggregate's best match so the headline
-    anchor is always first; grows with how diverse the photos are."""
+    aesthetic is in its top-k. Greedy, seeded with the aggregate's best match so it leads when
+    it explains anything; grows with how diverse the photos are."""
     tops = [{m["slug"]: m["score"] for m in r["matches"][:k]} for r in image_results]
     uncovered = set(range(len(tops)))
     chosen = [seed]
@@ -97,7 +97,8 @@ def cover(image_results: list[dict], seed: str, k: int = 3, cap: int = 5) -> lis
         candidates = {s for i in uncovered for s in tops[i]}
         chosen.append(max(candidates, key=lambda s: (sum(s in tops[i] for i in uncovered), sum(tops[i].get(s, 0) for i in uncovered),
                                                      -min(i for i in uncovered if s in tops[i]))))
-    return [{"slug": s, "photos": [i for i, t in enumerate(tops) if s in t]} for s in chosen]
+    found = [{"slug": s, "photos": [i for i, t in enumerate(tops) if s in t]} for s in chosen]
+    return [a for a in found if a["photos"]]
 
 
 def basic_score(image_results: list[dict], ratings: dict[str, float], k: int = 3) -> int:
