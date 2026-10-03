@@ -2,7 +2,9 @@ services:
   api:
     build: .
     ports: ["127.0.0.1:8000:8000", "100.103.5.49:8000:8000"]   # nginx + tailnet only
-    volumes: ["./data:/app/data:ro"]   # index.npz + graph.json; images are not needed at runtime
+    volumes:
+      - "./data:/app/data:ro"   # index.npz + graph.json + the face-detector ONNX; images are not needed at runtime
+      - "${HOME}/.cache/huggingface:/root/.cache/huggingface"   # SigLIP weights, so a rebuild does not re-download them
     environment: ["OLLAMA_URL=http://host.docker.internal:11434"]   # Ollama runs on the host; see server/roast.py
     extra_hosts: ["host.docker.internal:host-gateway"]
     restart: unless-stopped
