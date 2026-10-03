@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 from server import app as app_mod
-from server.match import Index, aggregate, basic_score, cover, normalize
+from server.match import Index, aggregate, basic_score, cover, normalize, nucleus
 
 # three synthetic aesthetics on orthogonal axes; "text-only" has no images
 INDEX = Index(
@@ -39,8 +39,21 @@ def test_match_and_placement():
     assert (m["x"], m["y"]) == (2.0, 1.0)
 
 
-def photo(*slugs):
-    return {"matches": [{"slug": s, "score": 0.5 - 0.1 * i} for i, s in enumerate(slugs)]}
+def photo(*slugs, probs=None):
+    probs = probs or [0.95] + [0.05 / max(len(slugs) - 1, 1)] * (len(slugs) - 1)
+    return {"matches": [{"slug": s, "score": 0.5 - 0.1 * i, "prob": p} for i, (s, p) in enumerate(zip(slugs, probs))]}
+
+
+def test_match_probabilities_use_clip_scale():
+    m = INDEX.match(np.array([1, 0, 0], dtype=np.float32))
+    probs = [x["prob"] for x in m["matches"]]
+    assert probs[0] > 0.9 and abs(sum(probs) - 1) < 1e-3  # three nodes, so the top-5 is the whole distribution
+
+
+def test_nucleus_is_smallest_set_reaching_p():
+    assert nucleus(photo("a", "b", "c")["matches"], 0.9) == ["a"]
+    assert nucleus(photo("a", "b", "c", probs=[0.86, 0.14, 0])["matches"], 0.9) == ["a", "b"]
+    assert nucleus(photo("a", "b", probs=[0.5, 0.3])["matches"], 0.9) == ["a", "b"]  # never more than what is listed
 
 
 def test_aggregate_is_unit_mean():
@@ -55,11 +68,17 @@ def test_cover_collapses_identical_photos_and_splits_disjoint_ones():
     assert [c["slug"] for c in cover(disjoint, "a")] == ["a", "b", "c"]
 
 
-def test_cover_keeps_seed_first_prefers_coverage_and_caps():
-    res = [photo("s", "p"), photo("q", "p"), photo("q", "r")]
-    assert cover(res, "s") == [{"slug": "s", "photos": [0]}, {"slug": "q", "photos": [1, 2]}]
+def test_cover_only_merges_near_ties():
+    tie = photo("s", "p", probs=[0.86, 0.14])    # within p=0.9, so explained by either
+    clear = photo("q", "p", probs=[0.99, 0.01])  # p is a distant second: not explained by it
+    assert cover([tie, clear], "p") == [{"slug": "q", "photos": [1]}, {"slug": "p", "photos": [0]}]
+
+
+def test_cover_sorts_by_photos_explained_and_caps():
+    res = [photo("s"), photo("q"), photo("q")]
+    assert cover(res, "s") == [{"slug": "q", "photos": [1, 2]}, {"slug": "s", "photos": [0]}]
     res = [photo("z"), photo("a"), photo("b"), photo("c")]
-    assert [c["slug"] for c in cover(res, "z", cap=2)] == ["z", "a"]
+    assert len(cover(res, "z", cap=2)) == 2
     assert cover([photo("a")], "ghost") == [{"slug": "a", "photos": [0]}]  # a seed that explains nothing is dropped
 
 
@@ -69,6 +88,7 @@ def test_basic_score_rescales_over_catalog_range():
     assert basic_score([photo("niche")] * 3, ratings) == 0
     assert basic_score([photo("mid", "unrated")], ratings) == 50
     assert basic_score([photo("unrated")], ratings) == 50
+    assert basic_score([photo("basic", "niche", probs=[0.5, 0.5])], ratings) == 50  # weighted by probability
 
 
 @pytest.fixture

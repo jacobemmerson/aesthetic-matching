@@ -12,6 +12,8 @@ from pipeline.train_head import zscore
 IMAGE_WEIGHT, TEXT_WEIGHT = 0.7, 0.3
 PRIOR_WEIGHT = 0.08  # from pipeline/evaluate.py: +2pts popularity-weighted top-1 for -0.6pt plain
 TOP_K = 5
+SOFTMAX_T = 0.01  # CLIP's own logit scale (100 x cosine); turns scores into per-photo probabilities
+NUCLEUS_P = 0.9   # a photo is explained by the fewest aesthetics whose probabilities reach this
 PLACE_NUDGE = (0.2, 0.1)  # how far the map position leans from the top match toward #2 and #3
 
 
@@ -71,12 +73,14 @@ class Index:
 
     def match(self, vec: np.ndarray) -> dict:
         s = self.scores(vec)
+        z = np.exp((s - s.max()) / SOFTMAX_T)
+        prob = z / z.sum()
         top = np.argsort(-s)[:TOP_K]
         # Anchor at the top match so the label and the map position agree (a weighted mean of
         # three nodes could land beside an unrelated fourth); the nudges hint at the runners-up.
         anchor = self.xy[top[0]]
         x, y = anchor + sum(w * (self.xy[i] - anchor) for w, i in zip(PLACE_NUDGE, top[1:]))
-        return {"matches": [{"slug": self.slugs[i], "score": float(s[i])} for i in top], "x": float(x), "y": float(y)}
+        return {"matches": [{"slug": self.slugs[i], "score": float(s[i]), "prob": float(prob[i])} for i in top], "x": float(x), "y": float(y)}
 
 
 def aggregate(vecs: list[np.ndarray]) -> np.ndarray:
@@ -84,30 +88,41 @@ def aggregate(vecs: list[np.ndarray]) -> np.ndarray:
     return normalize(np.mean(vecs, axis=0))
 
 
-def cover(image_results: list[dict], seed: str, k: int = 3, cap: int = 5) -> list[dict]:
-    """Smallest set of aesthetics that explains every photo: a photo is explained when the
-    aesthetic is in its top-k. Greedy, seeded with the aggregate's best match so it leads when
-    it explains anything; grows with how diverse the photos are."""
-    tops = [{m["slug"]: m["score"] for m in r["matches"][:k]} for r in image_results]
-    uncovered = set(range(len(tops)))
+def nucleus(matches: list[dict], p: float = NUCLEUS_P) -> list[str]:
+    """Top-p over the listed matches: the fewest slugs whose probabilities reach p."""
+    out, total = [], 0.0
+    for m in matches:
+        out.append(m["slug"])
+        total += m["prob"]
+        if total >= p:
+            break
+    return out
+
+
+def cover(image_results: list[dict], seed: str, p: float = NUCLEUS_P, cap: int = 5) -> list[dict]:
+    """Smallest set of aesthetics that explains every photo, where a photo is explained by any
+    aesthetic in its nucleus (so clear winners stand alone and near-ties merge). Greedy, seeded
+    with the aggregate's best match; grows with how diverse the photos are. Rows are sorted by
+    photos explained, then probability mass."""
+    nuclei = [{m["slug"]: m["prob"] for m in r["matches"] if m["slug"] in nucleus(r["matches"], p)} for r in image_results]
+    uncovered = set(range(len(nuclei)))
     chosen = [seed]
     while True:
-        covers = {i for i in uncovered if chosen[-1] in tops[i]}
-        uncovered -= covers
+        uncovered -= {i for i in uncovered if chosen[-1] in nuclei[i]}
         if not uncovered or len(chosen) >= cap:
             break
-        candidates = {s for i in uncovered for s in tops[i]}
-        chosen.append(max(candidates, key=lambda s: (sum(s in tops[i] for i in uncovered), sum(tops[i].get(s, 0) for i in uncovered),
-                                                     -min(i for i in uncovered if s in tops[i]))))
-    found = [{"slug": s, "photos": [i for i, t in enumerate(tops) if s in t]} for s in chosen]
-    return [a for a in found if a["photos"]]
+        candidates = {s for i in uncovered for s in nuclei[i]}
+        chosen.append(max(candidates, key=lambda s: (sum(s in n for n in nuclei), sum(n.get(s, 0) for n in nuclei),
+                                                     -min(i for i in uncovered if s in nuclei[i]))))
+    found = [{"slug": s, "photos": [i for i, n in enumerate(nuclei) if s in n]} for s in chosen if any(s in n for n in nuclei)]
+    return sorted(found, key=lambda a: (-len(a["photos"]), -sum(nuclei[i][a["slug"]] for i in a["photos"])))
 
 
-def basic_score(image_results: list[dict], ratings: dict[str, float], k: int = 3) -> int:
-    """0 = the most niche thing in the catalog, 100 = the most basic; match-weighted mean of the
-    mainstream ratings over each photo's top-k, rescaled over the catalog's rating range."""
+def basic_score(image_results: list[dict], ratings: dict[str, float]) -> int:
+    """0 = the most niche thing in the catalog, 100 = the most basic; probability-weighted mean
+    of the mainstream ratings over each photo's matches, rescaled over the catalog's range."""
     lo, hi = (min(ratings.values()), max(ratings.values())) if ratings else (0.0, 0.0)
-    pairs = [(max(m["score"], 1e-6), ratings[m["slug"]]) for r in image_results for m in r["matches"][:k] if m["slug"] in ratings]
+    pairs = [(max(m["prob"], 1e-6), ratings[m["slug"]]) for r in image_results for m in r["matches"] if m["slug"] in ratings]
     if hi <= lo or not pairs:
         return 50
     mean = sum(w * v for w, v in pairs) / sum(w for w, _ in pairs)
