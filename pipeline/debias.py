@@ -64,24 +64,30 @@ def leace_fit(X: np.ndarray, Z: np.ndarray, ridge: float = 1e-4) -> tuple[np.nda
     return P.astype(np.float32), (mu - P @ mu).astype(np.float32)
 
 
-def main():
+def suffix(tag: str, masked: bool) -> str:
+    """File suffix shared by index, image_vecs, probe and debias artifacts of one build."""
+    return (f"_{tag}" if tag else "") + ("_masked" if masked else "")
+
+
+def main(tag: str = ""):
     from pipeline.build_index import embed_texts
 
     P, b = projection_from_basis(prompt_directions(embed_texts))
-    np.savez(DATA / "debias_prompt.npz", P=P, b=b)
-    print("wrote data/debias_prompt.npz")
-    for suffix in ("", "_masked"):
-        probe = DATA / f"probe{suffix}.npz"
+    np.savez(DATA / f"debias_prompt{suffix(tag, False)}.npz", P=P, b=b)
+    print(f"wrote data/debias_prompt{suffix(tag, False)}.npz")
+    for masked in (False, True):
+        probe = DATA / f"probe{suffix(tag, masked)}.npz"
         if not probe.exists():
             continue
         z = np.load(probe)
         rows = fit_rows(len(z["race"]))
         Z = np.concatenate([onehot(z["race"][rows], len(RACE_GROUPS)), onehot(z["gender"][rows], len(GENDER_GROUPS))], 1)
         P, b = leace_fit(z["vecs"][rows], Z)
-        np.savez(DATA / f"debias_leace{suffix}.npz", P=P, b=b)
-        print(f"wrote data/debias_leace{suffix}.npz: rank {np.linalg.matrix_rank(P, tol=1e-4)} of {P.shape[0]}")
+        np.savez(DATA / f"debias_leace{suffix(tag, masked)}.npz", P=P, b=b)
+        print(f"wrote data/debias_leace{suffix(tag, masked)}.npz: rank {np.linalg.matrix_rank(P, tol=1e-4)} of {P.shape[0]}")
 
 
 if __name__ == "__main__":
-    argparse.ArgumentParser(description=__doc__).parse_args()
-    main()
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--tag", default="", help="fit on probe_TAG.npz and write debias_*_TAG.npz")
+    main(ap.parse_args().tag)

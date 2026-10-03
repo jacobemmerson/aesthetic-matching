@@ -37,3 +37,10 @@ def test_fit_rows_is_half_and_disjoint_from_eval():
 
     f = fit_rows(10)
     assert f.sum() == 5 and (~f).sum() == 5 and f.dtype == bool
+
+
+def test_suffix_names_tagged_and_masked_artifacts():
+    from pipeline.debias import suffix
+
+    assert suffix("", False) == "" and suffix("", True) == "_masked"
+    assert suffix("siglip", False) == "_siglip" and suffix("siglip", True) == "_siglip_masked"

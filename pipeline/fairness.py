@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from pipeline.build_index import MIN_IMAGES, normalize
-from pipeline.debias import RACE_GROUPS, apply, fit_rows
+from pipeline.debias import RACE_GROUPS, apply, fit_rows, suffix
 from pipeline.evaluate import accuracy, loo_sims
 from pipeline.logreg import cv_accuracy
 from pipeline.train_head import best_l2, cv_scores, group_weights, train, zscore
@@ -81,8 +81,8 @@ TAG = ""  # set by --tag: evaluate index_TAG / image_vecs_TAG (e.g. a --crops bu
 
 
 def load_bundle(masked: bool):
-    suffix = "_masked" if masked else (f"_{TAG}" if TAG else "")
-    paths = [DATA / f"index{suffix}.npz", DATA / f"image_vecs{suffix}.npz", DATA / f"probe{'_masked' if masked else ''}.npz"]
+    sfx = suffix(TAG, masked)
+    paths = [DATA / f"index{sfx}.npz", DATA / f"image_vecs{sfx}.npz", DATA / f"probe{sfx}.npz"]
     if not all(p.exists() for p in paths):
         return None
     return tuple(np.load(p) for p in paths)
@@ -91,8 +91,7 @@ def load_bundle(masked: bool):
 def treatment_map(name: str, masked: bool, d: int):
     if name == "none":
         return np.eye(d, dtype=np.float32), np.zeros(d, np.float32)
-    suffix = "_masked" if masked and name == "leace" else ""
-    t = np.load(DATA / f"debias_{name}{suffix}.npz")
+    t = np.load(DATA / f"debias_{name}{suffix(TAG, masked and name == 'leace')}.npz")
     return t["P"], t["b"]
 
 
@@ -142,7 +141,7 @@ def run_config(scorer: str, treatment: str, masked: bool, attrs) -> dict | None:
 def main(only: list[str] | None, tag: str = ""):
     global TAG
     TAG = tag
-    attrs = np.load(DATA / "reference_attrs.npz")
+    attrs = np.load(DATA / f"reference_attrs{suffix(tag, False)}.npz")
     lines = ["| config | race TVD | gender TVD | race acc (chance 0.143) | gender acc (chance 0.5) | LOO top1 | LOO top5 |",
              "|---|---|---|---|---|---|---|"]
     if attrs["race_cv_acc"] < 0.6 or attrs["gender_cv_acc"] < 0.85:

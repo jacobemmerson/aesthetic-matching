@@ -52,10 +52,11 @@ def load_fairface():
     return ds, race, gender
 
 
-def main(limit, per_cell, mask_faces):
+def main(limit, per_cell, mask_faces, tag: str = ""):
     from PIL import Image
 
     from pipeline.build_index import load_model, normalize
+    from pipeline.debias import suffix
     from pipeline.faces import Detector
 
     ds, race, gender = load_fairface()
@@ -70,20 +71,20 @@ def main(limit, per_cell, mask_faces):
             vecs.append(model.encode_image(torch.stack([preprocess(im) for im in imgs])).float().numpy())
             print(f"  embedded {min(i + 32, len(idx))}/{len(idx)}", end="\r")
     print()
-    suffix = "_masked" if mask_faces else ""
-    np.savez(DATA / f"probe{suffix}.npz", vecs=normalize(np.concatenate(vecs)), race=race[idx], gender=gender[idx], id=idx.astype(str))
-    print(f"wrote data/probe{suffix}.npz ({len(idx)} images)")
+    sfx = suffix(tag, mask_faces)
+    np.savez(DATA / f"probe{sfx}.npz", vecs=normalize(np.concatenate(vecs)), race=race[idx], gender=gender[idx], id=idx.astype(str))
+    print(f"wrote data/probe{sfx}.npz ({len(idx)} images)")
     if mask_faces:
         return  # reference labels come from the unmasked probe only
-    ref = np.load(DATA / "image_vecs.npz")
+    ref = np.load(DATA / f"image_vecs{sfx}.npz")
     n = int(ref["source"].max()) + 1  # originals come first; crops map back through `source`
     n = n if limit is None else min(n, limit)
     det = Detector()
     has_face = np.array([len(det.boxes(Image.open(p))) > 0 for p in ref["path"][:n]])
-    out = label_references(np.load(DATA / "probe.npz")["vecs"], race[idx], gender[idx], ref["vecs"][:n], has_face)
+    out = label_references(np.load(DATA / f"probe{sfx}.npz")["vecs"], race[idx], gender[idx], ref["vecs"][:n], has_face)
     print(f"attribute classifier held-out acc: race {out['race_cv_acc']:.3f} gender {out['gender_cv_acc']:.3f}; "
           f"{int((~has_face).sum())}/{len(has_face)} reference images without a face")
-    np.savez(DATA / "reference_attrs.npz", **out)
+    np.savez(DATA / f"reference_attrs{sfx}.npz", **out)
 
 
 if __name__ == "__main__":
@@ -91,5 +92,6 @@ if __name__ == "__main__":
     ap.add_argument("--limit", type=int, help="smoke run: ~N probe images and N reference rows")
     ap.add_argument("--per-cell", type=int, default=200)
     ap.add_argument("--mask-faces", action="store_true", help="write probe_masked.npz instead")
+    ap.add_argument("--tag", default="", help="suffix for a build made with another backbone (probe_TAG.npz, image_vecs_TAG.npz)")
     a = ap.parse_args()
-    main(a.limit, a.per_cell, a.mask_faces)
+    main(a.limit, a.per_cell, a.mask_faces, a.tag)
