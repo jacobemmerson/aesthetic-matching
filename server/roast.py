@@ -48,6 +48,7 @@ def statement(score: int, names: list[str], client: httpx.Client | None = None) 
         f"This person's taste scored {score} out of 100, where 0 is the most obscure taste in the catalog and 100 "
         f"the most mainstream. The aesthetics their photos matched: {', '.join(names)}.\n{register(score)}\n"
         "Write exactly two sentences, 30 to 45 words in total, second person. "
+        "Start the two sentences with different words; at most one may begin with 'Your'. "
         "The first sentence says how obscure or mainstream their taste is and what that suggests about them. "
         "The second may nod to one of the matched aesthetics. Never use the word 'niche'. Never quote a number. "
         "No emoji, hashtags, lists, quotation marks, or preamble; reply with the two sentences only."
