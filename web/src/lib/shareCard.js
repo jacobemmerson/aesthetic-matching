@@ -2,13 +2,14 @@ const BG = '#0b0b0d', TEXT = '#f2efe9', MUTED = '#8a8794', ACCENT = '#ff4d6d', D
 
 export function layoutCard(result, graph, W = 1080, H = 1350) {
   const pad = 72
-  const names = result.overall.map((m, i) => ({ text: result.names[m.slug], x: pad, y: 250 + i * 118, size: 96 }))
   const map = { x: pad, y: 640, w: W - 2 * pad, h: 560 }
+  const size = result.aesthetics.length <= 3 ? 96 : 68  // five lines of 68 end at y=586, above the map
+  const names = result.aesthetics.map((a, i) => ({ text: result.names[a.slug], x: pad, y: 250 + i * Math.round(size * 1.23), size }))
   const xs = graph.nodes.map((n) => n.x), ys = graph.nodes.map((n) => n.y)
   const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)]
   const px = (x) => map.x + ((x - x0) / (x1 - x0 || 1)) * map.w
   const py = (y) => map.y + ((y - y0) / (y1 - y0 || 1)) * map.h
-  const hot = new Set(result.images.map((i) => i.matches[0].slug))
+  const hot = new Set(result.aesthetics.map((a) => a.slug))
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
   return {
     title: { x: pad, y: 160, size: 30 },
@@ -17,6 +18,7 @@ export function layoutCard(result, graph, W = 1080, H = 1350) {
     dots: graph.nodes.map((n) => ({ slug: n.slug, x: px(n.x), y: py(n.y), hot: hot.has(n.slug) })),
     photos: result.images.map((img, index) => ({ index, x: clamp(px(img.x), map.x + 40, map.x + map.w - 40), y: clamp(py(img.y), map.y + 40, map.y + map.h - 40), r: 40 })),
     footer: { x: pad, y: H - 72, size: 26 },
+    score: { x: W - pad, y: H - 72, size: 26, text: `basic score ${result.basic_score} / 100` },
   }
 }
 
@@ -42,6 +44,7 @@ export function drawCard(ctx, L, images, hostname, W = 1080, H = 1350) {
     ctx.strokeStyle = ACCENT; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.stroke()
   }
   ctx.fillStyle = MUTED; ctx.font = `500 ${L.footer.size}px Inter, system-ui, sans-serif`; ctx.fillText(hostname, L.footer.x, L.footer.y)
+  ctx.fillStyle = TEXT; ctx.font = `600 ${L.score.size}px Inter, system-ui, sans-serif`; ctx.textAlign = 'right'; ctx.fillText(L.score.text, L.score.x, L.score.y); ctx.textAlign = 'left'
 }
 
 // Resolves null on failure so one bad photo doesn't abort the card.

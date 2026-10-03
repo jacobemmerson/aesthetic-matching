@@ -2,17 +2,25 @@ import { expect, it, vi } from 'vitest'
 import { fitFontSize, layoutCard, shareOrDownload } from './shareCard.js'
 
 const graph = { nodes: [{ slug: 'a', x: -1, y: -1 }, { slug: 'b', x: 1, y: 1 }, { slug: 'c', x: 0, y: 0 }] }
-const result = { overall: [{ slug: 'a' }, { slug: 'b' }, { slug: 'c' }], names: { a: 'Alpha', b: 'Beta', c: 'Gamma' }, images: [{ x: 0, y: 0, matches: [{ slug: 'c' }] }] }
+const result = { aesthetics: [{ slug: 'a', photos: [0] }, { slug: 'b', photos: [] }, { slug: 'c', photos: [0] }], basic_score: 62, names: { a: 'Alpha', b: 'Beta', c: 'Gamma' }, images: [{ x: 0, y: 0, matches: [{ slug: 'c' }] }] }
 
-it('lays out three names and maps every node and photo inside the map box', () => {
+it('lays out the aesthetics, the score, and maps every node and photo inside the map box', () => {
   const L = layoutCard(result, graph)
   expect(L.names.map((n) => n.text)).toEqual(['Alpha', 'Beta', 'Gamma'])
+  expect(L.score.text).toBe('basic score 62 / 100')
   expect(L.dots).toHaveLength(3)
   for (const d of [...L.dots, ...L.photos]) {
     expect(d.x).toBeGreaterThanOrEqual(L.map.x); expect(d.x).toBeLessThanOrEqual(L.map.x + L.map.w)
     expect(d.y).toBeGreaterThanOrEqual(L.map.y); expect(d.y).toBeLessThanOrEqual(L.map.y + L.map.h)
   }
-  expect(L.dots.filter((d) => d.hot).map((d) => d.slug)).toEqual(['c'])
+  expect(L.dots.filter((d) => d.hot).map((d) => d.slug)).toEqual(['a', 'b', 'c'])
+})
+
+it('shrinks the name lines so five aesthetics stay above the map', () => {
+  const five = { ...result, aesthetics: ['a', 'b', 'c', 'a', 'b'].map((slug) => ({ slug, photos: [] })) }
+  const L = layoutCard(five, graph)
+  expect(L.names).toHaveLength(5)
+  expect(Math.max(...L.names.map((n) => n.y))).toBeLessThan(L.map.y)
 })
 
 it('falls back to a download when navigator.share is unavailable', async () => {
