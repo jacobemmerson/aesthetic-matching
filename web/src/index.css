@@ -37,7 +37,7 @@ footer a { color: var(--muted); }
 
 .result { position: fixed; inset: 0; max-width: none; padding: 0; }
 .result { --panel: min(380px, 30vw); }  /* the verdict column; the globe owns everything to its right */
-.result-head { position: absolute; top: 16px; left: 16px; z-index: 5; width: calc(var(--panel) - 32px); pointer-events: none; }
+.result-head { position: absolute; top: 16px; left: 16px; bottom: 48px; z-index: 5; width: calc(var(--panel) - 32px); overflow-y: auto; scrollbar-width: thin; pointer-events: none; }
 .result-head > * { pointer-events: auto; }
 .graph-shell { position: absolute; inset: -5vh 0 -5vh var(--panel); }  /* beside the verdict, never under it; a little taller than the screen so the globe fills it */
 .graph { position: absolute; inset: 0; }
@@ -65,7 +65,7 @@ footer a { color: var(--muted); }
 .meter { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
 .meter span { display: block; height: 100%; background: linear-gradient(90deg, #7bd389, var(--accent)); transition: width .8s ease-out; }
 .meter-ends { display: flex; justify-content: space-between; color: var(--muted); }
-.statement { font-family: var(--display); font-size: 1.02rem; line-height: 1.35; margin: 4px 0 0; }
+.statement { font-family: var(--display); font-size: 1.02rem; line-height: 1.35; margin: 4px 0 0; max-height: 7.5em; overflow-y: auto; scrollbar-width: thin; padding-right: 4px; }
 .actions { display: flex; gap: 8px; }
 .result ~ footer { position: fixed; left: 16px; right: 16px; bottom: 0; z-index: 4; padding: 10px 0; margin: 0; max-width: none; pointer-events: none; }
 .result ~ footer a { pointer-events: auto; }
