@@ -38,7 +38,7 @@ footer a { color: var(--muted); }
 .result { position: fixed; inset: 0; max-width: none; padding: 0; }
 .result-head { position: absolute; top: 16px; left: 16px; z-index: 5; width: min(440px, calc(100% - 32px)); pointer-events: none; }
 .result-head > * { pointer-events: auto; }
-.graph-shell { position: absolute; inset: 0; }
+.graph-shell { position: absolute; inset: 0; left: min(470px, 34vw); }  /* the sphere sits beside the verdict, not under it */
 .graph { position: absolute; inset: 0; }
 .search { position: absolute; top: 16px; right: 16px; width: min(280px, calc(100% - 32px)); z-index: 5; }
 .search input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: rgba(20,20,24,.9); color: var(--text); font: inherit; }
@@ -78,5 +78,5 @@ footer a { color: var(--muted); }
 @media (max-width: 799px) {
   .result ~ footer { display: none; }
   .result-head { width: calc(100% - 32px); max-height: calc(46dvh - 16px); overflow-y: auto; scrollbar-width: thin; }
-  .graph-shell { top: 46dvh; }  /* the verdict sits above the map instead of over it */
+  .graph-shell { top: 46dvh; left: 0; }  /* the verdict sits above the map instead of over it */
 }

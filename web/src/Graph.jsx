@@ -74,7 +74,10 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       },
     })
     sigmaRef.current = sigma
+    sigma.setCustomBBox({ x: [-SCALE, SCALE], y: [-SCALE, SCALE] })  // frame the whole sphere, not whichever nodes face front
     project()
+    const resizer = new ResizeObserver(() => sigma.resize())  // sigma only watches the window, not its container
+    resizer.observe(el.current)
     const camera = sigma.getCamera()
     camera.on('updated', () => { if (camera.x !== .5 || camera.y !== .5) camera.setState({ x: .5, y: .5 }) })  // zoom about the centre only
 
@@ -126,7 +129,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     apiRef.current = api
     onReady?.(api)
     return () => {
-      fadeRef.current(); spin.cancel?.(); hoverRef.current = null; dimRef.current = 0; setHover(null)
+      fadeRef.current(); spin.cancel?.(); resizer.disconnect(); hoverRef.current = null; dimRef.current = 0; setHover(null)
       container.removeEventListener('pointerdown', down); container.removeEventListener('pointermove', move); container.removeEventListener('pointerup', up); container.removeEventListener('pointercancel', up)
       sigma.kill()
     }
