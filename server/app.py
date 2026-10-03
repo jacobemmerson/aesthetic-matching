@@ -13,7 +13,7 @@ from server.match import Encoder, Index, aggregate, basic_score, cover
 DATA = Path(os.environ.get("DATA_DIR", Path(__file__).resolve().parent.parent / "data"))
 WEB = Path(__file__).resolve().parent.parent / "web" / "dist"
 MIN_IMAGES, MAX_IMAGES, MAX_BYTES = 3, 10, 5_000_000
-RATE_LIMIT, RATE_WINDOW = 5, 3600  # analyses per IP per hour
+RATE_LIMIT, RATE_WINDOW = int(os.environ.get("RATE_LIMIT", 5)), 3600  # analyses per IP per hour; 0 disables
 
 app = FastAPI(title="aesthetics roast")
 state: dict = {}
@@ -40,6 +40,8 @@ def client_ip(request: Request) -> str:
 
 
 def check_rate(ip: str):
+    if not RATE_LIMIT:
+        return
     now = time.time()
     hits[ip] = [t for t in hits[ip] if now - t < RATE_WINDOW]
     if len(hits[ip]) >= RATE_LIMIT:
