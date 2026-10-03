@@ -174,7 +174,13 @@ def main(limit: int | None, crops: int = 0, mask_faces: bool = False, tag: str =
 
         owner_idx = np.array([slugs.index(o) for o in owner])
         treated = apply(image_vecs, extra["proj_P"], extra["proj_b"]) if extra else image_vecs  # scores() projects the query first
-        weights = group_weights(np.load(DATA / "reference_attrs.npz")["race"][source], owner_idx) if head == "reweighted" else None
+        weights = None
+        if head == "reweighted":  # labels live on the unmasked build of this backbone; carry them over by path
+            from pipeline.debias import align_by_path, suffix
+
+            label_tag = suffix(tag if debias_tag is None else debias_tag, False)
+            attrs, labelled = np.load(DATA / f"reference_attrs{label_tag}.npz"), np.load(DATA / f"image_vecs{label_tag}.npz")
+            weights = group_weights(align_by_path(attrs["race"], labelled["path"], [str(paths[i]) for i in source]), owner_idx)
         l2 = best_l2(treated, owner_idx, len(slugs), source, weights)
         extra["head_w"], extra["head_b"] = train(treated, owner_idx, len(slugs), weights, l2)
         print(f"head: l2={l2}")

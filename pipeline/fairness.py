@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from pipeline.build_index import MIN_IMAGES, normalize
-from pipeline.debias import RACE_GROUPS, apply, fit_rows, suffix
+from pipeline.debias import RACE_GROUPS, align_by_path, apply, fit_rows, suffix
 from pipeline.evaluate import accuracy, loo_sims
 from pipeline.logreg import cv_accuracy
 from pipeline.train_head import best_l2, cv_scores, group_weights, train, zscore
@@ -93,13 +93,6 @@ def treatment_map(name: str, masked: bool, d: int):
         return np.eye(d, dtype=np.float32), np.zeros(d, np.float32)
     t = np.load(DATA / f"debias_{name}{suffix(TAG, masked and name == 'leace')}.npz")
     return t["P"], t["b"]
-
-
-def align_by_path(labels: np.ndarray, label_paths, target_paths) -> np.ndarray:
-    """Reference labels were made on the unmasked build; a masked build prunes a slightly different
-    set of images, so carry labels across by path (-1 where a path has no label)."""
-    by_path = dict(zip(map(str, label_paths), labels))
-    return np.array([by_path.get(str(p), -1) for p in target_paths])
 
 
 def run_config(scorer: str, treatment: str, masked: bool, attrs) -> dict | None:

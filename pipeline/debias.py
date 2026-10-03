@@ -64,6 +64,13 @@ def leace_fit(X: np.ndarray, Z: np.ndarray, ridge: float = 1e-4) -> tuple[np.nda
     return P.astype(np.float32), (mu - P @ mu).astype(np.float32)
 
 
+def align_by_path(labels: np.ndarray, label_paths, target_paths) -> np.ndarray:
+    """Reference labels were made on one build; another build (masked, other backbone) prunes a
+    slightly different image set, so carry labels across by path (-1 where a path has no label)."""
+    by_path = dict(zip(map(str, label_paths), labels))
+    return np.array([by_path.get(str(p), -1) for p in target_paths])
+
+
 def suffix(tag: str, masked: bool) -> str:
     """File suffix shared by index, image_vecs, probe and debias artifacts of one build."""
     return (f"_{tag}" if tag else "") + ("_masked" if masked else "")
