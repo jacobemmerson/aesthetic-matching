@@ -1,40 +1,42 @@
-"""One humorous verdict from a local Ollama model, given the matched aesthetics."""
+"""One short line on how niche the result is, from a local Ollama model, with a static fallback."""
 import os
 
 import httpx
 
 OLLAMA = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2:3b")
-FALLBACK = "The oracle is asleep. Your aesthetic remains a mystery, which is honestly a look in itself."
 
-SYSTEM = (
-    "You are a snarky but affectionate fashion and lifestyle critic who has seen every internet aesthetic. "
-    "You are given the aesthetics a person's photos matched. Write ONE verdict of about 100 words, second person, "
-    "roasting them with specific, playful jabs drawn from the aesthetic descriptions. Name the top aesthetic and at "
-    "least one other. No lists, no headings, no hashtags, no emoji, no disclaimers."
-)
-
-
-def build_prompt(overall: list[dict], per_image: list[str], nodes: dict[str, dict]) -> str:
-    lines = ["Overall matched aesthetics, strongest first:"]
-    for i, m in enumerate(overall, 1):
-        n = nodes[m["slug"]]
-        lines.append(f"{i}. {n['name']}: {n['description'][:400]}")
-        if n.get("key_values"):
-            lines.append(f"   values: {n['key_values'][:200]}")
-    lines.append(f"Per-photo top matches: {', '.join(per_image)}.")
-    lines.append("Write the verdict now.")
-    return "\n".join(lines)
+# One line per score decile (0-9, 10-19, ... 90-100): served when the model is unreachable.
+BANDS = [
+    "Wow. Genuinely niche: almost nobody's photos land here.",
+    "Deeply niche. Your taste lives in the corners of the map.",
+    "Properly niche. You found this before the algorithm did.",
+    "Off the beaten path, with a foot in something people recognise.",
+    "A little niche. You lean obscure but you still go outside.",
+    "Right in the middle: half discovery, half what everyone's into.",
+    "A little mainstream. Recognisable, with the odd curveball.",
+    "Mostly mainstream. The feed has clearly been taking notes on you.",
+    "Trendy. You and the algorithm agree on nearly everything.",
+    "Peak mainstream. Your taste is the moodboard everyone else copies.",
+]
 
 
-def roast(prompt: str, client: httpx.Client | None = None) -> str:
-    client = client or httpx.Client(timeout=90)
+def fallback(score: int) -> str:
+    return BANDS[min(max(score, 0), 100) // 10 if score < 100 else 9]
+
+
+def statement(score: int, names: list[str], client: httpx.Client | None = None) -> str:
+    prompt = (
+        f"Score {score}/100 where 0 is the most niche and 100 the most mainstream; aesthetics: {', '.join(names)}. "
+        "Write ONE sentence, under 20 words, second person, telling them how niche or mainstream their taste is. "
+        "No emoji, no hashtags, no lists, no preamble."
+    )
+    client = client or httpx.Client(timeout=10)
     try:
         r = client.post(f"{OLLAMA}/api/generate", json={
-            "model": MODEL, "system": SYSTEM, "prompt": prompt, "stream": False,
-            "options": {"temperature": 0.9, "num_predict": 220},
+            "model": MODEL, "prompt": prompt, "stream": False, "options": {"temperature": 0.8, "num_predict": 40},
         })
         r.raise_for_status()
-        return r.json()["response"].strip() or FALLBACK
+        return r.json()["response"].strip() or fallback(score)
     except (httpx.HTTPError, KeyError, ValueError):
-        return FALLBACK
+        return fallback(score)
