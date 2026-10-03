@@ -30,3 +30,22 @@ spanish-golden-age
 suprematism
 symbolism
 gothic-architecture
+# music genres (and one hate-adjacent subculture) that survived on a Fashion tag; they route
+# portraits of Black people to rap nodes and are not visual styles in their own right
+gangsta-rap
+hip-hop
+emo-rap
+swag
+opium
+funk
+britpop
+new-wave
+glam-rock
+hair-metal
+nu-metal
+industrial
+post-punk
+riot-grrrl
+twee
+indie
+skinhead

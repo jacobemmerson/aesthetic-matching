@@ -87,8 +87,7 @@
   "key_values": "Liberation, innovation, heritage, future vision",
   "decade_of_origin": "1950s-Present",
   "related": [
-   "cyberpunk",
-   "funk"
+   "cyberpunk"
   ],
   "subgenres": [],
   "mentions": 14,
@@ -510,8 +509,7 @@
   "related": [
    "bohemian",
    "hippie",
-   "hipster",
-   "post-punk"
+   "hipster"
   ],
   "subgenres": [],
   "mentions": 30,
@@ -608,7 +606,6 @@
   "key_values": "Stunting/flexing, independent mogul, guerrilla capitalism, baroque maximalism, blaxportation revival​",
   "decade_of_origin": "Late 1990s",
   "related": [
-   "hip-hop",
    "mcbling"
   ],
   "subgenres": [],
@@ -745,36 +742,6 @@
   "mainstream": 3.05
  },
  {
-  "name": "Britpop",
-  "slug": "britpop",
-  "title": "Britpop",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Britpop",
-  "has_infobox": true,
-  "description": "Britpop was a British music and cultural movement that emerged in the early 1990s and dominated UK popular culture during the mid-1990s. Musically, it produced bright, catchy alternative rock that deliberately referenced British pop music of the 1960s (like The Kinks and The Beatles) as a direct reaction to the dour themes and dominance of American-led grunge.\nThe aesthetic, which became a key part of the larger cultural moment known as Cool Britannia, was defined by a strong emphasis on British national identity and working-class pride. Britpop translated its sonic reverence for the past into a distinctly British style that merged elements of Mod culture, casuals, and punk-derived irreverence.",
-  "word_count": 1033,
-  "categories": [
-   "Music Genres",
-   "1990s",
-   "British",
-   "Fashion",
-   "Subcultures",
-   "Masculine",
-   "Retro"
-  ],
-  "other_names": "British Pop",
-  "key_motifs": "Union Jack imagery, working-class pride, football casual culture (terrace wear), Mod Revival accessories, beer and \"lad culture\" imagery, sharp lyrics",
-  "key_colours": "Red, white, and blue (referencing the Union Jack); khaki/olive (parkas); navy/black (suit jackets)",
-  "key_values": "British national identity, youthful exuberance, anti-Americanism (anti-Grunge), nostalgia for the 1960s, irony",
-  "decade_of_origin": "Early 1990s",
-  "related": [
-   "indie"
-  ],
-  "subgenres": [],
-  "mentions": 15,
-  "popularity": 9,
-  "mainstream": 4.09
- },
- {
   "name": "Brutalism",
   "slug": "brutalism",
   "title": "Brutalism",
@@ -887,8 +854,7 @@
   "key_values": "Hispanic pride\nAnti-assimilation",
   "decade_of_origin": "1930s",
   "related": [
-   "baddie",
-   "hip-hop"
+   "baddie"
   ],
   "subgenres": [],
   "mentions": 10,
@@ -1159,7 +1125,6 @@
   "decade_of_origin": "Late 1990s",
   "related": [
    "cyberpunk",
-   "industrial",
    "rave",
    "techwear"
   ],
@@ -1366,9 +1331,7 @@
   "key_colours": "Metallic colors, neon colors, red, yellow, orange, multi-colors",
   "key_values": "Escapism, freedom of expression, communal energy, glamour, nightlife culture",
   "decade_of_origin": "1970s",
-  "related": [
-   "funk"
-  ],
+  "related": [],
   "subgenres": [],
   "mentions": 33,
   "popularity": 10,
@@ -1556,39 +1519,6 @@
   "mentions": 77,
   "popularity": 10,
   "mainstream": 5.1
- },
- {
-  "name": "Emo Rap",
-  "slug": "emo-rap",
-  "title": "Emo Rap",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Emo_Rap",
-  "has_infobox": true,
-  "description": "Emo Rap is a subgenre of hip-hop haracterized by emotional lyrics, drawing parallels to the emo subculture. It originated within the SoundCloud rap scene during the mid-2010s. The genre merges hip-hop characteristics, such as trap-style beats, with sung vocals. Prominent artists in the genre include Lil Peep, XXXTentacion, and Juice Wrld. The peak popularity of emo rap occurred roughly between 2016 and 2020. Fans of the genre are often referred to as \"Sadbois\" and \"Sadgirls,\" referencing the \"Sad Boys\" collective, which consists of rapper Yung Lean and producers Yung Sherman and Yung Gud.\nEmo Rap emerged from the online underground hip-hop scene, with roots in cloud rap and trap. It is defined by melancholic production, combining atmospheric cloud rap elements and trap drum patterns with samples from alternative rock and emo genres, including Midwest Emo, emo-pop, and pop-punk. Lyrically, emo rap features dark themes and a mournful, melodic delivery style, influenced by 2000s Midwest emo and emo-pop. The genre frequently blends with pop rap, alternative R&B, and contemporary R&B. Its rise is connected to the early 2010s \"emo revival.\" Early artists like Wicca Phase Springs Eternal, associated with the emo revival, contributed to the genre's formation.\nBones, a cloud rap artist, and members of the GothBoiClique crew, including Lil Tracy, Wicca Phase Springs Eternal, and Horse Head, were early pioneers. Around the same time, the Swedish Drain Gang/Sad Boys collectives influenced the genre with their melancholic lyricism and melodic flows. Lil Peep's popularity on SoundCloud helped establish the genre's sound. Artists like nothing,nowhere., Lil Uzi Vert, Sybyr, and XXXTentacion also contributed to its development. The genre reflects a broader shift towards emotional vulnerability in hip-hop, with lyrics addressing loneliness, mental health, and personal struggles. This shift is seen in the earlier work of artists like Kid Cudi, Kanye West, and Drake. Production is considered integral to the genre, with producers like Nedarb Nagrom and Greaf working with leading artists.\nEmo rap entered the mainstream in the late-2010s, achieving popularity and critical acclaim. Lil Peep, XXXTentacion, and Juice WRLD gained significant success, particularly posthumously, and influenced artists like Post Malone and Future. The genre expanded internationally, with lighter, pop-oriented versions emerging, led by artists like Iann Dior, Juice Wrld, and Trippie Redd.",
-  "word_count": 1802,
-  "categories": [
-   "Music Genres",
-   "2010s",
-   "Hip-Hop",
-   "Black",
-   "Streetwear",
-   "African-American"
-  ],
-  "other_names": "Emo Hip-Hop, Sad Rap, Emo Trap, Depressed Rap, Bop-Punk",
-  "key_motifs": "Trap beats, sung vocals, melancholic melodies, dark lyrics",
-  "key_colours": "Black, white, red, purple",
-  "key_values": "Emotional vulnerability, expression of sadness, mental health awareness",
-  "decade_of_origin": "2010s",
-  "related": [
-   "e-boy",
-   "e-girl",
-   "emo",
-   "grunge",
-   "hip-hop"
-  ],
-  "subgenres": [],
-  "mentions": 17,
-  "popularity": 5,
-  "mainstream": 3.55
  },
  {
   "name": "Ethereal",
@@ -1868,41 +1798,6 @@
   "mainstream": 3.57
  },
  {
-  "name": "Funk",
-  "slug": "funk",
-  "title": "Funk",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Funk",
-  "has_infobox": true,
-  "description": "Funk is an aesthetic primarily associated with the music genre of the same name, which originated in African-American communities in the mid-1960s. The music is characterized by a rhythmic groove focusing on a bass line and drum part, with less emphasis on melody or chord progressions. This musical foundation influenced a distinct visual aesthetic that became prominent in the 1970s.\nThe fashion components of Funk included specific garment types such as flared trousers, jumpsuits, and suits with wide lapels. Fabrics like polyester, satin, sequins, and velvet were common. Color palettes ranged from bright, sometimes psychedelic, tones to later earth tones. Hairstyles like the Afro were also associated with this aesthetic. The visual and cultural expression of Funk often reflected themes of self-development, personal liberation, and social commentary, with musical lyrics taking on urgent social commentary.",
-  "word_count": 1905,
-  "categories": [
-   "Music Genres",
-   "1960s",
-   "African-American",
-   "1970s",
-   "Fashion",
-   "Retro",
-   "Rainbow",
-   "Subcultures"
-  ],
-  "other_names": "Funky, Groovy",
-  "key_motifs": "Flared silhouettes, platform footwear, psychedelic patterns, Afro hairstyles, sequins, velvet, bold geometric designs",
-  "key_colours": "Bright primary colors, neon hues, vibrant purples, oranges, blues, golds, earth tones (later in 1970s)",
-  "key_values": "Self-expression, individuality, cultural pride, liberation, energetic movement, rebellion against convention",
-  "decade_of_origin": "1960s",
-  "related": [
-   "afrofuturism",
-   "bohemian",
-   "disco",
-   "hippie",
-   "mod"
-  ],
-  "subgenres": [],
-  "mentions": 13,
-  "popularity": 10,
-  "mainstream": 4.1
- },
- {
   "name": "Galaxy Print",
   "slug": "galaxy-print",
   "title": "Galaxy Print",
@@ -1936,40 +1831,6 @@
   "mainstream": 3.05
  },
  {
-  "name": "Gangsta Rap",
-  "slug": "gangsta-rap",
-  "title": "Gangsta Rap",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Gangsta_Rap",
-  "has_infobox": true,
-  "description": "Gangsta Rap is a subgenre of Hip-Hop that is characterized by the violent lifestyle of youth from underprivileged areas of the principal coasts of U.S.A like Long Island, Compton, or South Central Los Angeles. \nSometimes the aesthetic is banned at bars and venues with rules like no white t-shirts or baggy clothing. The offical reasoning is usually that this style is commonly worn by gangs, but this could also lead to discrimination (or intentionally be racist) as many black people are part of the aesthetic without actually being gangsters.",
-  "word_count": 520,
-  "categories": [
-   "Music Genres",
-   "1980s",
-   "1990s",
-   "2000s",
-   "African-American",
-   "Fashion",
-   "Fashion Styles",
-   "Masculine",
-   "Mature",
-   "Hip-Hop"
-  ],
-  "other_names": "G-Funk, 90's Hip-Hop",
-  "key_motifs": "",
-  "key_colours": "Black, red, blue, green, brown, grey, white",
-  "key_values": "",
-  "decade_of_origin": "Mid 80's",
-  "related": [
-   "cholo",
-   "hip-hop"
-  ],
-  "subgenres": [],
-  "mentions": 20,
-  "popularity": 6,
-  "mainstream": 3.06
- },
- {
   "name": "Geek Chic",
   "slug": "geek-chic",
   "title": "Geek Chic",
@@ -1991,8 +1852,7 @@
   "decade_of_origin": "Mid-2000s",
   "related": [
    "preppy",
-   "scene",
-   "twee"
+   "scene"
   ],
   "subgenres": [],
   "mentions": 9,
@@ -2032,42 +1892,6 @@
   "mentions": 8,
   "popularity": 4,
   "mainstream": 3.04
- },
- {
-  "name": "Glam Rock",
-  "slug": "glam-rock",
-  "title": "Glam Rock",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Glam_Rock",
-  "has_infobox": true,
-  "description": "Glam Rock is a style of rock music that developed in the United Kingdom in the early 1970s. It was performed by musicians who wore outrageous costumes, makeup, and hairstyles, particularly platform shoes and glitter. Glam artists drew on diverse sources across music and throwaway pop culture, ranging from bubblegum pop and 1950s rock and roll to cabaret, science fiction, and complex art rock. The flamboyant clothing and visual styles of performers were often camp or androgynous, and have been described as playing with other gender roles. Glitter rock was a more extreme version of glam.\nThe UK charts were inundated with glam rock acts from 1971 to 1975. The March 1971 appearance of T. Rex frontman Marc Bolan on the BBC music show Top of the Pops, wearing glitter and satin, is often cited as the beginning of the movement. Other British glam rock artists include David Bowie, Mott the Hoople, Sweet, Slade, Mud, Roxy Music and Gary Glitter. Those not central to the genre, such as Elton John, Rod Stewart and Queen, also adopted glam styles. There was a similar scene in the United States, with Alice Cooper, Kiss, The Tubes, Brownsville Station, and Lou Reed being the most popular American exponents of the style. Other American glam artists include the New York Dolls, Sparks, Suzi Quatro, Iggy Pop, Zolar X, The Runaways, Cherry Vanilla, The Magic Tramps, Ruby and the Rednecks, and Jobriath - many of these acts constituted the \"glam punk\" style, a movement that was most prominent in New York City, Los Angeles, and the Northeastern United States. Glam rock declined after the mid-1970s, but influenced other musical genres including punk rock, glam metal, New Romantic, deathrock and gothic rock.\nIn the late 70s, bands like Hanoi Rocks and Japan the Band (before they went to New Romantic and City Pop) embraced a punk-tinged version of this aesthetic and musical sound. They went on to influence a few Goth bands (Gene Loves Jezebel especially), some Japanese Goth and Visual Kei, and nigh the entirety of the Hair Metal scene.",
-  "word_count": 564,
-  "categories": [
-   "Music Genres",
-   "Fashion",
-   "Kitsch",
-   "Glitter",
-   "1970s",
-   "Maximalism",
-   "LGBTQ",
-   "Androgynous",
-   "Silver"
-  ],
-  "other_names": "",
-  "key_motifs": "Loud classic rock music, big boots, 70's over the top clothing, drugs, makeup, androgyny",
-  "key_colours": "Any and all colors",
-  "key_values": "Sexuality, fashion, rock music, androgyny",
-  "decade_of_origin": "1970-1976",
-  "related": [
-   "burlesque",
-   "camp",
-   "goth",
-   "post-punk",
-   "punk"
-  ],
-  "subgenres": [],
-  "mentions": 25,
-  "popularity": 8,
-  "mainstream": 4.08
  },
  {
   "name": "Goblincore",
@@ -2153,9 +1977,7 @@
   "related": [
    "cybergoth",
    "gothic",
-   "industrial",
    "metalhead",
-   "post-punk",
    "punk",
    "steampunk",
    "vampire"
@@ -2257,7 +2079,6 @@
   "decade_of_origin": "1980s",
   "related": [
    "alternative",
-   "indie",
    "metalhead",
    "punk"
   ],
@@ -2299,37 +2120,6 @@
   "mentions": 42,
   "popularity": 10,
   "mainstream": 4.1
- },
- {
-  "name": "Hair Metal",
-  "slug": "hair-metal",
-  "title": "Hair Metal",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Hair_Metal",
-  "has_infobox": true,
-  "description": "Hair Metal, also known as Glam Metal, is a subgenre of metal music that emerged and peaked in popularity during the 1980s until its decline in the early 1990s. Originating in the United States, this genre differed from other metal subgenres of the time due to its striking, androgynous, and glamorous image, evident in both the musicians' appearance and their music. Hair metal emphasized catchy riffs and guitar solos (often featuring shredding), melodic hooks, and lyrics focused on themes of love and lust.",
-  "word_count": 1307,
-  "categories": [
-   "1980s",
-   "Fashion Styles",
-   "Music Genres",
-   "Maximalism",
-   "Metal",
-   "LGBTQ",
-   "Androgynous"
-  ],
-  "other_names": "Glam Metal, Pop Metal, Sleaze Rock",
-  "key_motifs": "Teased hair, flashy makeup, revealing clothing, animal print, studs, spikes, chains, leather, denim, cowboy boots, drugs, alcohol, strippers, parties, motorcycles, tattoos",
-  "key_colours": "Black, white, red, navy blue, green, violet, shades of pink, gold, silver",
-  "key_values": "The \"sex, drugs and rock 'n' roll\" lifestyle, nightlife, rebellion and controversies",
-  "decade_of_origin": "Late 70's-early 80's",
-  "related": [
-   "punk",
-   "scene"
-  ],
-  "subgenres": [],
-  "mentions": 11,
-  "popularity": 6,
-  "mainstream": 3.56
  },
  {
   "name": "Halloween",
@@ -2428,43 +2218,12 @@
    "goth",
    "nerd",
    "normcore",
-   "nu-metal",
    "punk"
   ],
   "subgenres": [],
   "mentions": 9,
   "popularity": 5,
   "mainstream": 3.05
- },
- {
-  "name": "Hip-Hop",
-  "slug": "hip-hop",
-  "title": "Hip-Hop",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Hip-Hop",
-  "has_infobox": true,
-  "description": "Hip-Hop, often referred to as Rap Music, is a cultural movement and art form that originated in the early 1970s among inner-city African Americans and Latino Americans in the Bronx borough of New York City. Its development arose from the social and economic challenges of the time, including post-industrial decline, urban decay, and the resulting poverty and social unrest. These conditions created a need for new forms of expression and community gathering.\nThe four foundational elements of hip-hop are DJing/turntablism, MCing/rapping, B-boying/breaking, and visual/graffiti art. Block parties in the Bronx served as early venues for these forms of expression. Hip-hop's influence has extended far beyond music, impacting fashion, dance, language, and popular culture globally. While it continues to evolve and incorporate new styles, its roots in the Bronx and its spirit of innovation, self-expression, and resilience remain central to its identity.",
-  "word_count": 1307,
-  "categories": [
-   "Fashion",
-   "Music Genres",
-   "African-American",
-   "Subcultures",
-   "Hip-Hop",
-   "American",
-   "Streetwear"
-  ],
-  "other_names": "Rap",
-  "key_motifs": "Breakbeats, rhythmic speech, DJing techniques, dance, graffiti, urban settings, self-expression",
-  "key_colours": "Varies widely",
-  "key_values": "Creativity, innovation, self-expression, community, social commentary, resilience",
-  "decade_of_origin": "1970s",
-  "related": [
-   "swag"
-  ],
-  "subgenres": [],
-  "mentions": 80,
-  "popularity": 10,
-  "mainstream": 5.1
  },
  {
   "name": "Hippie",
@@ -2495,7 +2254,6 @@
   "related": [
    "beatnik",
    "bohemian",
-   "funk",
    "hipster"
   ],
   "subgenres": [],
@@ -2532,7 +2290,6 @@
    "emo",
    "grunge",
    "hippie",
-   "indie",
    "minimalism",
    "nerd",
    "normcore",
@@ -2605,44 +2362,12 @@
   "key_values": "Exclusivity, brand consciousness, social status, trend-following, conspicuous consumption",
   "decade_of_origin": "Mid-2000s (peak popularity in the late 2010s)",
   "related": [
-   "hip-hop",
-   "swag",
    "techwear"
   ],
   "subgenres": [],
   "mentions": 18,
   "popularity": 9,
   "mainstream": 4.59
- },
- {
-  "name": "Indie",
-  "slug": "indie",
-  "title": "Indie",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Indie",
-  "has_infobox": true,
-  "description": "Indie is a broad aesthetic based on individuality; its name comes from the word \"independent.\"  The indie aesthetic includes a variety of independent music genres, including shoegaze. This can also include the indie movie genre, as many movies in the genre add to the original indie aesthetic. The version of the indie aesthetic from the 2000s to 2012 is now named Indie Sleaze. The later iteration of the indie aesthetic in 2019-2020 is labeled Indie Kid. Other variations are usually unlabeled and just generically called indie.",
-  "word_count": 1071,
-  "categories": [
-   "Fashion",
-   "Music Genres"
-  ],
-  "other_names": "Vintage Indie, Indie Grunge",
-  "key_motifs": "Records and CDs, books, muted color palette, moody atmosphere, Polaroids, poetry",
-  "key_colours": "Neutrals, blue, red, green",
-  "key_values": "Individualism, philosophy, independence, overcoming adversity",
-  "decade_of_origin": "1980s",
-  "related": [
-   "alternative",
-   "britpop",
-   "grunge",
-   "skater",
-   "twee",
-   "vaporwave"
-  ],
-  "subgenres": [],
-  "mentions": 36,
-  "popularity": 10,
-  "mainstream": 4.1
  },
  {
   "name": "Indie Kid",
@@ -2707,51 +2432,10 @@
   "decade_of_origin": "Mid-to-late 2000s",
   "related": [
    "hipster",
-   "indie",
-   "mcbling",
-   "swag",
-   "twee"
+   "mcbling"
   ],
   "subgenres": [],
   "mentions": 41,
-  "popularity": 10,
-  "mainstream": 3.1
- },
- {
-  "name": "Industrial",
-  "slug": "industrial",
-  "title": "Industrial",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Industrial",
-  "has_infobox": true,
-  "description": "Industrial is a genre of experimental music and the subculture that developed around it, whose members are sometimes called \"Industrialists,\" that originated in the mid-1970s, built on transgressive and provocative themes expressed through harsh, mechanical sound that its own artists termed \"anti-musical.\" The genre blended avant-garde electronic experiments, such as tape loops, musique concrète, and early synthesizers, with the confrontational ethos of punk, and its lyrical and thematic content favored controversial subjects like totalitarianism, violence, sexual perversion, and the occult, using shock value as a tool for social critique rather than simple provocation.\nThe term \"industrial music\" was coined by artist Monte Cazazza and adopted by the band Throbbing Gristle for their independent record label, Industrial Records, founded under the slogan \"industrial music for industrial people.\" By the 1980s the genre had moved past its experimental roots and split into a range of \"post-industrial\" styles, the most consequential of which was Electronic Body Music (EBM), which took industrial's harshness and paired it with danceable, sequenced rhythms. EBM built its own youth subculture around this sound, whose members were known as EBM-heads or, particularly in North America, Rivetheads, recognizable by a militaristic and fetish-inspired fashion that would go on to influence Cybergoth in the late 1990s.",
-  "word_count": 5183,
-  "categories": [
-   "Music Genres",
-   "1970s",
-   "1980s",
-   "1990s",
-   "Subcultures",
-   "Industrial",
-   "Militaristic",
-   "Shock Value",
-   "Working Class",
-   "Silver"
-  ],
-  "other_names": "",
-  "key_motifs": "Industrial decay, dystopia, transgression, obsolete machinery, brutalist graphic design, military surplus and fetish gear, totalitarian imagery used subversively",
-  "key_colours": "Black, grey, white, stark red, metallic tones",
-  "key_values": "Provocation, confrontation, anti-conformity, transgression, social critique, experimentation, deprogramming",
-  "decade_of_origin": "1970s",
-  "related": [
-   "cyberpunk",
-   "goth",
-   "post-punk",
-   "punk"
-  ],
-  "subgenres": [
-   "cybergoth"
-  ],
-  "mentions": 68,
   "popularity": 10,
   "mainstream": 3.1
  },
@@ -2859,8 +2543,7 @@
    "decora",
    "femboy",
    "lolita",
-   "maid",
-   "twee"
+   "maid"
   ],
   "subgenres": [],
   "mentions": 111,
@@ -3249,10 +2932,7 @@
    "grunge",
    "punk"
   ],
-  "subgenres": [
-   "industrial",
-   "nu-metal"
-  ],
+  "subgenres": [],
   "mentions": 20,
   "popularity": 10,
   "mainstream": 4.1
@@ -3349,8 +3029,7 @@
   "decade_of_origin": "Late 1950s",
   "related": [
    "beatnik",
-   "hippie",
-   "skinhead"
+   "hippie"
   ],
   "subgenres": [],
   "mentions": 44,
@@ -3538,46 +3217,12 @@
   "key_values": "",
   "decade_of_origin": "Late 1970s",
   "related": [
-   "goth",
-   "post-punk"
+   "goth"
   ],
   "subgenres": [],
   "mentions": 27,
   "popularity": 6,
   "mainstream": 3.56
- },
- {
-  "name": "New Wave",
-  "slug": "new-wave",
-  "title": "New Wave",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/New_Wave",
-  "has_infobox": true,
-  "description": "New Wave is a broad catch-all term for a music genre and associated graphic design style that emerged in the late 1970s as a pop-oriented evolution of Punk. While it retained punk's rejection of the corporate \"Old Wave\" (the perceived stagnation of 1970s progressive rock), New Wave replaced raw aggression with a philosophy of \"synthetic modernity.\" The aesthetic is characterized by a celebration of the artificial and the plastic, manifesting in an aesthetic of geometric precision, bright fluorescent colors, and a \"retro-futuristic\" appropriation of 1950s atomic-age design subverted by 1980s irony.\nVisually, New Wave is defined by a radical shift in graphic design pioneered by figures like Barney Bubbles and Malcolm Garrett, who deconstructed the rigid rules of Modernism. Musically, it favored jittery, robotic rhythms and synthesizers that mirrored this visual angularity. Unlike the darker, more serious tone of Post-Punk, New Wave embraced a \"campy\" or quirky pop sensibility, establishing the aesthetic of the early MTV era.",
-  "word_count": 2135,
-  "categories": [
-   "Music Genres",
-   "1980s",
-   "Design Aesthetics",
-   "Fashion",
-   "Retro",
-   "Futuristic",
-   "Androgynous",
-   "Wave Suffix"
-  ],
-  "other_names": "",
-  "key_motifs": "Geometric shapes (triangles, circles, grids), skewed typography, industrial textures (halftones, xerox grain), retro-futurism (1950s Atomic Age meets 1980s), synthetic materials",
-  "key_colours": "Hot pink, electric yellow, cyan, tertiary tones (purple, orange, green)",
-  "key_values": "Irony, \"authentic inauthenticity,\" modernity, plasticity, artifice over nature",
-  "decade_of_origin": "Late 1970s",
-  "related": [
-   "bauhaus",
-   "goth",
-   "post-punk"
-  ],
-  "subgenres": [],
-  "mentions": 41,
-  "popularity": 9,
-  "mainstream": 4.09
  },
  {
   "name": "Normcore",
@@ -3643,41 +3288,6 @@
   "mainstream": 3.04
  },
  {
-  "name": "Nu-Metal",
-  "slug": "nu-metal",
-  "title": "Nu-Metal",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Nu-Metal",
-  "has_infobox": true,
-  "description": "Nu-Metal is a subgenre of alternative metal that originated in the mid-1990s and achieved massive mainstream popularity in the late 1990s and early 2000s. The genre is defined by its fusion of heavy metal and alternative rock with a wide range of other influences, most notably hip-hop, industrial, funk, and grunge.\nPioneering bands like Korn and Deftones established the genre's sound, which is often characterized by down-tuned guitars, rhythmic and groove-oriented riffs, and a vocal style that can range from rapping and melodic singing to aggressive screaming.\nThe genre is inextricably linked to the Mallgoth subculture, which served as its primary visual aesthetic. This fashion style, popularized in the Y2K era, is defined by baggy clothing (especially JNCO jeans), oversized band hoodies, wallet chains, spiky hair, and facial piercings. Lyrically, Nu-Metal often explores themes of angst, anger, and personal pain, which resonated with a generation of suburban youth.",
-  "word_count": 3845,
-  "categories": [
-   "Fashion",
-   "Music Genres",
-   "1990s",
-   "2000s",
-   "Metal",
-   "American",
-   "Streetwear"
-  ],
-  "other_names": "",
-  "key_motifs": "Baggy clothing (jeans, hoodies), wallet chains, spiky hair, dreadlocks, piercings, band logos, JNCO jeans, down-tuned guitars, masks, jumpsuits, hip hop inspired street wear, Horrorcore",
-  "key_colours": "",
-  "key_values": "Angst, rage, defiance, emotiveness, decaying visuals, atmospheric sludge, industrial settings",
-  "decade_of_origin": "Mid-1990s",
-  "related": [
-   "alternative",
-   "grunge",
-   "hip-hop",
-   "industrial",
-   "skater",
-   "y2k"
-  ],
-  "subgenres": [],
-  "mentions": 25,
-  "popularity": 10,
-  "mainstream": 4.1
- },
- {
   "name": "Old Hollywood",
   "slug": "old-hollywood",
   "title": "Old Hollywood",
@@ -3739,38 +3349,6 @@
   "mentions": 33,
   "popularity": 10,
   "mainstream": 5.1
- },
- {
-  "name": "Opium",
-  "slug": "opium",
-  "title": "Opium",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Opium",
-  "has_infobox": true,
-  "description": "Opium, also known as Vamp, is a fashion and musical aesthetic that originated in the early 2020s, stemming from the artistic direction of Playboi Carti and his record label of the same name, Opium.\nVisually, the aesthetic is defined by a fusion of avant-garde high fashion (specifically the \"darkwear\" of Rick Owens and Balenciaga) with the rebellious iconography of 1970s Punk and Black Metal. It represents a shift in hip-hop fashion away from the colorful designer streetwear of the 2010s (e.g., Hypebeast culture) toward a monochromatic, gothic, and silhouette-focused look.\nMusically, it is associated with \"Rage\" beats; heavy, distorted synthesizers and erratic vocal performances that mimic the energy of a punk rock mosh pit.",
-  "word_count": 784,
-  "categories": [
-   "Internet Aesthetics",
-   "2020s",
-   "Fashion",
-   "Music",
-   "Hip-Hop",
-   "Black",
-   "Masculine",
-   "Streetwear"
-  ],
-  "other_names": "Vamp, 00, Opiumcore",
-  "key_motifs": "Inverted crosses, anarchy symbols, bats, vampires, \"00\" branding, infrared/thermal imagery, heavy metal typography",
-  "key_colours": "Black, blood red, silver, white",
-  "key_values": "Rebellion, rockstar lifestyle, exclusivity, drug culture, avant-garde experimentalism",
-  "decade_of_origin": "2020s",
-  "related": [
-   "metalhead",
-   "vampire"
-  ],
-  "subgenres": [],
-  "mentions": 11,
-  "popularity": 10,
-  "mainstream": 3.1
  },
  {
   "name": "Otaku",
@@ -3997,37 +3575,6 @@
   "mainstream": 3.05
  },
  {
-  "name": "Post-Punk",
-  "slug": "post-punk",
-  "title": "Post-Punk",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Post-Punk",
-  "has_infobox": true,
-  "description": "Post-Punk is a subgenre and era of rock music that emerged in the late 1970s in the wake of the initial punk rock movement. It was defined by its departure from punk's raw, three-chord formula, embracing a more experimental, introverted, and artistically ambitious approach. The aesthetic associated with Post-Punk rejected the overt aggression of punk fashion in favor of a more restrained and minimalist style, often drawing inspiration from British working-class attire, vintage clothing, and avant-garde art movements.\nWhile the music was diverse and explored a wide range of sounds, from angular art-funk to atmospheric and somber tones, the visual identity coalesced around a look that was both utilitarian and intellectual, setting the stage for the later development of the Goth subculture.",
-  "word_count": 821,
-  "categories": [
-   "Subcultures",
-   "1980s",
-   "Music Genres",
-   "Punk",
-   "Androgynous"
-  ],
-  "other_names": "",
-  "key_motifs": "Minimalism, monochromatic color schemes, trench coats, button-up shirts, slim trousers, Dr. Martens, abstract art, German Expressionism, architectural lines",
-  "key_colours": "",
-  "key_values": "Introspection, intellectualism, anti-commercialism, DIY ethos, existentialism, artistic experimentation",
-  "decade_of_origin": "1970s",
-  "related": [
-   "goth",
-   "industrial",
-   "normcore",
-   "punk"
-  ],
-  "subgenres": [],
-  "mentions": 49,
-  "popularity": 4,
-  "mainstream": 3.04
- },
- {
   "name": "Power Dressing",
   "slug": "power-dressing",
   "title": "Power Dressing",
@@ -4129,9 +3676,7 @@
    "emo",
    "goth",
    "grunge",
-   "industrial",
-   "metalhead",
-   "post-punk"
+   "metalhead"
   ],
   "subgenres": [],
   "mentions": 229,
@@ -4200,37 +3745,6 @@
   "mentions": 9,
   "popularity": 10,
   "mainstream": 4.1
- },
- {
-  "name": "Riot Grrrl",
-  "slug": "riot-grrrl",
-  "title": "Riot Grrrl",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Riot_Grrrl",
-  "has_infobox": true,
-  "description": "Riot Grrrl was an underground feminist punk movement that emerged in the early 1990s in the United States, primarily from Washington D.C. and the Pacific Northwest. Characterized by its DIY ethos, the movement combined punk music with feminist politics, challenging sexism, advocating for female empowerment, and addressing topics like domestic violence, discrimination, and rape through its lyrics and activism.\nMusically, Riot Grrrl bands typically featured standard rock instrumentation, rooted in punk rock with influences from grunge, post-hardcore, and noise rock. The sound was often raw, aggressive, and intentionally unpolished, defined by shouted, confrontational female vocals and distorted guitar work within concise song structures. While some bands adjacent to the movement shared a similar aesthetic, such as grunge acts like Babes in Toyland and L7, they were often not considered part of the broader political movement. Some groups associated with Riot Grrrl also had ties to the Queercore scene.\nThe term \"Riot Grrrl\" originated from discussions among members of the feminist punk band Bratmobile, Allison Wolfe and Molly Neuman, who coined the phrase \"girl riot.\" Jen Smith contributed the spelling \"grrrl,\" which was further developed by Tobi Vail's expression \"angry grrrl zines.\" The deliberate use of \"grrrl\" replaced the passive connotations of \"girl\" and conveyed the movement's anger and growl-like intensity. The movement gained significant momentum following events like \"Girl Night\" at the International Pop Underground Convention in Olympia, Washington, on August 20, 1991, which brought together numerous all-female or female-fronted bands and solidified the movement's focus on creative autonomy and community building.",
-  "word_count": 1765,
-  "categories": [
-   "1990s",
-   "Punk",
-   "Feminine",
-   "Subcultures",
-   "Music Genres",
-   "American",
-   "Feminine"
-  ],
-  "other_names": "",
-  "key_motifs": "DIY zines and publications; handwritten text and collage; visible protest slogans; reclaimed derogatory terms; unpolished aesthetics",
-  "key_colours": "Black, pink, red, white, ivory, dark grey",
-  "key_values": "Feminism, anti-consumerism, rejection of the mainstream, DIY ethos, female empowerment, social activism",
-  "decade_of_origin": "Early 1990s",
-  "related": [
-   "grunge",
-   "punk"
-  ],
-  "subgenres": [],
-  "mentions": 9,
-  "popularity": 7,
-  "mainstream": 3.07
  },
  {
   "name": "Rockabilly",
@@ -4509,47 +4023,12 @@
   "related": [
    "alternative",
    "grunge",
-   "hip-hop",
-   "nu-metal",
    "punk"
   ],
   "subgenres": [],
   "mentions": 32,
   "popularity": 10,
   "mainstream": 4.6
- },
- {
-  "name": "Skinhead",
-  "slug": "skinhead",
-  "title": "Skinhead",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Skinhead",
-  "has_infobox": true,
-  "description": "Skinheads, also known as Skins, are a broad subculture that originated among working-class youths in the late 1960s in London, England. Characterized by closely cropped hair and distinctive working-class attire, the subculture initially drew influences from Jamaican ska and reggae music, embraced by the multicultural working-class communities, as well as British Mod fashion.\nMusic played a central role in the early skinhead subculture, with Jamaican artists like The Skatalites and Desmond Dekker being popular. The fashion included items such as Doc Martens boots, Levi’s 501 jeans or Sta-Prest trousers often rolled up, and Ben Sherman or Fred Perry shirts, frequently worn with Harrington or bomber jackets.\nWhile the early skinhead subculture was not inherently political, during the 1970s and 1980s, segments of the movement became associated with extreme nationalist and anti-immigrant ideologies, leading to instances of violence and recruitment by far-right organizations. This resulted in a widespread public perception linking skinheads to racism and neo-Nazism. However, it is important to note that not all individuals identifying as skinheads espoused these views, with some adhering to non-political or even left-wing stances. The musical preferences of skinheads also evolved, with the emergence of Oi!, a punk rock subgenre addressing working-class themes.",
-  "word_count": 1397,
-  "categories": [
-   "Subcultures",
-   "1960s",
-   "Fashion",
-   "Music",
-   "Masculine",
-   "British",
-   "Punk",
-   "Working Class",
-   "Skinhead"
-  ],
-  "other_names": "",
-  "key_motifs": "Shaved or closely cropped hair, Doc Martens boots, braces (suspenders), button-down shirts (Ben Sherman, Fred Perry), straight-leg jeans or trousers (Levi's 501, Sta-Prest), bomber jackets, Harrington jackets",
-  "key_colours": "Often solid, working-class colours: black, oxblood, navy, white, grey, sometimes with tartan or check patterns",
-  "key_values": "Working-class identity, rebellion against counterculture, sometimes associated with territorialism and football subcultures; diverse political affiliations emerged later",
-  "decade_of_origin": "1960s",
-  "related": [
-   "mod",
-   "punk"
-  ],
-  "subgenres": [],
-  "mentions": 22,
-  "popularity": 5,
-  "mainstream": 3.05
  },
  {
   "name": "Soft Boy",
@@ -4846,43 +4325,6 @@
   "mainstream": 4.6
  },
  {
-  "name": "Swag",
-  "slug": "swag",
-  "title": "Swag",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Swag",
-  "has_infobox": true,
-  "description": "Swag is a youth subculture and street fashion aesthetic that was prominent in the late 2000s and early 2010s. The movement was heavily intertwined with hip-hop culture, particularly the West Coast \"Jerk\" dance and music scene that emerged from California. It is characterized by a bright, colorful, and brand-conscious fashion style, a specific slang vocabulary, and an attitude centered on confidence and self-expression. The aesthetic was popularized globally through music videos (particularly \"You're a Jerk\" by New Boy'z), early social media platforms like Tumblr, and its adoption by mainstream hip-hop artists.",
-  "word_count": 575,
-  "categories": [
-   "Fashion",
-   "Streetwear",
-   "2000s",
-   "2010s",
-   "Hip-Hop",
-   "African-American",
-   "Music",
-   "Lifestyle"
-  ],
-  "other_names": "Jerk, Swag Era, Trillwave, Trill Era, Swag Era",
-  "key_motifs": "Snapback hats, graphic tees, skinny jeans, high-top sneakers, gold chains, \"jerk\" dance",
-  "key_colours": "Bright, high-contrast colors: red, black, purple, neon green",
-  "key_values": "Confidence, individuality, street fashion, party culture, online presence",
-  "decade_of_origin": "Late 2000s - Early 2010s",
-  "related": [
-   "baddie",
-   "hip-hop",
-   "hipster",
-   "hypebeast",
-   "scene",
-   "vaporwave",
-   "webcore"
-  ],
-  "subgenres": [],
-  "mentions": 32,
-  "popularity": 10,
-  "mainstream": 4.6
- },
- {
   "name": "Techwear",
   "slug": "techwear",
   "title": "Techwear",
@@ -5014,38 +4456,6 @@
   "mentions": 24,
   "popularity": 10,
   "mainstream": 4.6
- },
- {
-  "name": "Twee",
-  "slug": "twee",
-  "title": "Twee",
-  "wiki_url": "https://aesthetics.fandom.com/wiki/Twee",
-  "has_infobox": true,
-  "description": "Twee is an aesthetic that first emerged in the 1980s, primarily as a reaction against the increasing harshness in the post-punk music scene. The term itself derived from British slang for \"sweet,\" reflecting the aesthetic's emphasis on delicacy and a childlike innocence. Though initially used in a derogatory manner, the term was later reclaimed by the indie pop music scene in both the United Kingdom and the United States, giving rise to the Twee Pop genre.\nThe aesthetic gained prominence in the late 1980s with the emergence of this distinct musical style and its associated cultural expressions. It encompasses various forms, including fashion, film, music, and even food trends. In 2014, Marc Spitz's book, Twee: the gentle revolution in music, books, television, fashion, and film, codified the aesthetic, labeling it as \"the most powerful youth movement since Punk and Hip-Hop.\" Adherents of the Twee aesthetic are sometimes associated with the broader Hipster aesthetic, though Hipster encompasses a wider array of alternative styles.\nAs described by James Parker of The Atlantic, \"Twee's core values include 'a healthy suspicion of adulthood'; 'a steadfast focus on our essential goodness'; 'the cultivation of a passion project' (T-shirt company, organic food truck); and 'the utter dispensing with of 'cool' as it's conventionally known, often in favor of a kind of fetishization of the nerd, the geek, the dork, the virgin.'\"\nVisually, the aesthetic involves the re-contextualization of outdated habits and objects, which gain novelty through their uniqueness in comparison to mainstream trends. Idiosyncrasy and an eclectic blend of colors and vintage items are prominent indicators of the Twee visual style.\nTwee has gained renewed interest in the mid-2020s, influencing trends such as Whimsy Twee on TikTok.",
-  "word_count": 1778,
-  "categories": [
-   "Music Genres",
-   "1980s",
-   "Feminine",
-   "Fashion",
-   "Vintage",
-   "Cute",
-   "Youthful",
-   "Rainbow"
-  ],
-  "other_names": "Twee Pop",
-  "key_motifs": "Childlike innocence, vintage objects, delicate imagery, idiosyncratic elements, eclectic color blends, hearts, Manic Pixie Dream Girl archetype",
-  "key_colours": "Pastel hues, bright primary and secondary colors (often in eclectic combinations)",
-  "key_values": "Nerdiness, sweetness, romanticism, shyness, carefree attitude, simplicity, suspicion of adulthood, essential goodness, cultivation of passion projects, rejection of conventional \"cool\", romanticization of the nerd/geek/dork/virgin archetypes",
-  "decade_of_origin": "Mid-to-late 1980s",
-  "related": [
-   "hipster",
-   "indie"
-  ],
-  "subgenres": [],
-  "mentions": 23,
-  "popularity": 10,
-  "mainstream": 4.1
  },
  {
   "name": "Tweencore",
