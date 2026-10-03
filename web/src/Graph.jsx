@@ -8,6 +8,7 @@ import Drawer from './Drawer.jsx'
 import { searchNodes } from './lib/search.js'
 import { mixHex, tween } from './lib/tween.js'
 import { identity, lookAt, multiply, rotateVec, rotationFromDrag, slerpRotation } from './lib/sphere.js'
+import EdgeGrowProgram from './lib/edgeGrow.js'
 
 const SCALE = 60
 const COLORS = { node: '#4a4740', edge: '#1e1e23', bg: '#0b0b0d', hot: '#ff4d6d', label: '#f2efe9', dim: '#1c1c20', you: '#f2efe9' }
@@ -63,7 +64,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     }
 
     const sigma = new Sigma(g, el.current, {
-      nodeProgramClasses: { image: NodeImageProgram }, renderLabels: true, labelRenderedSizeThreshold: 7,
+      nodeProgramClasses: { image: NodeImageProgram }, edgeProgramClasses: { line: EdgeGrowProgram }, renderLabels: true, labelRenderedSizeThreshold: 7,
       labelColor: { color: COLORS.label }, labelFont: 'Inter', labelSize: 12, zIndex: true, defaultDrawNodeHover: drawDiscNodeLabel,
       enableCameraPanning: false, enableCameraRotation: false, minCameraRatio: .35, maxCameraRatio: 1.1,
       nodeReducer: (node, data) => {
@@ -91,7 +92,10 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
         const f = hop ? Math.max(Math.min(faceOf(sa), faceOf(sb)), LIT_BACK) : Math.min(faceOf(sa), faceOf(sb))
         const toward = (d) => ({ ...d, color: mixHex(d.color, COLORS.bg, 1 - f) })
         if (!h || t === 0) return toward(data)
-        if (hop) { const k = hop === 1 ? Math.min(1, 2 * t) : .6 * Math.max(0, 2 * t - 1); return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), size: data.size + (1.2 - data.size) * k, zIndex: 1 } }
+        if (hop) {  // the highlight travels out from the nearer end as its hop's clock runs
+          const clock = hop === 1 ? Math.min(1, 2 * t) : Math.max(0, 2 * t - 1), k = hop === 1 ? clock : .6 * clock
+          return { ...toward({ ...data, color: mixHex(data.color, COLORS.hot, k) }), size: data.size + (1.2 - data.size) * k, zIndex: 1, grow: clock, growFrom: a < b ? 'source' : 'target' }
+        }
         return t >= 1 ? { ...data, hidden: true } : toward({ ...data, color: mixHex(data.color, COLORS.bg, t) })
       },
     })
