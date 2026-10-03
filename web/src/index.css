@@ -70,7 +70,7 @@ footer a { color: var(--muted); }
 .score-head small { font-size: 1rem; color: var(--muted); }
 .meter { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
 .meter span { display: block; height: 100%; background: linear-gradient(90deg, #7bd389, var(--accent)); transition: width .8s ease-out; }
-.score > small { color: var(--muted); }
+.meter-ends { display: flex; justify-content: space-between; color: var(--muted); }
 .statement { font-family: var(--display); font-size: 1.15rem; line-height: 1.35; margin: 4px 0 0; }
 .actions { display: flex; gap: 8px; }
 .result ~ footer { position: fixed; left: 16px; right: 16px; bottom: 0; z-index: 4; padding: 10px 0; margin: 0; max-width: none; pointer-events: none; }
