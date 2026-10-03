@@ -8,7 +8,7 @@ html, body, #root { margin: 0; min-height: 100%; background: var(--bg); color: v
 h1, h2, .display { font-family: var(--display); font-weight: 500; letter-spacing: -0.01em; }
 a { color: var(--text); }
 button { font: inherit; }
-.btn { font-family: var(--ui); font-weight: 600; font-size: 1rem; padding: 12px 24px; border-radius: 999px; border: 1px solid var(--border); background: var(--text); color: var(--bg); cursor: pointer; }
+.btn { font-weight: 600; font-size: 1rem; padding: 12px 24px; border-radius: 999px; border: 1px solid var(--border); background: var(--text); color: var(--bg); cursor: pointer; }
 .btn.ghost { background: transparent; color: var(--text); }
 .btn:disabled { opacity: .5; cursor: default; }
 main { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
@@ -42,10 +42,11 @@ footer a { color: var(--muted); }
 .graph-shell { position: absolute; inset: -5vh 0 -5vh var(--panel); }  /* beside the verdict, never under it; a little taller than the screen so the globe fills it */
 .graph { position: absolute; inset: 0; }
 .tip { position: absolute; z-index: 6; pointer-events: none; max-width: 260px; background: rgba(20,20,24,.95); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: .85rem; display: flex; flex-direction: column; gap: 2px; }
+.tip strong { font-weight: 600; }
 .tip span { color: var(--muted); }
 .drawer { position: absolute; top: calc(5vh + 16px); right: 16px; max-height: calc(100vh - 32px - 64px); width: min(340px, calc(100% - 32px)); z-index: 7; background: rgba(20,20,24,.97); border: 1px solid var(--border); border-radius: 16px; padding: 20px; overflow: auto; scrollbar-width: thin; }  /* the shell overhangs the viewport by 5vh, so the card is pinned inside the visible part */
 .drawer h2 { margin: 0 0 6px; font-size: 1.8rem; }
-.aliases { color: var(--muted); font-style: italic; margin: 0 0 12px; }
+.aliases { color: var(--muted); margin: 0 0 12px; }
 .desc { line-height: 1.55; font-size: .95rem; }
 .values span { color: var(--muted); }
 .close { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; }
@@ -65,7 +66,7 @@ footer a { color: var(--muted); }
 .statement { font-family: var(--display); font-size: 1.02rem; line-height: 1.35; margin: 4px 0 0; }
 .actions { display: flex; gap: 8px; }
 .dev { position: fixed; right: 16px; bottom: 16px; top: 16px; width: min(360px, calc(100% - 32px)); z-index: 8; overflow: auto; scrollbar-width: thin; background: rgba(20,20,24,.97); border: 1px solid var(--border); border-radius: 16px; padding: 16px; font-size: .8rem; pointer-events: auto; }
-.dev h3 { margin: 0 36px 10px 0; font-family: var(--ui); font-weight: 600; font-size: .9rem; }
+.dev h3 { margin: 0 36px 10px 0; font-weight: 600; font-size: .9rem; }
 .dev section { margin-bottom: 12px; }
 .dev header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--muted); }
 .dev header img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
@@ -80,19 +81,6 @@ footer a { color: var(--muted); }
 .result ~ footer { position: fixed; left: 16px; right: 16px; bottom: 0; z-index: 4; padding: 10px 0; margin: 0; max-width: none; pointer-events: none; }
 .result ~ footer a { pointer-events: auto; }
 @media (max-width: 799px) {
-  .dev { position: fixed; right: 16px; bottom: 16px; top: 16px; width: min(360px, calc(100% - 32px)); z-index: 8; overflow: auto; scrollbar-width: thin; background: rgba(20,20,24,.97); border: 1px solid var(--border); border-radius: 16px; padding: 16px; font-size: .8rem; pointer-events: auto; }
-.dev h3 { margin: 0 36px 10px 0; font-family: var(--ui); font-weight: 600; font-size: .9rem; }
-.dev section { margin-bottom: 12px; }
-.dev header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--muted); }
-.dev header img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-.dev .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text); display: inline-block; margin: 0 8px; }
-.dev ol { list-style: none; margin: 0; padding: 0; }
-.dev li { display: grid; grid-template-columns: 1fr 90px 100px; gap: 8px; align-items: center; padding: 2px 0; }
-.dev .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dev .bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.dev .bar i { display: block; height: 100%; background: var(--accent); }
-.dev code { color: var(--muted); font-size: .72rem; text-align: right; }
-.dev .hint { color: var(--muted); margin: 8px 0 0; }
 .result ~ footer { display: none; }
   .result-head { width: calc(100% - 32px); max-height: calc(46dvh - 16px); overflow-y: auto; scrollbar-width: thin; }
   .graph-shell { inset: 46dvh 0 0 0; }  /* the verdict sits above the map instead of over it */
