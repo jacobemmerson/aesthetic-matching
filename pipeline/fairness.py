@@ -95,6 +95,13 @@ def treatment_map(name: str, masked: bool, d: int):
     return t["P"], t["b"]
 
 
+def align_by_path(labels: np.ndarray, label_paths, target_paths) -> np.ndarray:
+    """Reference labels were made on the unmasked build; a masked build prunes a slightly different
+    set of images, so carry labels across by path (-1 where a path has no label)."""
+    by_path = dict(zip(map(str, label_paths), labels))
+    return np.array([by_path.get(str(p), -1) for p in target_paths])
+
+
 def run_config(scorer: str, treatment: str, masked: bool, attrs) -> dict | None:
     """Score reference images (leave-one-out or out-of-fold) and probe faces under one
     configuration; return the report numbers for it."""
@@ -118,7 +125,7 @@ def run_config(scorer: str, treatment: str, masked: bool, attrs) -> dict | None:
         ref_s = np.where(counts > 0, IMAGE_WEIGHT * ref + TEXT_WEIGHT * txt_ref, txt_ref) + PRIOR_WEIGHT * prior
         pro_s = centroid_probe_scores(praw, sums, z, P, b)
     else:
-        w = group_weights(attrs["race"][img["source"]], owner_idx) if scorer == "head_rw" else None
+        w = group_weights(align_by_path(attrs["race"], load_bundle(False)[1]["path"], img["path"]), owner_idx) if scorer == "head_rw" else None
         l2 = best_l2(vecs, owner_idx, len(slugs), img["source"], w)
         ref_s = zscore(cv_scores(vecs, owner_idx, len(slugs), img["source"], w, l2))
         W, hb = train(vecs, owner_idx, len(slugs), w, l2)

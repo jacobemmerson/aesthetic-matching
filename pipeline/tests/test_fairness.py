@@ -57,3 +57,11 @@ def test_parity_floor_is_small_for_random_labels():
     top1 = rng.integers(0, 50, 2000)
     groups = rng.integers(0, 7, 2000)
     assert 0 < parity_floor(top1, groups, 50) < 0.3
+
+
+def test_align_by_path_maps_labels_onto_another_build_of_the_same_images():
+    from pipeline.fairness import align_by_path
+
+    labels = np.array([2, 0, 1])
+    out = align_by_path(labels, ["a.jpg", "b.jpg", "c.jpg"], ["c.jpg", "zzz.jpg", "a.jpg", "a.jpg"])
+    assert out.tolist() == [1, -1, 2, 2]  # unknown paths get -1 (no group)

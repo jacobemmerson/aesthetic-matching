@@ -26,13 +26,18 @@ later.
 
 Measured on the FairFace probe and the existing leave-one-out evaluation:
 
-| metric | baseline | target | served (centroid + LEACE) |
-|---|---|---|---|
-| top-1 label parity, max TVD across race groups | 0.825 | <= 0.41 (halved) | 0.320 (shuffled-label floor 0.275) |
-| top-1 label parity, max TVD across gender groups | 0.479 | <= 0.24 (halved) | 0.187 (floor 0.117) |
-| race recoverable from embedding (5-fold logreg acc.) | 0.619 | within 5 points of chance (0.143) | 0.285, target missed |
-| gender recoverable from embedding | 0.936 | within 5 points of chance (0.5) | 0.625, target missed |
-| leave-one-out top-5 (plain) | 0.724 | >= 0.69 (floor: at most 3 points lost) | 0.714 |
+| metric | baseline (CLIP, 2026-10-01) | target | served 2026-10-01 (CLIP centroid + LEACE) | served 2026-10-03 (SigLIP 2 centroid + mask + LEACE) |
+|---|---|---|---|---|
+| top-1 label parity, max TVD across race groups | 0.825 | <= 0.41 (halved) | 0.320 (shuffled-label floor 0.275) | 0.100 |
+| top-1 label parity, max TVD across gender groups | 0.479 | <= 0.24 (halved) | 0.187 (floor 0.117) | 0.036 |
+| race recoverable from embedding (5-fold logreg acc.) | 0.619 | within 5 points of chance (0.143) | 0.285, target missed | 0.143, met |
+| gender recoverable from embedding | 0.936 | within 5 points of chance (0.5) | 0.625, target missed | 0.499, met |
+| leave-one-out top-5 (plain) | 0.724 | >= 0.69 (floor: at most 3 points lost) | 0.714 | 0.718 (CLIP on the same data: 0.700 plain) |
+
+The 2026-10-03 column is measured on a different reference set (152 nodes, four pooled queries per
+node, portrait and duplicate pruning, ~6,900 images), so its accuracy is not comparable to the
+first column; its floor is CLIP's plain top-5 on the same data, 0.700. Report:
+`data/fairness_report_siglip.md`.
 
 Measured 2026-10-01 on the 2,800-face FairFace probe (`data/fairness_report.md`). LEACE is fitted
 on the even probe rows and every number is measured on the odd rows, so they are out of sample.
