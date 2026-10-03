@@ -12,7 +12,7 @@ from pipeline.train_head import zscore
 IMAGE_WEIGHT, TEXT_WEIGHT = 0.7, 0.3
 PRIOR_WEIGHT = 0.08  # from pipeline/evaluate.py: +2pts popularity-weighted top-1 for -0.6pt plain
 TOP_K = 5
-PLACE_K = 3
+PLACE_NUDGE = (0.2, 0.1)  # how far the map position leans from the top match toward #2 and #3
 
 
 def normalize(v: np.ndarray) -> np.ndarray:
@@ -72,8 +72,10 @@ class Index:
     def match(self, vec: np.ndarray) -> dict:
         s = self.scores(vec)
         top = np.argsort(-s)[:TOP_K]
-        weights = np.clip(s[top[:PLACE_K]], 1e-6, None)
-        x, y = (self.xy[top[:PLACE_K]] * weights[:, None]).sum(0) / weights.sum()
+        # Anchor at the top match so the label and the map position agree (a weighted mean of
+        # three nodes could land beside an unrelated fourth); the nudges hint at the runners-up.
+        anchor = self.xy[top[0]]
+        x, y = anchor + sum(w * (self.xy[i] - anchor) for w, i in zip(PLACE_NUDGE, top[1:]))
         return {"matches": [{"slug": self.slugs[i], "score": float(s[i])} for i in top], "x": float(x), "y": float(y)}
 
 

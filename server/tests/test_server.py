@@ -35,7 +35,8 @@ def jpeg(color: str) -> bytes:
 def test_match_and_placement():
     m = INDEX.match(np.array([1, 0, 0], dtype=np.float32))
     assert m["matches"][0]["slug"] == "red" and m["matches"][-1]["slug"] == "text-only"
-    assert 0 <= m["x"] <= 10 and 0 <= m["y"] <= 10  # inside the triangle of its matches
+    # anchored at the top match (red, at 0,0), nudged 20% toward #2 (green, 10,0) and 10% toward #3 (text-only, 0,10)
+    assert (m["x"], m["y"]) == (2.0, 1.0)
 
 
 def photo(*slugs):
