@@ -7,16 +7,21 @@ import { useObjectUrls } from './lib/objectUrls.js'
 import Drawer from './Drawer.jsx'
 import { searchNodes } from './lib/search.js'
 import { mixHex, tween } from './lib/tween.js'
+import { identity, lookAt, multiply, rotateVec, rotationFromDrag, slerpRotation } from './lib/sphere.js'
 
 const SCALE = 60
+const DRAG_SPEED = 0.006   // radians per pixel
 const COLORS = { node: '#4a4740', edge: '#1e1e23', bg: '#0b0b0d', hot: '#ff4d6d', label: '#f2efe9', dim: '#1c1c20', you: '#f2efe9' }
-const HOVER_MS = 180
+const HOVER_MS = 360       // hop 1 lights during the first half, hop 2 during the second
+const PHOTO_SIZE = 20
 
 export default function Graph({ graph, result, files, onReady, photosVisible = true }) {
   const el = useRef(null)
   const sigmaRef = useRef(null)
-  const hoverRef = useRef(null)   // node under the cursor (kept while the dim fades back out)
-  const dimRef = useRef(0)        // 0 = nothing dimmed, 1 = fully focused on hoverRef
+  const apiRef = useRef(null)
+  const hoverRef = useRef(null)   // node under the cursor (kept while the highlight fades back out)
+  const depthRef = useRef({})     // hops from the hovered node, up to 2
+  const dimRef = useRef(0)        // 0 = nothing highlighted, 1 = fully crawled out
   const fadeRef = useRef(() => {})
   const urls = useObjectUrls(files)
   const [hover, setHover] = useState(null)      // { slug, x, y }
@@ -28,56 +33,107 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
 
   useEffect(() => {
     const g = new Graphology()
-    graph.nodes.forEach((n) => g.addNode(n.slug, { x: n.x * SCALE, y: n.y * SCALE, label: n.name, size: litAtStart.has(n.slug) ? 8 : 3, color: litAtStart.has(n.slug) ? COLORS.hot : COLORS.node, zIndex: litAtStart.has(n.slug) ? 2 : 0 }))
+    const vec = {}  // node id -> unit vector on the sphere
+    graph.nodes.forEach((n) => { vec[n.slug] = [n.x, n.y, n.z]; g.addNode(n.slug, { x: 0, y: 0, depth: 1, label: n.name, size: litAtStart.has(n.slug) ? 8 : 3, color: litAtStart.has(n.slug) ? COLORS.hot : COLORS.node, zIndex: litAtStart.has(n.slug) ? 2 : 0 }) })
     graph.edges.forEach((e) => { if (g.hasNode(e.source) && g.hasNode(e.target) && !g.hasEdge(e.source, e.target)) g.addEdge(e.source, e.target, { color: COLORS.edge, size: .6 }) })
     result.images.forEach((img, k) => {
       const image = urls.get(files[k])
-      if (image) g.addNode(`photo-${k}`, { x: img.x * SCALE, y: img.y * SCALE, size: photosVisible ? 20 : 0, type: 'image', image, color: COLORS.hot, zIndex: 3 })
+      if (image) { vec[`photo-${k}`] = [img.x, img.y, img.z]; g.addNode(`photo-${k}`, { x: 0, y: 0, depth: 1, size: photosVisible ? PHOTO_SIZE : 0, type: 'image', image, color: COLORS.hot, zIndex: 3 }) }
     })
-    g.addNode('overall', { x: result.overall.x * SCALE, y: result.overall.y * SCALE, size: photosVisible ? 11 : 0, label: 'you', color: COLORS.you, zIndex: 3 })
+    vec.overall = [result.overall.x, result.overall.y, result.overall.z]
+    g.addNode('overall', { x: 0, y: 0, depth: 1, size: photosVisible ? 11 : 0, label: 'You', color: COLORS.you, zIndex: 3 })
+
+    let R = identity()
+    const project = () => {
+      g.forEachNode((id) => { const [x, y, z] = rotateVec(R, vec[id]); g.mergeNodeAttributes(id, { x: x * SCALE, y: y * SCALE, depth: z }) })
+      sigma.refresh()
+    }
 
     const sigma = new Sigma(g, el.current, {
       nodeProgramClasses: { image: NodeImageProgram }, renderLabels: true, labelRenderedSizeThreshold: 7,
       labelColor: { color: COLORS.label }, labelFont: 'Inter', labelSize: 12, zIndex: true, defaultDrawNodeHover: drawDiscNodeLabel,
+      enableCameraPanning: false, enableCameraRotation: false, minCameraRatio: .35, maxCameraRatio: 1.1,
       nodeReducer: (node, data) => {
-        const h = hoverRef.current, t = dimRef.current
-        if (!h || t === 0) return data
-        if (node === h || g.hasEdge(node, h) || g.hasEdge(h, node)) return { ...data, zIndex: 4, forceLabel: true }
-        const dimmed = { ...data, color: mixHex(data.color, COLORS.dim, t), label: t > .5 ? null : data.label }
-        return t > .5 && data.size > 8 ? { ...dimmed, image: undefined, type: 'circle', size: 3 } : dimmed  // photos and "you" shrink to dots
+        // the back of the sphere is hidden; the front gets a little bigger for depth
+        const base = data.depth < 0 ? { ...data, hidden: true } : { ...data, size: data.size * (.6 + .4 * data.depth) }
+        const h = hoverRef.current, t = dimRef.current, d = depthRef.current[node]
+        if (!h || t === 0) return base
+        if (d === 0) return { ...base, zIndex: 4, forceLabel: true }
+        if (d === 1) { const k = Math.min(1, 2 * t); return { ...base, color: mixHex(data.color, COLORS.hot, k), zIndex: 3, forceLabel: k > .5 } }
+        if (d === 2) { const k = .6 * Math.max(0, 2 * t - 1); return { ...base, color: mixHex(data.color, COLORS.hot, k), zIndex: 2 } }
+        const dimmed = { ...base, color: mixHex(data.color, COLORS.dim, t), label: t > .5 ? null : data.label }
+        return t > .5 && data.size > 8 ? { ...dimmed, image: undefined, type: 'circle', size: 3 } : dimmed  // photos and You shrink to dots
       },
       edgeReducer: (edge, data) => {
         const h = hoverRef.current, t = dimRef.current
         if (!h || t === 0) return data
-        if (g.hasExtremity(edge, h)) return { ...data, color: mixHex(data.color, COLORS.hot, t), size: data.size + (1.2 - data.size) * t, zIndex: 1 }
+        const [a, b] = g.extremities(edge).map((n) => depthRef.current[n])
+        const hop = a !== undefined && b !== undefined && Math.abs(a - b) === 1 ? Math.max(a, b) : 0
+        if (hop) { const k = hop === 1 ? Math.min(1, 2 * t) : .6 * Math.max(0, 2 * t - 1); return { ...data, color: mixHex(data.color, COLORS.hot, k), size: data.size + (1.2 - data.size) * k, zIndex: 1 } }
         return t >= 1 ? { ...data, hidden: true } : { ...data, color: mixHex(data.color, COLORS.bg, t) }
       },
     })
     sigmaRef.current = sigma
+    project()
+    const camera = sigma.getCamera()
+    camera.on('updated', () => { if (camera.x !== .5 || camera.y !== .5) camera.setState({ x: .5, y: .5 }) })  // zoom about the centre only
+
     const quick = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const hops = (from) => {  // BFS to two hops
+      const depth = { [from]: 0 }
+      let frontier = [from]
+      for (let d = 1; d <= 2; d++) frontier = frontier.flatMap((n) => g.neighbors(n).filter((m) => depth[m] === undefined && (depth[m] = d)))
+      return depth
+    }
     const fade = (to, then) => {
       fadeRef.current()
       const from = dimRef.current
       fadeRef.current = tween(quick ? 0 : HOVER_MS * Math.abs(to - from), (p) => { dimRef.current = from + (to - from) * p; sigma.refresh(); if (p === 1) then?.() })
     }
-    sigma.on('enterNode', ({ node, event }) => { hoverRef.current = node; setHover({ slug: node, x: event.x, y: event.y }); fade(1) })
-    sigma.on('leaveNode', () => { setHover(null); fade(0, () => { hoverRef.current = null; sigma.refresh() }) })
+    let pinned = photosVisible  // photos stay up while the reveal is showing them
+    const sizePhotos = (size) => { result.images.forEach((_, k) => g.hasNode(`photo-${k}`) && g.setNodeAttribute(`photo-${k}`, 'size', size)); sigma.refresh() }
+    sigma.on('enterNode', ({ node, event }) => {
+      hoverRef.current = node; depthRef.current = hops(node); setHover({ slug: node, x: event.x, y: event.y }); fade(1)
+      if (node === 'overall') sizePhotos(PHOTO_SIZE)
+    })
+    sigma.on('leaveNode', () => { setHover(null); fade(0, () => { hoverRef.current = null; sigma.refresh() }); if (!pinned) sizePhotos(0) })
     sigma.on('clickNode', ({ node }) => nodes[node] && setSelected(nodes[node]))
     sigma.on('clickStage', () => setSelected(null))
+
+    // drag anywhere spins the sphere (pointer events cover mouse and touch)
+    let drag = null
+    const container = el.current
+    const down = (e) => { if (e.button === 0 || e.pointerType !== 'mouse') { drag = [e.clientX, e.clientY]; container.setPointerCapture?.(e.pointerId) } }
+    const move = (e) => { if (!drag) return; spin.cancel?.(); R = multiply(rotationFromDrag(e.clientX - drag[0], e.clientY - drag[1], DRAG_SPEED), R); drag = [e.clientX, e.clientY]; project() }
+    const up = () => { drag = null }
+    container.addEventListener('pointerdown', down); container.addEventListener('pointermove', move); container.addEventListener('pointerup', up); container.addEventListener('pointercancel', up)
+
+    const spin = { cancel: null }
+    const turnTo = (id, duration) => {
+      spin.cancel?.()
+      const from = R, to = lookAt(vec[id])
+      spin.cancel = tween(quick ? 0 : duration, (p) => { R = slerpRotation(from, to, p); project() })
+    }
     const api = {
-      flyTo: (id, ratio = .25, duration = 600) => g.hasNode(id) && sigma.getCamera().animate({ ...sigma.getNodeDisplayData(id), ratio }, { duration }),
-      overview: (duration = 800) => sigma.getCamera().animate({ x: .5, y: .5, ratio: 1 }, { duration }),
-      showPhoto: (k) => { if (g.hasNode(`photo-${k}`)) g.setNodeAttribute(`photo-${k}`, 'size', 20); sigma.refresh() },
+      flyTo: (id, ratio = .25, duration = 600) => { if (!g.hasNode(id)) return; turnTo(id, duration); camera.animate({ x: .5, y: .5, ratio }, { duration: quick ? 0 : duration }) },
+      overview: (duration = 800) => camera.animate({ x: .5, y: .5, ratio: 1 }, { duration }),
+      showPhoto: (k) => { pinned = true; if (g.hasNode(`photo-${k}`)) g.setNodeAttribute(`photo-${k}`, 'size', PHOTO_SIZE); sigma.refresh() },
+      hidePhotos: () => { pinned = false; sizePhotos(0) },
       showOverall: () => { g.setNodeAttribute('overall', 'size', 11); sigma.refresh() },
       light: (slug) => { if (g.hasNode(slug)) { g.mergeNodeAttributes(slug, { color: COLORS.hot, size: 8, zIndex: 2 }); sigma.refresh() } },
       select: (slug) => setSelected(nodes[slug] || null),
     }
+    apiRef.current = api
     onReady?.(api)
-    return () => { fadeRef.current(); hoverRef.current = null; dimRef.current = 0; setHover(null); sigma.kill() }
+    return () => {
+      fadeRef.current(); spin.cancel?.(); hoverRef.current = null; dimRef.current = 0; setHover(null)
+      container.removeEventListener('pointerdown', down); container.removeEventListener('pointermove', move); container.removeEventListener('pointerup', up); container.removeEventListener('pointercancel', up)
+      sigma.kill()
+    }
   }, [graph, result, files, urls])
 
   const hits = searchNodes(graph.nodes, query)
-  const pick = (n) => { setQuery(''); sigmaRef.current && (sigmaRef.current.getCamera().animate({ ...sigmaRef.current.getNodeDisplayData(n.slug), ratio: .25 }, { duration: 600 }), setSelected(n)) }
+  const pick = (n) => { setQuery(''); apiRef.current?.flyTo(n.slug); setSelected(n) }
 
   return (
     <div className="graph-shell">
@@ -93,12 +149,12 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       )}
       {hover && hover.slug.startsWith('photo-') && (
         <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
-          <strong>your photo</strong><span>closest to {result.names[result.images[hover.slug.slice(6)].matches[0].slug]}</span>
+          <strong>Your photo</strong><span>closest to {result.names[result.images[hover.slug.slice(6)].matches[0].slug]}</span>
         </div>
       )}
       {hover && hover.slug === 'overall' && (
         <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
-          <strong>you</strong><span>all your photos averaged, closest to {result.names[result.overall.matches[0].slug]}</span>
+          <strong>You</strong><span>Your photos, averaged. Closest to {result.names[result.overall.matches[0].slug]}.</span>
         </div>
       )}
       <Drawer node={selected} onClose={() => setSelected(null)} />

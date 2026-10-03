@@ -44,7 +44,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
         later(() => { shown.current.overall = true; api.current.showOverall() })
       },
       frame: () => api.current.overview(quick ? 0 : TIMING.frame),
-      headline: () => setStage('done'),
+      headline: () => { setStage('done'); shown.current.photos = []; api.current.hidePhotos() },  // photos come back while You is hovered
     })
     cancel.current = () => { stopSteps(); timers.forEach(clearTimeout) }
   }
