@@ -10,7 +10,6 @@ import { mixHex, tween } from './lib/tween.js'
 import { identity, lookAt, multiply, rotateVec, rotationFromDrag, slerpRotation } from './lib/sphere.js'
 
 const SCALE = 60
-const DRAG_SPEED = 0.006   // radians per pixel
 const COLORS = { node: '#4a4740', edge: '#1e1e23', bg: '#0b0b0d', hot: '#ff4d6d', label: '#f2efe9', dim: '#1c1c20', you: '#f2efe9' }
 const HOVER_MS = 360       // hop 1 lights during the first half, hop 2 during the second
 const PHOTO_SIZE = 20
@@ -22,6 +21,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
   const sigmaRef = useRef(null)
   const apiRef = useRef(null)
   const hoverRef = useRef(null)   // node under the cursor (kept while the highlight fades back out)
+  const pinRef = useRef(null)     // node whose highlight a click froze, so the globe can be turned around it
   const depthRef = useRef({})     // hops from the hovered node, up to 2
   const dimRef = useRef(0)        // 0 = nothing highlighted, 1 = fully crawled out
   const fadeRef = useRef(() => {})
@@ -45,9 +45,18 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     vec.overall = [result.overall.x, result.overall.y, result.overall.z]
     g.addNode('overall', { x: 0, y: 0, depth: 1, size: photosVisible ? 11 : 0, label: 'You', color: COLORS.you, zIndex: 3 })
 
+    const visible = (n) => facing(g.getNodeAttribute(n, 'depth')) >= .5
+    const hops = (from) => {  // BFS to two hops over the visible face, so every lit node shows its edge and label
+      const depth = { [from]: 0 }
+      let frontier = [from]
+      for (let d = 1; d <= 2; d++) frontier = frontier.flatMap((n) => g.neighbors(n).filter((m) => depth[m] === undefined && visible(m) && (depth[m] = d)))
+      if (from === 'overall') result.images.forEach((_, k) => { depth[`photo-${k}`] = 1 })  // the photos are You's neighbours
+      return depth
+    }
     let R = identity()
     const project = () => {
       g.forEachNode((id) => { const [x, y, z] = rotateVec(R, vec[id]); g.mergeNodeAttributes(id, { x: x * SCALE, y: y * SCALE, depth: z }) })
+      if (hoverRef.current) depthRef.current = hops(hoverRef.current)  // paths only run over the visible face, which the turn just changed
       sigma.refresh()
     }
 
@@ -90,13 +99,6 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     camera.on('updated', () => { if (camera.x !== .5 || camera.y !== .5) camera.setState({ x: .5, y: .5 }) })  // zoom about the centre only
 
     const quick = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const hops = (from) => {  // BFS to two hops
-      const depth = { [from]: 0 }
-      let frontier = [from]
-      for (let d = 1; d <= 2; d++) frontier = frontier.flatMap((n) => g.neighbors(n).filter((m) => depth[m] === undefined && (depth[m] = d)))
-      if (from === 'overall') result.images.forEach((_, k) => { depth[`photo-${k}`] = 1 })  // the photos are You's neighbours
-      return depth
-    }
     const fade = (to, then) => {
       fadeRef.current()
       const from = dimRef.current
@@ -104,19 +106,26 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     }
     let pinned = photosVisible  // photos stay up while the reveal is showing them
     const sizePhotos = (size) => { result.images.forEach((_, k) => g.hasNode(`photo-${k}`) && g.setNodeAttribute(`photo-${k}`, 'size', size)); sigma.refresh() }
-    sigma.on('enterNode', ({ node, event }) => {
-      hoverRef.current = node; depthRef.current = hops(node); setHover({ slug: node, x: event.x, y: event.y }); fade(1)
-      if (node === 'overall') sizePhotos(PHOTO_SIZE)
+    const focus = (node) => { hoverRef.current = node; depthRef.current = hops(node); fade(1); if (node === 'overall') sizePhotos(PHOTO_SIZE) }
+    const unfocus = () => { fade(0, () => { hoverRef.current = null; sigma.refresh() }); if (!pinned) sizePhotos(0) }
+    sigma.on('enterNode', ({ node, event }) => { setHover({ slug: node, x: event.x, y: event.y }); if (!pinRef.current) focus(node) })
+    sigma.on('leaveNode', () => { setHover(null); if (!pinRef.current) unfocus() })
+    sigma.on('clickNode', ({ node }) => {  // click freezes the lit paths; clicking the same node or the stage lets go
+      pinRef.current = pinRef.current === node ? null : node
+      if (pinRef.current) focus(node); else unfocus()
+      nodes[node] && setSelected(nodes[node])
     })
-    sigma.on('leaveNode', () => { setHover(null); fade(0, () => { hoverRef.current = null; sigma.refresh() }); if (!pinned) sizePhotos(0) })
-    sigma.on('clickNode', ({ node }) => nodes[node] && setSelected(nodes[node]))
-    sigma.on('clickStage', () => setSelected(null))
+    sigma.on('clickStage', () => { setSelected(null); if (pinRef.current) { pinRef.current = null; unfocus() } })
 
     // drag anywhere spins the sphere (pointer events cover mouse and touch)
     let drag = null
     const container = el.current
     const down = (e) => { if (e.button === 0 || e.pointerType !== 'mouse') { drag = [e.clientX, e.clientY]; container.setPointerCapture?.(e.pointerId) } }
-    const move = (e) => { if (!drag) return; spin.cancel?.(); R = multiply(rotationFromDrag(e.clientX - drag[0], e.clientY - drag[1], DRAG_SPEED), R); drag = [e.clientX, e.clientY]; project() }
+    const radiusPx = () => { const o = sigma.graphToViewport({ x: 0, y: 0 }), r = sigma.graphToViewport({ x: SCALE, y: 0 }); return Math.hypot(r.x - o.x, r.y - o.y) }
+    const move = (e) => {  // one pixel turns the globe by one pixel of its on-screen radius, so the point under the pointer tracks it at any zoom
+      if (!drag) return
+      spin.cancel?.(); R = multiply(rotationFromDrag(e.clientX - drag[0], e.clientY - drag[1], 1 / radiusPx()), R); drag = [e.clientX, e.clientY]; project()
+    }
     const up = () => { drag = null }
     container.addEventListener('pointerdown', down); container.addEventListener('pointermove', move); container.addEventListener('pointerup', up); container.addEventListener('pointercancel', up)
 
@@ -138,7 +147,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     apiRef.current = api
     onReady?.(api)
     return () => {
-      fadeRef.current(); spin.cancel?.(); resizer.disconnect(); hoverRef.current = null; dimRef.current = 0; setHover(null)
+      fadeRef.current(); spin.cancel?.(); resizer.disconnect(); hoverRef.current = null; pinRef.current = null; dimRef.current = 0; setHover(null)
       container.removeEventListener('pointerdown', down); container.removeEventListener('pointermove', move); container.removeEventListener('pointerup', up); container.removeEventListener('pointercancel', up)
       sigma.kill()
     }
