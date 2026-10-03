@@ -1,20 +1,20 @@
 import { expect, it, vi } from 'vitest'
 import { buildRevealSteps, runSteps } from './reveal.js'
 
-const result = { images: [{}, {}, {}] }
+const result = { images: [{}, {}, {}], aesthetics: [{ slug: 'a', photos: [0, 2] }, { slug: 'b', photos: [1] }] }
 
-it('builds overview, one photo step per image, a frame, then the headline', () => {
-  const kinds = buildRevealSteps(result, {}).map((s) => s.kind)
-  expect(kinds).toEqual(['overview', 'photo', 'photo', 'photo', 'frame', 'headline'])
-  expect(buildRevealSteps(result, {}).filter((s) => s.kind === 'photo').map((s) => s.index)).toEqual([0, 1, 2])
+it('builds overview, one step per aesthetic, the overall anchor, a frame, then the headline', () => {
+  const steps = buildRevealSteps(result, {})
+  expect(steps.map((s) => s.kind)).toEqual(['overview', 'aesthetic', 'aesthetic', 'overall', 'frame', 'headline'])
+  expect(steps.filter((s) => s.kind === 'aesthetic').map((s) => s.index)).toEqual([0, 1])
 })
-it('single photo still yields a full sequence', () => {
-  expect(buildRevealSteps({ images: [{}] }, {}).map((s) => s.kind)).toEqual(['overview', 'photo', 'frame', 'headline'])
+it('single aesthetic still yields a full sequence', () => {
+  expect(buildRevealSteps({ images: [{}], aesthetics: [{ slug: 'a', photos: [0] }] }, {}).map((s) => s.kind)).toEqual(['overview', 'aesthetic', 'overall', 'frame', 'headline'])
 })
 it('reduced motion collapses to zero-delay steps in the same order', () => {
   const steps = buildRevealSteps(result, { reducedMotion: true })
   expect(steps.every((s) => s.delay === 0)).toBe(true)
-  expect(steps.map((s) => s.kind)).toEqual(['overview', 'photo', 'photo', 'photo', 'frame', 'headline'])
+  expect(steps.map((s) => s.kind)).toEqual(['overview', 'aesthetic', 'aesthetic', 'overall', 'frame', 'headline'])
 })
 it('runSteps calls handlers in order and can be cancelled', async () => {
   vi.useFakeTimers()

@@ -8,7 +8,7 @@ import Drawer from './Drawer.jsx'
 import { searchNodes } from './lib/search.js'
 
 const SCALE = 60
-const COLORS = { node: '#4a4740', edge: '#1e1e23', hot: '#ff4d6d', label: '#f2efe9', dim: '#1c1c20' }
+const COLORS = { node: '#4a4740', edge: '#1e1e23', hot: '#ff4d6d', label: '#f2efe9', dim: '#1c1c20', you: '#f2efe9' }
 
 export default function Graph({ graph, result, files, onReady, photosVisible = true }) {
   const el = useRef(null)
@@ -19,7 +19,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
   const [selected, setSelected] = useState(null) // node object
   const [query, setQuery] = useState('')
   const nodes = Object.fromEntries(graph.nodes.map((n) => [n.slug, n]))
-  const hot = new Set(result.images.map((i) => i.matches[0].slug))
+  const hot = new Set(result.aesthetics.map((a) => a.slug))
   const litAtStart = photosVisible ? hot : new Set()  // reveal lights matches via api.light
 
   useEffect(() => {
@@ -28,8 +28,9 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
     graph.edges.forEach((e) => { if (g.hasNode(e.source) && g.hasNode(e.target) && !g.hasEdge(e.source, e.target)) g.addEdge(e.source, e.target, { color: COLORS.edge, size: .6 }) })
     result.images.forEach((img, k) => {
       const image = urls.get(files[k])
-      if (image) g.addNode(`photo-${k}`, { x: img.x * SCALE, y: img.y * SCALE, size: photosVisible ? 20 : 0, type: 'image', image, label: `your photo ${k + 1}`, color: COLORS.hot, zIndex: 3 })
+      if (image) g.addNode(`photo-${k}`, { x: img.x * SCALE, y: img.y * SCALE, size: photosVisible ? 20 : 0, type: 'image', image, color: COLORS.hot, zIndex: 3 })
     })
+    g.addNode('overall', { x: result.overall.x * SCALE, y: result.overall.y * SCALE, size: photosVisible ? 11 : 0, label: 'you', color: COLORS.you, zIndex: 3 })
 
     const sigma = new Sigma(g, el.current, {
       nodeProgramClasses: { image: NodeImageProgram }, renderLabels: true, labelRenderedSizeThreshold: 7,
@@ -55,6 +56,7 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       flyTo: (id, ratio = .25, duration = 600) => g.hasNode(id) && sigma.getCamera().animate({ ...sigma.getNodeDisplayData(id), ratio }, { duration }),
       overview: (duration = 800) => sigma.getCamera().animate({ x: .5, y: .5, ratio: 1 }, { duration }),
       showPhoto: (k) => { if (g.hasNode(`photo-${k}`)) g.setNodeAttribute(`photo-${k}`, 'size', 20); sigma.refresh() },
+      showOverall: () => { g.setNodeAttribute('overall', 'size', 11); sigma.refresh() },
       light: (slug) => { if (g.hasNode(slug)) { g.mergeNodeAttributes(slug, { color: COLORS.hot, size: 8, zIndex: 2 }); sigma.refresh() } },
       select: (slug) => setSelected(nodes[slug] || null),
     }
@@ -75,6 +77,16 @@ export default function Graph({ graph, result, files, onReady, photosVisible = t
       {hover && nodes[hover.slug] && (
         <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
           <strong>{nodes[hover.slug].name}</strong><span>{nodes[hover.slug].description.split(/(?<=\.)\s/)[0]}</span>
+        </div>
+      )}
+      {hover && hover.slug.startsWith('photo-') && (
+        <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
+          <strong>your photo</strong><span>closest to {result.names[result.images[hover.slug.slice(6)].matches[0].slug]}</span>
+        </div>
+      )}
+      {hover && hover.slug === 'overall' && (
+        <div className="tip" style={{ left: hover.x + 14, top: hover.y + 14 }}>
+          <strong>you</strong><span>all your photos averaged, closest to {result.names[result.overall.matches[0].slug]}</span>
         </div>
       )}
       <Drawer node={selected} onClose={() => setSelected(null)} />
