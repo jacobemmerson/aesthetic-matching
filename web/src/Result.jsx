@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Graph from './Graph.jsx'
+import DevPanel from './DevPanel.jsx'
 import { buildRevealSteps, runSteps, TIMING } from './lib/reveal.js'
 import { useObjectUrls } from './lib/objectUrls.js'
 
@@ -9,6 +10,12 @@ const fade = (duration, delay = 0) => (reduced() ? { duration: 0, delay: 0 } : {
 
 export default function Result({ files, result, graph, graphError, onReset }) {
   const [stage, setStage] = useState('reveal')   // 'reveal' | 'done'
+  const [dev, setDev] = useState(() => new URLSearchParams(location.search).has('dev'))  // ?dev or the d key
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'd' && !e.metaKey && !e.ctrlKey && e.target.tagName !== 'INPUT') setDev((v) => !v) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
   const api = useRef(null)
   const started = useRef(false)
   const shown = useRef({ photos: [], lit: [], overall: false })  // what the reveal has exposed so far, replayed if the graph rebuilds
@@ -80,6 +87,7 @@ export default function Result({ files, result, graph, graphError, onReset }) {
           </motion.div>
         )}</AnimatePresence>
       </header>
+      {dev && <DevPanel result={result} files={files} onClose={() => setDev(false)} />}
     </main>
   )
 }
