@@ -8,11 +8,11 @@ from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from server.match import Encoder, Index, overall
+from server.match import Encoder, Index, aggregate, basic_score, cover
 
 DATA = Path(os.environ.get("DATA_DIR", Path(__file__).resolve().parent.parent / "data"))
 WEB = Path(__file__).resolve().parent.parent / "web" / "dist"
-MAX_IMAGES, MAX_BYTES = 10, 5_000_000
+MIN_IMAGES, MAX_IMAGES, MAX_BYTES = 3, 10, 5_000_000
 RATE_LIMIT, RATE_WINDOW = 5, 3600  # analyses per IP per hour
 
 app = FastAPI(title="aesthetics roast")
@@ -26,6 +26,7 @@ def load():
     graph = json.loads((DATA / "graph.json").read_text())
     state["graph"] = graph
     state["nodes"] = {n["slug"]: n for n in graph["nodes"]}
+    state["ratings"] = {n["slug"]: n["mainstream"] for n in graph["nodes"] if n.get("mainstream") is not None}
     state.setdefault("encoder", Encoder(masked=state["index"].masked_faces))
 
 
@@ -48,11 +49,11 @@ def check_rate(ip: str):
 
 @app.post("/api/analyze")
 async def analyze(request: Request, images: list[UploadFile] = File(...)):
-    if not 1 <= len(images) <= MAX_IMAGES:
-        raise HTTPException(400, f"upload 1-{MAX_IMAGES} images")
+    if not MIN_IMAGES <= len(images) <= MAX_IMAGES:
+        raise HTTPException(400, f"upload {MIN_IMAGES}-{MAX_IMAGES} images")
     check_rate(client_ip(request))
     index, encoder, nodes = state["index"], state["encoder"], state["nodes"]
-    results = []
+    results, vecs = [], []
     for up in images:
         data = await up.read()
         if len(data) > MAX_BYTES:
@@ -61,9 +62,13 @@ async def analyze(request: Request, images: list[UploadFile] = File(...)):
             vec = encoder.encode(data)
         except Exception:
             raise HTTPException(400, f"{up.filename} is not a readable image")
+        vecs.append(vec)
         results.append({"filename": up.filename, **index.match(vec)})
-    slugs = {m["slug"] for r in results for m in r["matches"]}
-    return {"images": results, "overall": overall(results), "names": {s: nodes[s]["name"] for s in slugs}}
+    overall = index.match(aggregate(vecs))
+    aesthetics = cover(results, overall["matches"][0]["slug"])
+    slugs = {m["slug"] for r in results + [overall] for m in r["matches"]}
+    return {"images": results, "overall": overall, "aesthetics": aesthetics, "basic_score": basic_score(results, state["ratings"]),
+            "names": {s: nodes[s]["name"] for s in slugs}}
 
 
 @app.get("/api/graph")

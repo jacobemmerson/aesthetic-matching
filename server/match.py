@@ -77,16 +77,38 @@ class Index:
         return {"matches": [{"slug": self.slugs[i], "score": float(s[i])} for i in top], "x": float(x), "y": float(y)}
 
 
-def overall(image_results: list[dict], top_k: int = 3) -> list[dict]:
-    """Each photo's best match first (so every photo is represented), then the highest summed
-    scores. Plain summing let one photo's cluster of near-synonyms fill every slot."""
-    totals: dict[str, float] = {}
-    for r in image_results:
-        for m in r["matches"]:
-            totals[m["slug"]] = totals.get(m["slug"], 0.0) + m["score"]
-    firsts = sorted({r["matches"][0]["slug"] for r in image_results}, key=lambda s: -totals[s])
-    rest = sorted((s for s in totals if s not in firsts), key=lambda s: -totals[s])
-    return [{"slug": s, "score": totals[s]} for s in (firsts + rest)[:top_k]]
+def aggregate(vecs: list[np.ndarray]) -> np.ndarray:
+    """One unit vector for the whole upload, scored like a photo."""
+    return normalize(np.mean(vecs, axis=0))
+
+
+def cover(image_results: list[dict], seed: str, k: int = 3, cap: int = 5) -> list[dict]:
+    """Smallest set of aesthetics that explains every photo: a photo is explained when the
+    aesthetic is in its top-k. Greedy, seeded with the aggregate's best match so the headline
+    anchor is always first; grows with how diverse the photos are."""
+    tops = [{m["slug"]: m["score"] for m in r["matches"][:k]} for r in image_results]
+    uncovered = set(range(len(tops)))
+    chosen = [seed]
+    while True:
+        covers = {i for i in uncovered if chosen[-1] in tops[i]}
+        uncovered -= covers
+        if not uncovered or len(chosen) >= cap:
+            break
+        candidates = {s for i in uncovered for s in tops[i]}
+        chosen.append(max(candidates, key=lambda s: (sum(s in tops[i] for i in uncovered), sum(tops[i].get(s, 0) for i in uncovered),
+                                                     -min(i for i in uncovered if s in tops[i]))))
+    return [{"slug": s, "photos": [i for i, t in enumerate(tops) if s in t]} for s in chosen]
+
+
+def basic_score(image_results: list[dict], ratings: dict[str, float], k: int = 3) -> int:
+    """0 = the most niche thing in the catalog, 100 = the most basic; match-weighted mean of the
+    mainstream ratings over each photo's top-k, rescaled over the catalog's rating range."""
+    lo, hi = (min(ratings.values()), max(ratings.values())) if ratings else (0.0, 0.0)
+    pairs = [(max(m["score"], 1e-6), ratings[m["slug"]]) for r in image_results for m in r["matches"][:k] if m["slug"] in ratings]
+    if hi <= lo or not pairs:
+        return 50
+    mean = sum(w * v for w, v in pairs) / sum(w for w, _ in pairs)
+    return int(min(100, max(0, round((mean - lo) / (hi - lo) * 100))))
 
 
 class Encoder:

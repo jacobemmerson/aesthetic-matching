@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 from server import app as app_mod
-from server.match import Index, normalize, overall
+from server.match import Index, aggregate, basic_score, cover, normalize
 
 # three synthetic aesthetics on orthogonal axes; "text-only" has no images
 INDEX = Index(
@@ -38,39 +38,74 @@ def test_match_and_placement():
     assert 0 <= m["x"] <= 10 and 0 <= m["y"] <= 10  # inside the triangle of its matches
 
 
-def test_overall_represents_every_photo_then_sums():
-    res = [{"matches": [{"slug": "a", "score": 0.5}, {"slug": "b", "score": 0.4}]},
-           {"matches": [{"slug": "b", "score": 0.5}, {"slug": "a", "score": 0.1}]}]
-    assert [m["slug"] for m in overall(res)] == ["b", "a"]
-    cluster = [{"matches": [{"slug": "v", "score": 0.4}, {"slug": "v2", "score": 0.4}, {"slug": "v3", "score": 0.39}]},
-               {"matches": [{"slug": "c", "score": 0.3}, {"slug": "c2", "score": 0.2}]}]
-    assert [m["slug"] for m in overall(cluster)] == ["v", "c", "v2"]
+def photo(*slugs):
+    return {"matches": [{"slug": s, "score": 0.5 - 0.1 * i} for i, s in enumerate(slugs)]}
+
+
+def test_aggregate_is_unit_mean():
+    v = aggregate([np.array([1, 0, 0], np.float32), np.array([0, 1, 0], np.float32)])
+    np.testing.assert_allclose(v, [2**-0.5, 2**-0.5, 0], atol=1e-6)
+
+
+def test_cover_collapses_identical_photos_and_splits_disjoint_ones():
+    same = [photo("a", "b", "c")] * 3
+    assert cover(same, "a") == [{"slug": "a", "photos": [0, 1, 2]}]
+    disjoint = [photo("a", "x"), photo("b", "y"), photo("c", "z")]
+    assert [c["slug"] for c in cover(disjoint, "a")] == ["a", "b", "c"]
+
+
+def test_cover_keeps_seed_first_prefers_coverage_and_caps():
+    res = [photo("s", "p"), photo("q", "p"), photo("q", "r")]
+    assert cover(res, "s") == [{"slug": "s", "photos": [0]}, {"slug": "q", "photos": [1, 2]}]
+    res = [photo("z"), photo("a"), photo("b"), photo("c")]
+    assert [c["slug"] for c in cover(res, "z", cap=2)] == ["z", "a"]
+    assert cover([photo("a")], "ghost")[0] == {"slug": "ghost", "photos": []}
+
+
+def test_basic_score_rescales_over_catalog_range():
+    ratings = {"niche": 3.0, "mid": 4.0, "basic": 5.0}
+    assert basic_score([photo("basic")] * 3, ratings) == 100
+    assert basic_score([photo("niche")] * 3, ratings) == 0
+    assert basic_score([photo("mid", "unrated")], ratings) == 50
+    assert basic_score([photo("unrated")], ratings) == 50
 
 
 @pytest.fixture
 def client(monkeypatch):
     app_mod.state.update(index=INDEX, encoder=FakeEncoder(),
-                         graph={"nodes": [], "edges": []},
+                         graph={"nodes": [], "edges": []}, ratings={"red": 3.0, "green": 5.0},
                          nodes={s: {"name": s.title(), "description": "d", "key_values": ""} for s in INDEX.slugs})
     app_mod.hits.clear()
     monkeypatch.setattr(app_mod.app.router, "on_startup", [])
     return TestClient(app_mod.app)
 
 
+def upload(*colors):
+    return [("images", (f"{i}.jpg", jpeg(c), "image/jpeg")) for i, c in enumerate(colors)]
+
+
 def test_analyze_happy_path(client):
-    r = client.post("/api/analyze", files=[("images", ("a.jpg", jpeg("red"), "image/jpeg")), ("images", ("b.jpg", jpeg("green"), "image/jpeg"))])
+    r = client.post("/api/analyze", files=upload("red", "green", "green"))
     assert r.status_code == 200, r.text
     body = r.json()
-    assert [i["matches"][0]["slug"] for i in body["images"]] == ["red", "green"]
-    assert body["overall"][0]["slug"] in {"red", "green"} and "roast" not in body
+    assert [i["matches"][0]["slug"] for i in body["images"]] == ["red", "green", "green"]
+    assert body["overall"]["matches"][0]["slug"] in {"red", "green"} and 0 <= body["overall"]["x"] <= 10
+    assert body["aesthetics"][0]["slug"] == body["overall"]["matches"][0]["slug"]
+    assert sorted(i for a in body["aesthetics"] for i in a["photos"]) == [0, 1, 2]  # every photo explained
+    assert 0 <= body["basic_score"] <= 100 and "roast" not in body
     assert body["names"]["red"] == "Red"
 
 
+def test_analyze_needs_three_photos(client):
+    assert client.post("/api/analyze", files=upload("red", "green")).status_code == 400
+
+
 def test_rejects_junk_and_rate_limits(client):
-    assert client.post("/api/analyze", files=[("images", ("x.txt", b"nope", "text/plain"))]).status_code == 400
+    junk = [("images", ("x.txt", b"nope", "text/plain"))] + upload("red", "red")
+    assert client.post("/api/analyze", files=junk).status_code == 400
     for _ in range(app_mod.RATE_LIMIT - 1):  # the junk request above already used one slot
-        assert client.post("/api/analyze", files=[("images", ("a.jpg", jpeg("red"), "image/jpeg"))]).status_code == 200
-    assert client.post("/api/analyze", files=[("images", ("a.jpg", jpeg("red"), "image/jpeg"))]).status_code == 429
+        assert client.post("/api/analyze", files=upload("red", "red", "red")).status_code == 200
+    assert client.post("/api/analyze", files=upload("red", "red", "red")).status_code == 429
 
 
 def test_centering_removes_hub():
@@ -93,10 +128,8 @@ def test_prior_breaks_near_ties_toward_known_aesthetics():
 
 def test_forged_forwarded_header_does_not_dodge_rate_limit(client):
     for i in range(app_mod.RATE_LIMIT):
-        assert client.post("/api/analyze", headers={"x-forwarded-for": f"10.0.0.{i}"},
-                           files=[("images", ("a.jpg", jpeg("red"), "image/jpeg"))]).status_code == 200
-    assert client.post("/api/analyze", headers={"x-forwarded-for": "10.0.0.99"},
-                       files=[("images", ("a.jpg", jpeg("red"), "image/jpeg"))]).status_code == 429
+        assert client.post("/api/analyze", headers={"x-forwarded-for": f"10.0.0.{i}"}, files=upload("red", "red", "red")).status_code == 200
+    assert client.post("/api/analyze", headers={"x-forwarded-for": "10.0.0.99"}, files=upload("red", "red", "red")).status_code == 429
 
 
 def test_index_without_new_keys_scores_as_before(tmp_path):
