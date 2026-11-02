@@ -1,4 +1,5 @@
 import io
+import json
 
 import numpy as np
 import pytest
@@ -19,6 +20,9 @@ INDEX = Index(
 
 
 class FakeEncoder:
+    def preview(self, data: bytes) -> bytes:
+        return data
+
     def encode(self, data: bytes) -> np.ndarray:
         img = Image.open(io.BytesIO(data)).convert("RGB")  # still rejects junk like the real one
         r, g, _ = img.resize((1, 1)).getpixel((0, 0))
@@ -104,7 +108,8 @@ def client(monkeypatch):
                          nodes={s: {"name": s.title(), "description": "d", "key_values": ""} for s in INDEX.slugs})
     app_mod.hits.clear()
     monkeypatch.setattr(app_mod.app.router, "on_startup", [])
-    monkeypatch.setattr(app_mod, "statement", lambda score, names: f"fallback for {score}")  # never call a real model from tests
+    monkeypatch.setattr(app_mod, "statement", lambda score, names, images=(): f"fallback for {score} from {len(images)} photos")  # never call a real model from tests
+    monkeypatch.setattr(app_mod, "warm", lambda images: None)
     return TestClient(app_mod.app)
 
 
@@ -112,10 +117,31 @@ def upload(*colors):
     return [("images", (f"{i}.jpg", jpeg(c), "image/jpeg")) for i, c in enumerate(colors)]
 
 
+def ndjson(r) -> list[dict]:
+    return [json.loads(line) for line in r.text.splitlines() if line]
+
+
+def assemble(lines: list[dict]) -> dict:
+    """What the client builds from the stream: the photo lines plus the verdict and statement lines."""
+    photos = [m for m in lines if m["kind"] == "photo"]
+    verdict_line = next(m for m in lines if m["kind"] == "verdict")
+    return {"images": photos, **verdict_line, **next(m for m in lines if m["kind"] == "statement")}
+
+
+def test_analyze_streams_photos_then_verdict_then_statement(client):
+    r = client.post("/api/analyze", files=upload("red", "green", "green"))
+    assert r.status_code == 200 and r.headers["content-type"].startswith("application/x-ndjson")
+    kinds = [m["kind"] for m in ndjson(r)]
+    assert kinds == ["photo", "photo", "photo", "verdict", "statement"]
+    first = ndjson(r)[0]
+    assert first["index"] == 0 and first["name"] == "Red" and first["matches"][0]["slug"] == "red"
+    assert first["names"]["red"] == "Red" and set(first["names"]) == {m["slug"] for m in first["matches"]}
+
+
 def test_analyze_happy_path(client):
     r = client.post("/api/analyze", files=upload("red", "green", "green"))
     assert r.status_code == 200, r.text
-    body = r.json()
+    body = assemble(ndjson(r))
     assert [i["matches"][0]["slug"] for i in body["images"]] == ["red", "green", "green"]
     assert body["overall"]["matches"][0]["slug"] in {"red", "green"} and -1 <= body["overall"]["z"] <= 1
     top = body["overall"]["matches"][0]["slug"]
@@ -123,7 +149,7 @@ def test_analyze_happy_path(client):
     anchor = {"red": [0, 0, 1], "green": [1, 0, 0]}[top]  # the You dot sits by the mixture's top label
     assert np.dot(anchor, [body["overall"]["x"], body["overall"]["y"], body["overall"]["z"]]) > 0.9
     assert sorted(set(i for a in body["aesthetics"] for i in a["photos"])) == [0, 1, 2]  # every photo labelled
-    assert 0 <= body["basic_score"] <= 100 and body["statement"]  # fallback line; no model in tests
+    assert 0 <= body["basic_score"] <= 100 and body["statement"] == "fallback for %d from 3 photos" % body["basic_score"]  # the verdict model gets one preview per photo
     assert body["names"]["red"] == "Red"
 
 
@@ -212,13 +238,21 @@ def test_masked_encoder_requires_detector(monkeypatch, tmp_path):
         Encoder(masked=True)
 
 
+def test_join_infobox_adds_scrape_fields_by_slug():
+    graph = {"nodes": [{"slug": "red", "name": "Red"}, {"slug": "blue", "name": "Blue"}], "edges": []}
+    joined = app_mod.join_infobox(graph, [{"slug": "red", "key_motifs": "roses", "key_colours": "crimson", "decade_of_origin": "1920s", "mentions": 9}])
+    assert joined["nodes"][0]["key_motifs"] == "roses" and joined["nodes"][0]["decade_of_origin"] == "1920s"
+    assert "mentions" not in joined["nodes"][0] and joined["nodes"][1]["key_colours"] is None
+
+
 def test_graph_response_drops_fields_the_client_never_reads(client):
     full = {"nodes": [{"slug": "red", "name": "Red", "x": 0, "y": 0, "z": 1, "description": "d", "other_names": "", "key_values": "",
                        "image_count": 5, "wiki_url": "https://w", "mainstream": 3.0}],
             "edges": [{"source": "red", "target": "green", "type": "related"}]}
     app_mod.state["graph"] = app_mod.slim_graph(full)
     body = client.get("/api/graph").json()
-    assert set(body["nodes"][0]) == {"slug", "name", "x", "y", "z", "description", "other_names", "key_values"}
+    assert set(body["nodes"][0]) == set(app_mod.NODE_FIELDS)
+    assert body["nodes"][0]["key_motifs"] is None  # absent from nodes.json: present but null, so the client needs no special case
     assert body["edges"] == [{"source": "red", "target": "green"}]
 
 

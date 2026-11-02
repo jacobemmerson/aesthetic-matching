@@ -1,0 +1,22 @@
+# The verdict model: Qwen3-VL 4B Instruct (Q4_K_M) behind llama.cpp's OpenAI-compatible server.
+# Install:  sudo cp deploy/llama-server.service /etc/systemd/system/ && sudo systemctl enable --now llama-server
+# Model files come from Qwen/Qwen3-VL-4B-Instruct-GGUF on Hugging Face (see README "Run locally").
+[Unit]
+Description=llama-server (Qwen3-VL 4B) for the aesthetics verdict
+After=network-online.target
+
+[Service]
+User=taesur
+Environment=LLAMA_ARG_HOST=0.0.0.0
+Environment=LLAMA_ARG_PORT=8081
+# -ngl 22: a GTX 1650 Ti (4 GB) cannot hold all 36 layers plus the image encoder; full offload runs out of memory
+# while encoding photos. Raise it on a bigger card, drop it (or use 0) on a CPU-only box.
+ExecStart=/home/taesur/.local/bin/llama-server \
+  -m /home/taesur/.cache/llama.cpp/Qwen3VL-4B-Instruct-Q4_K_M.gguf \
+  --mmproj /home/taesur/.cache/llama.cpp/mmproj-Qwen3VL-4B-Instruct-F16.gguf \
+  -c 4096 -np 1 -fa on -ngl 22
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
