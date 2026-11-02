@@ -67,3 +67,19 @@ def test_embed_images_source_rows(monkeypatch, tmp_path):
         p = tmp_path / f"{i}.jpg"; Image.new("RGB", (32, 32)).save(p); paths.append(p)
     vecs, source = bi.embed_images(paths, crops=2)
     assert vecs.shape == (6, 4) and source.tolist() == [0, 1, 0, 1, 0, 1]
+
+
+def test_relax_spreads_clusters_but_keeps_nodes_on_the_sphere_and_in_order():
+    from pipeline.build_index import relax
+
+    rng = np.random.default_rng(0)
+    cluster = rng.normal(size=(20, 3)) * 0.05 + np.array([1, 0, 0])  # twenty nodes crammed around one point
+    far = np.array([[-1, 0, 0]], dtype=float)
+    xyz = np.concatenate([cluster, far])
+    out = relax(xyz, iters=15, step=0.4, samples=5000)
+    assert np.allclose(np.linalg.norm(out, axis=1), 1, atol=1e-5)
+    def spacing(P):
+        D = np.degrees(np.arccos(np.clip(P @ P.T, -1, 1))); np.fill_diagonal(D, 999); return np.median(D.min(1))
+    assert spacing(out) > 3 * spacing(xyz / np.linalg.norm(xyz, axis=1, keepdims=True))
+    assert out[-1] @ np.array([-1, 0, 0]) > 0.9  # the lone node stays on its side
+    assert np.array_equal(relax(xyz, iters=0), (xyz / np.linalg.norm(xyz, axis=1, keepdims=True)).astype(np.float32))

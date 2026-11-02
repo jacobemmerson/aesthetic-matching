@@ -35,6 +35,26 @@ def centroids(image_vecs: np.ndarray, owner: list[str], slugs: list[str]) -> tup
     return cents, counts
 
 
+RELAX_ITERS, RELAX_STEP = 25, 0.4  # UMAP packs the sphere into tight clusters; this spreads them without reordering neighbours
+
+
+def relax(xyz: np.ndarray, iters: int = RELAX_ITERS, step: float = RELAX_STEP, samples: int = 30000, seed: int = 1) -> np.ndarray:
+    """Lloyd relaxation on the unit sphere: each node drifts toward the centre of the patch of sphere it is
+    nearest to, so crowded clusters open up and empty regions shrink while every node keeps its neighbours.
+    `step` is the fraction of the way to move per iteration; 0 returns the input unchanged."""
+    P = normalize(np.asarray(xyz, dtype=np.float64))
+    Q = np.random.default_rng(seed).normal(size=(samples, 3))
+    Q /= np.linalg.norm(Q, axis=1, keepdims=True)
+    for _ in range(iters):
+        own = np.argmax(Q @ P.T, 1)
+        cent = np.zeros_like(P)
+        np.add.at(cent, own, Q)
+        has = np.linalg.norm(cent, axis=1) > 0
+        cent[has] /= np.linalg.norm(cent[has], axis=1, keepdims=True)
+        P[has] = normalize(P[has] + step * (cent[has] - P[has]))
+    return P.astype(np.float32)
+
+
 def layout(vectors: np.ndarray, seed: int = 0) -> np.ndarray:
     import umap  # slow import, keep it out of the test path for the pure functions
 
@@ -46,7 +66,7 @@ def layout(vectors: np.ndarray, seed: int = 0) -> np.ndarray:
         return np.stack([np.cos(t), np.sin(t), np.zeros(n)], 1).astype(np.float32)
     lat, lon = umap.UMAP(n_neighbors=min(15, n - 1), min_dist=0.1, metric="cosine", output_metric="haversine",
                          random_state=seed).fit_transform(vectors).T
-    return np.stack([np.cos(lat) * np.cos(lon), np.cos(lat) * np.sin(lon), np.sin(lat)], 1).astype(np.float32)
+    return relax(np.stack([np.cos(lat) * np.cos(lon), np.cos(lat) * np.sin(lon), np.sin(lat)], 1))
 
 
 def build_graph(nodes: list[dict], xyz: np.ndarray, counts: np.ndarray, ratings: dict[str, float] | None = None) -> dict:
