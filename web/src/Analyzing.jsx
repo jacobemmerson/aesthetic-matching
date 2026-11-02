@@ -1,27 +1,19 @@
-import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { STEP_MS, stepAt } from './lib/loading.js'
+import { lineFor } from './lib/loading.js'
+import { SPRING } from './lib/motion.js'
 
-export default function Analyzing({ files, urls }) {
-  const [line, setLine] = useState(stepAt(0))
-  useEffect(() => {
-    const start = Date.now()
-    const timer = setInterval(() => setLine(stepAt(Date.now() - start)), STEP_MS)
-    return () => clearInterval(timer)
-  }, [])
+/** The status line and progress bar under the photo list while the server works through the photos. */
+export default function Analyzing({ total, progress }) {
+  const line = lineFor({ shown: progress, total })
+  const pct = total ? (progress.length / total) * 100 : 0
   return (
-    <main className="hero">
-      <ul className="strip">
-        {files.map((f, i) => (
-          <motion.li key={`${f.name}:${f.size}`} layoutId={`${f.name}:${f.size}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * .04 }}>
-            <img src={urls.get(f)} alt="" /><span className="scan" />
-          </motion.li>
-        ))}
-      </ul>
+    <>
       <AnimatePresence mode="wait">
-        <motion.p key={line} className="display analyzing" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .3 }}>{line}</motion.p>
+        <motion.p key={line} className="analyzing" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .18 }}>{line}</motion.p>
       </AnimatePresence>
-      <div className="bar" role="progressbar" aria-busy="true"><span /></div>
-    </main>
+      <div className={'bar' + (pct ? '' : ' busy')} role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={progress.length}>
+        <motion.span animate={{ width: `${Math.max(pct, 6)}%` }} transition={SPRING} />
+      </div>
+    </>
   )
 }

@@ -1,12 +1,13 @@
 import Fade from './Fade.jsx'
+import { X } from './Icon.jsx'
 
 /** Developer view: every photo's match distribution (probability and raw score), plus the aggregate. */
 export default function DevPanel({ result, files, urls, onClose }) {
   const rows = [...result.images.map((img, k) => ({ key: k, label: `photo ${k + 1}`, src: urls.get(files[k]), matches: img.matches })),
                 { key: 'overall', label: 'You (mixture of the photos)', matches: result.overall.matches.slice(0, 5) }]
   return (
-    <Fade as="aside" className="dev">
-      <button className="close" aria-label="close" onClick={onClose}>×</button>
+    <Fade as="aside" className="dev material">
+      <button className="icon-btn close" aria-label="close" onClick={onClose}><X /></button>
       <h3>Match distributions</h3>
       {rows.map((r) => (
         <section key={r.key}>
