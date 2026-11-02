@@ -1,5 +1,6 @@
 """Score uploaded images against the aesthetic index and place them on the graph."""
 import io
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -134,23 +135,51 @@ def basic_score(image_results: list[dict], ratings: dict[str, float]) -> int:
     return int(min(100, max(0, round((mean - lo) / (hi - lo) * 100))))
 
 
-class Encoder:
-    """Image encoder (open_clip backbone), loaded once. Kept separate so tests can swap in a fake."""
+PREVIEW_PX = 336  # longest side of the photos sent to the verdict model; its image cost scales with pixels
 
-    def __init__(self, masked: bool = False, backbone: tuple[str, str] | None = None):
-        from pipeline.build_index import load_model
+
+def preprocess(img: Image.Image, cfg: dict) -> np.ndarray:
+    """The open_clip transform in PIL and numpy: squash-resize, scale to [0, 1], normalise; (1, 3, H, W) float32."""
+    h, w = cfg["size"]
+    resample = {"bicubic": Image.BICUBIC, "bilinear": Image.BILINEAR}[cfg["interpolation"]]
+    arr = np.asarray(img.convert("RGB").resize((w, h), resample), dtype=np.float32) / 255.0
+    arr = (arr - np.array(cfg["mean"], np.float32)) / np.array(cfg["std"], np.float32)
+    return arr.transpose(2, 0, 1)[None]
+
+
+class Encoder:
+    """Image encoder: the open_clip tower exported by `pipeline.export_onnx`, run with onnxruntime. Kept separate so tests can swap in a fake."""
+
+    def __init__(self, masked: bool = False, backbone: tuple[str, str] | None = None, path: Path | None = None):
+        import onnxruntime as ort
 
         self.masker = None
         if masked:
             from pipeline.faces import Detector
 
             self.masker = Detector()  # before the backbone so a missing model file fails fast at startup
-        self.model, self.preprocess, _, self.torch = load_model(*backbone) if backbone else load_model()
+        path = path or Path(__file__).resolve().parent.parent / "data" / "encoder.onnx"
+        if not path.exists():
+            raise FileNotFoundError(f"{path} is missing; run `python -m pipeline.export_onnx`")
+        self.cfg = json.loads(path.with_suffix(".json").read_text())
+        exported = (self.cfg["model"], self.cfg["pretrained"])
+        if backbone and tuple(backbone) != exported:
+            raise RuntimeError(f"index was built with {tuple(backbone)} but {path.name} holds {exported}; re-export or rebuild")
+        self.session = ort.InferenceSession(str(path), providers=["CPUExecutionProvider"])
 
     def encode(self, data: bytes) -> np.ndarray:
         img = Image.open(io.BytesIO(data)).convert("RGB")  # raises on non-images; caller maps to 400
         if self.masker:
             img = self.masker.mask(img)
-        with self.torch.no_grad():
-            v = self.model.encode_image(self.preprocess(img).unsqueeze(0)).float().numpy()[0]
+        v = self.session.run(None, {"image": preprocess(img, self.cfg)})[0][0]
         return v / np.linalg.norm(v)
+
+    def preview(self, data: bytes, px: int = PREVIEW_PX) -> bytes:
+        """The photo as the verdict model sees it: faces blanked exactly as for the embedding, longest side `px`, JPEG."""
+        img = Image.open(io.BytesIO(data)).convert("RGB")
+        if self.masker:
+            img = self.masker.mask(img)
+        img.thumbnail((px, px))
+        out = io.BytesIO()
+        img.save(out, "JPEG", quality=85)
+        return out.getvalue()

@@ -9,7 +9,7 @@ FROM python:3.12-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project
+RUN uv sync --frozen --no-dev --no-group pipeline --no-install-project   # onnxruntime, not torch: the encoder ships as data/encoder.onnx
 COPY pipeline/ pipeline/
 COPY server/ server/
 COPY --from=web /web/dist web/dist

@@ -5,26 +5,36 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.142.1",
     "httpx>=0.28.1",
-    "mwparserfromhell>=0.7.2",
     "numpy>=2.5.3",
-    "open-clip-torch>=3.3.0",
+    "onnxruntime>=1.22",
     "opencv-python-headless>=5.0.0.93",
     "pillow>=12.3.0",
-    "protobuf>=7.36.2",
     "python-multipart>=0.0.32",
+    "uvicorn>=0.54.0",
+]
+
+[dependency-groups]
+# The served image installs only `dependencies`: the encoder runs as ONNX. Torch and open_clip are
+# needed to build the index and to export that ONNX file.
+pipeline = [
+    "mwparserfromhell>=0.7.2",
+    "onnx>=1.17",
+    "onnxscript>=0.3",
+    "open-clip-torch>=3.3.0",
+    "protobuf>=7.36.2",
     "sentencepiece>=0.2.2",
     "torch>=2.14.0",
     "torchvision>=0.29.0",
     "transformers>=5.18.0",
     "umap-learn>=0.5.12",
-    "uvicorn>=0.54.0",
 ]
-
-[dependency-groups]
 dev = [
     "datasets>=5.0.1",
     "pytest>=9.1.1",
 ]
+
+[tool.uv]
+default-groups = ["dev", "pipeline"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
